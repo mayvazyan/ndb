@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{32C3566B-3B4A-4827-8BE6-0BF1FC179CB1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ITCreatings.Ndb</RootNamespace>
+    <AssemblyName>ITCreatings.Ndb</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DocumentationFile>bin\Debug\ITCreatings.Ndb.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\ITCreatings.Ndb.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Enyim.Caching, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\Enyim.Caching.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data, Version=5.0.8.1, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql, Version=2.0.1.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\Npgsql.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite, Version=1.0.60.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\System.Data.SQLite.DLL</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SqlServerCe, Version=3.5.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\System.Data.SqlServerCe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Accessors\PostgreAccessor.cs" />
+    <Compile Include="Attributes\Keys\DbForeignKeyFieldAttribute.cs" />
+    <Compile Include="Attributes\Indexes\DbFullTextIndexedFieldAttribute.cs" />
+    <Compile Include="Attributes\Indexes\DbIndexedFieldAttribute.cs" />
+    <Compile Include="Attributes\Keys\DbPrimaryKeyFieldAttribute.cs" />
+    <Compile Include="Attributes\DbRecordAttribute.cs" />
+    <Compile Include="Accessors\MsSqlCeAccessor.cs" />
+    <Compile Include="Accessors\MsSqlAccessor.cs" />
+    <Compile Include="Accessors\MySqlAccessor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Accessors\SqLiteAccessor.cs" />
+    <Compile Include="Attributes\Indexes\DbUniqueFieldAttribute.cs" />
+    <Compile Include="Core\DbIdentityRecordInfo.cs" />
+    <Compile Include="Core\DbIndexesInfo.cs" />
+    <Compile Include="Core\DbTableCheckResult.cs" />
+    <Compile Include="DbCachedGateway.cs" />
+    <Compile Include="DbStructureGateway.cs" />
+    <Compile Include="DbGateway.cs" />
+    <Compile Include="ActiveRecord\DbActiveRecord.cs" />
+    <Compile Include="Attributes\DbFieldAttribute.cs" />
+    <Compile Include="Core\DbAttributesManager.cs" />
+    <Compile Include="Core\DbRecordInfo.cs" />
+    <Compile Include="ActiveRecord\DbIdentityRecord.cs" />
+    <Compile Include="DbAccessor.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="Exceptions\NdbConnectionFailedException.cs" />
+    <Compile Include="Exceptions\NdbException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Exceptions\NdbNotIdentityException.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Core\DbFieldCheckResult.cs" />
+    <Compile Include="Tests\PostgreTests.cs" />
+    <Compile Include="Tests\Data\NewsItem.cs" />
+    <Compile Include="Tests\Data\TestData.cs" />
+    <Compile Include="Tests\Data\Event.cs" />
+    <Compile Include="Tests\Data\Role.cs" />
+    <Compile Include="Tests\Data\RolesManager.cs" />
+    <Compile Include="Tests\Data\Task.cs" />
+    <Compile Include="Tests\Data\TasksAssignments.cs" />
+    <Compile Include="Tests\Data\TestDataObjects.cs" />
+    <Compile Include="Tests\Data\TestGuidRecord.cs" />
+    <Compile Include="Tests\Data\TestUser.cs" />
+    <Compile Include="Tests\Data\TestWorkLog.cs" />
+    <Compile Include="Tests\Core\DbAttributesManagerTests.cs" />
+    <Compile Include="Tests\Core\DbCachedGatewayTests.cs" />
+    <Compile Include="Tests\DbGatewayTests.cs" />
+    <Compile Include="Tests\Core\DbTableCheckResultTest.cs" />
+    <Compile Include="Tests\DbStructureGatewayTests.cs" />
+    <Compile Include="Tests\DbTestFixture.cs" />
+    <Compile Include="Tests\DbTestUtils.cs" />
+    <Compile Include="Tests\SqLiteTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Tests\App.config" />
+    <Content Include="Tests\testdb.sdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.SQL.Server.Compact.3.5">
+      <Visible>False</Visible>
+      <ProductName>SQL Server Compact 3.5</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<records>
+
+	<record class="User" tableName="Users">
+	  <field name="Id" />
+	  <field name="FullName" />
+	  <indexes>
+		<index source="Id" isPrimary="True"/>
+		<index source="FullName"/>
+	  </indexes>
+	</record>
+
+	<record class="Task" tableName="Tasks">
+		<field name="Id" />
+		<field name="Title" >
+		<indexes>
+			<index source="Id" isPrimary="True" />
+		</indexes>
+	</record>
+
+	<record class="TaskAssignments" tableName="TasksAssignments">
+	  <field name="TaskId" foreignKey="Task"/>
+	  <field name="UserId" foreignKey="User"/>
+	  <indexes>
+		<index source="TaskId, UserId" isPrimary="True" />
+		<index source="UserId" />
+		<index source="TaskId" />
+	  </indexes>
+	</record>
+	
+</records>
