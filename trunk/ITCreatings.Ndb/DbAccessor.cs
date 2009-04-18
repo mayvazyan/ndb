@@ -37,6 +37,7 @@ namespace ITCreatings.Ndb
 
         #region Instance Logic
 
+        //TODO: add multithread support?
         private static DbAccessor instance;
 
         /// <summary>
@@ -46,7 +47,6 @@ namespace ITCreatings.Ndb
         {
             get
             {
-                //TODO: add multithread support?
                 if (instance == null)
                 {
                     instance = Create("NdbConnection");
@@ -99,37 +99,37 @@ namespace ITCreatings.Ndb
         /// <returns></returns>
         public static DbAccessor Create(DbProvider dbProvider)
         {
-            DbAccessor _instance;
+            DbAccessor accessor;
 
             switch (dbProvider)
             {
                 case Ndb.DbProvider.MySql:
-                    _instance = new MySqlAccessor();
+                    accessor = new MySqlAccessor();
                     break;
 
                 case Ndb.DbProvider.SqLite:
-                    _instance = new SqLiteAccessor();
+                    accessor = new SqLiteAccessor();
                     break;
 
                 case Ndb.DbProvider.Postgre:
-                    _instance = new PostgreAccessor();
+                    accessor = new PostgreAccessor();
                     break;
 
                 case Ndb.DbProvider.MsSql:
-                    _instance = new MsSqlAccessor();
+                    accessor = new MsSqlAccessor();
                     break;
 
                 case Ndb.DbProvider.MsSqlCe:
-                    _instance = new MsSqlCeAccessor();
+                    accessor = new MsSqlCeAccessor();
                     break;
 
                 default:
                     throw new NdbConnectionFailedException(string.Format("Provider {0} doesn't supported", dbProvider));
             }
 
-            _instance.dbProvider = dbProvider;
+            accessor.dbProvider = dbProvider;
             
-            return _instance;
+            return accessor;
         }
 
         /// <summary>
@@ -140,10 +140,10 @@ namespace ITCreatings.Ndb
         /// <returns></returns>
         public static DbAccessor Create(DbProvider dbProvider, string connectionString)
         {
-            DbAccessor db = Create(dbProvider);
-            db.ConnectionString = connectionString;
+            DbAccessor accessor = Create(dbProvider);
+            accessor.ConnectionString = connectionString;
 
-            return db;
+            return accessor;
         }
 
         #endregion
@@ -159,8 +159,6 @@ namespace ITCreatings.Ndb
         {
             get
             {
-//                if (dbProvider == DbProvider.Unknown)
-//                    dbProvider = getProviderFromConfig();
                 return dbProvider;
             }
             set
@@ -168,12 +166,6 @@ namespace ITCreatings.Ndb
                 dbProvider = value;
             }
         }
-
-//        private static DbProvider getProviderFromConfig()
-//        {
-//            var connection = getConnectionFromConfig();
-//            return getProviderFromConfig(connection);
-//        }
 
         private static DbProvider getProviderFromConfig(ConnectionStringSettings connection)
         {
@@ -221,6 +213,15 @@ namespace ITCreatings.Ndb
         {
             return sql;
         }
+
+        /// <summary>
+        /// Adds limit to query
+        /// </summary>
+        /// <param name="query">SQL Query</param>
+        /// <param name="limit">Records Limit</param>
+        /// <param name="offset">Records Offset</param>
+        /// <returns></returns>
+        public abstract string BuildLimits(string query, int limit, int offset);
 
         #region Command
 
@@ -320,6 +321,36 @@ namespace ITCreatings.Ndb
         /// <returns></returns>
         public DataSet LoadDataSet(string query, params object[] args)
         {
+            return LoadDataSet(query, 0, 0, args);
+        }
+
+        /// <summary>
+        /// Load Data Set. Use this method, if you need load 2 or more tables from 1 query
+        /// </summary>
+        /// <param name="query">query</param>
+        /// <param name="limit">count limit</param>
+        /// <param name="args">if need, you may load params</param>
+        /// <returns></returns>
+        public DataSet LoadDataSet(string query, int limit, params object[] args)
+        {
+            return LoadDataSet(query, limit, 0, args);
+        }
+
+        /// <summary>
+        /// Load Data Set. Use this method, if you need load 2 or more tables from 1 query
+        /// </summary>
+        /// <param name="query">query</param>
+        /// <param name="limit">records count limit</param>
+        /// <param name="offset">records offset</param>
+        /// <param name="args">if need, you may load params</param>
+        /// <returns></returns>
+        public DataSet LoadDataSet(string query, int limit, int offset, params object[] args)
+        {
+            if (limit != 0 || offset != 0)
+            {
+                query = BuildLimits(query, limit, offset);
+            }
+
             DataSet set = new DataSet();
             DbDataAdapter adapter = null;
             try
@@ -354,14 +385,39 @@ namespace ITCreatings.Ndb
         #region DataTable
 
         /// <summary>
-        /// Load Data Table
+        /// Loads Data Table
         /// </summary>
-        /// <param name="query"></param>
-        /// <param name="args"></param>
+        /// <param name="query">SQL Query</param>
+        /// <param name="args">Filters</param>
         /// <returns></returns>
         public DataTable LoadDataTable(string query, params object[] args)
         {
-            DataSet set = LoadDataSet(query, args);
+            return LoadDataTable(query, 0, 0, args);
+        }
+
+        /// <summary>
+        /// Loads Data Table
+        /// </summary>
+        /// <param name="query">SQL Query</param>
+        /// <param name="limit">Records Limit</param>
+        /// <param name="args">Filters</param>
+        /// <returns></returns>
+        public DataTable LoadDataTable(string query, int limit, params object[] args)
+        {
+            return LoadDataTable(query, limit, 0, args);
+        }
+
+        /// <summary>
+        /// Loads Data Table
+        /// </summary>
+        /// <param name="query">SQL Query</param>
+        /// <param name="limit">Records Limit</param>
+        /// <param name="offset">Records Offset</param>
+        /// <param name="args">Filters</param>
+        /// <returns></returns>
+        public DataTable LoadDataTable(string query, int limit, int offset, params object[] args)
+        {
+            DataSet set = LoadDataSet(query, limit, offset, args);
             
             if (set.Tables.Count > 0)
                 return set.Tables[0];
@@ -587,6 +643,8 @@ namespace ITCreatings.Ndb
         }
 
         #endregion
+
+
         
         #region DDL
 
@@ -709,5 +767,7 @@ namespace ITCreatings.Ndb
         }
 
         #endregion
+
+        
     }
 }

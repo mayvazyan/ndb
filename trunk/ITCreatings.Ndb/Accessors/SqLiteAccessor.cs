@@ -10,6 +10,11 @@ namespace ITCreatings.Ndb.Accessors
 {
     internal class SqLiteAccessor : DbAccessor
     {
+        public override string BuildLimits(string query, int limit, int offset)
+        {
+            return string.Concat(query, " LIMIT ", offset.ToString(), ",", limit.ToString());
+        }
+
         protected override System.Data.Common.DbCommand Command(string query)
         {
             return new SQLiteCommand(query, new SQLiteConnection(ConnectionString));

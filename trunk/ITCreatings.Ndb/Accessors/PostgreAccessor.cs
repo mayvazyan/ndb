@@ -16,6 +16,11 @@ namespace ITCreatings.Ndb.Accessors
     {
         #region Core
 
+        public override string BuildLimits(string query, int limit, int offset)
+        {
+            return string.Concat(query, " LIMIT ", limit.ToString(), " OFFSET ", offset.ToString());
+        }
+
         protected override DbCommand Command(string query)
         {
             return new NpgsqlCommand(query, new NpgsqlConnection(ConnectionString));
@@ -28,7 +33,6 @@ namespace ITCreatings.Ndb.Accessors
 
         #endregion
 
-
         #region DDL
 
         internal override string GetIdentity(string pk)
@@ -37,7 +41,6 @@ namespace ITCreatings.Ndb.Accessors
         }
 
         #endregion
-
 
         #region SDL
 

@@ -188,6 +188,32 @@ namespace ITCreatings.Ndb.Tests
 
             Assert.AreEqual(1, gateway.LoadList<TestUser>("LastName", "Doe").Length);
         }
+
+        [Test]
+        public void LoadLimitedTest()
+        {
+            TestUser user = TestData.TestUser;
+            user.Email = "user2@example.com";
+            gateway.Insert(user);
+
+            user.Email = "user3@example.com";
+            gateway.Insert(user);
+
+            user.Email = "user4@example.com";
+            gateway.Insert(user);
+
+
+            TestUser[] users = gateway.LoadListLimited<TestUser>(2, 2);
+            Assert.AreEqual(2, users.Length);
+            Assert.AreEqual("user3@example.com", users[0].Email);
+            Assert.AreEqual("user4@example.com", users[1].Email);
+
+            users = gateway.LoadListLimited<TestUser>(3, 1);
+            Assert.AreEqual(3, users.Length);
+            Assert.AreEqual("user2@example.com", users[0].Email);
+            Assert.AreEqual("user3@example.com", users[1].Email);
+            Assert.AreEqual("user4@example.com", users[2].Email);
+        }
     }
 }
 #endif

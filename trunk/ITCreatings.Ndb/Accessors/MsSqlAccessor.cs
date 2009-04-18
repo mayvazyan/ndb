@@ -8,6 +8,21 @@ namespace ITCreatings.Ndb.Accessors
 {
     internal class MsSqlAccessor : DbAccessor
     {
+        /*WITH results AS
+(
+SELECT ROW_NUMBER() OVER (ORDER BY p.CreatedDate DESC, p.ProjectId DESC) AS Pager,
+*
+FROM dbo.Projects p
+WHERE (p.Name LIKE ‘ñàéò%’ )
+)
+SELECT *
+FROM results
+WHERE Pager BETWEEN 2 AND 7*/
+        public override string BuildLimits(string query, int limit, int offset)
+        {
+            throw new System.NotImplementedException();
+        }
+
         protected override DbCommand Command(string query)
         {
             return new SqlCommand(query, new SqlConnection(ConnectionString));

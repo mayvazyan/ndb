@@ -8,6 +8,11 @@ namespace ITCreatings.Ndb.Accessors
 {
     internal class MsSqlCeAccessor : DbAccessor
     {
+        public override string BuildLimits(string query, int limit, int offset)
+        {
+            throw new System.NotImplementedException();
+        }
+
         protected override DbCommand Command(string query)
         {
             return new SqlCeCommand(query, new SqlCeConnection(ConnectionString));

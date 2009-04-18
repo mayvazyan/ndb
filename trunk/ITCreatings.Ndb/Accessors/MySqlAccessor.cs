@@ -21,6 +21,11 @@ namespace ITCreatings.Ndb.Accessors
             return sql.Replace('@', '?');
         }
 
+        public override string BuildLimits(string query, int limit, int offset)
+        {
+            return string.Concat(query, " LIMIT ", offset.ToString(), ",", limit.ToString());
+        }
+
         protected override DbCommand Command(string query)
         {
             return new MySqlCommand(query, new MySqlConnection(ConnectionString));

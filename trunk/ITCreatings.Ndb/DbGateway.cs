@@ -410,6 +410,85 @@ namespace ITCreatings.Ndb
         }
 
         /// <summary>
+        /// Loads limited array of Objects
+        /// </summary>
+        /// <typeparam name="T">Type which has DbAttriibutes</typeparam>
+        /// <param name="limit">Objects Count Limit</param>
+        /// <param name="args">Filter values</param>
+        /// <returns>Array of requested objects</returns>
+        /// <example>
+        /// <code>
+        /// WorkLog [] list = DbGateway.Instance.LoadList{WorkLog}(7, "Type", WorkLogType.Default);
+        /// 
+        /// Type Definition:
+        /// 
+        ///    [DbRecord]
+        ///    public class WorkLog
+        ///    {
+        ///        [DbPrimaryKeyField]
+        ///        public ulong Id;
+        ///         
+        ///        [DbField] 
+        ///        public WorkLogType Type;
+        /// 
+        ///        ...
+        ///     }
+        /// 
+        ///     public enum WorkLogType : uint
+        ///     {
+        ///         Default,
+        ///         ...
+        ///     }
+        /// </code>
+        /// </example>
+        public T[] LoadListLimited<T>(int limit, params object[] args)
+        {
+            return LoadListLimited<T>(limit, 0, args);
+        }
+
+        /// <summary>
+        /// Loads limited array of Objects
+        /// </summary>
+        /// <typeparam name="T">Type which has DbAttriibutes</typeparam>
+        /// <param name="limit">Objects Count Limit</param>
+        /// <param name="offset">Objects Offset</param>
+        /// <param name="args">Filter values</param>
+        /// <returns>Array of requested objects</returns>
+        /// <example>
+        /// <code>
+        /// WorkLog [] list = DbGateway.Instance.LoadList{WorkLog}(7, 7, "Type", WorkLogType.Default);
+        /// 
+        /// Type Definition:
+        /// 
+        ///    [DbRecord]
+        ///    public class WorkLog
+        ///    {
+        ///        [DbPrimaryKeyField]
+        ///        public ulong Id;
+        ///         
+        ///        [DbField] 
+        ///        public WorkLogType Type;
+        /// 
+        ///        ...
+        ///     }
+        /// 
+        ///     public enum WorkLogType : uint
+        ///     {
+        ///         Default,
+        ///         ...
+        ///     }
+        /// </code>
+        /// </example>
+        public T[] LoadListLimited<T>(int limit, int offset, params object[] args)
+        {
+            DbRecordInfo info = DbAttributesManager.GetRecordInfo(typeof(T));
+
+            string query = DbAccessor.BuildWhere("SELECT * FROM " + info.TableName, args);
+
+            return loadRecords<T>(info, query, limit, offset, args);
+        }
+
+        /// <summary>
         /// Low level records loader
         /// </summary>
         /// <typeparam name="T">Type which has DbAttriibutes</typeparam>
@@ -423,8 +502,45 @@ namespace ITCreatings.Ndb
         /// </example>
         public T[] LoadRecords<T>(string query, params object[] args)
         {
+            return LoadRecords<T>(query, 0, 0, args);
+        }
+
+        /// <summary>
+        /// Low level records loader
+        /// </summary>
+        /// <typeparam name="T">Type which has DbAttriibutes</typeparam>
+        /// <param name="query">SQL query</param>
+        /// <param name="limit">Objects Count Limit</param>
+        /// <param name="args">filter values</param>
+        /// <returns>Array of requested objects</returns>
+        /// <example>
+        /// <code>
+        /// ViewRecordType[] list = DbGateway.Instance.LoadRecords{ViewRecordType}("SELECT ***.... ", 7, "UserId", UserId)
+        /// </code>
+        /// </example>
+        public T[] LoadRecords<T>(string query, int limit, params object[] args)
+        {
+            return LoadRecords<T>(query, limit, 0, args);
+        }
+
+        /// <summary>
+        /// Low level records loader
+        /// </summary>
+        /// <typeparam name="T">Type which has DbAttriibutes</typeparam>
+        /// <param name="query">SQL query</param>
+        /// <param name="limit">Objects Count Limit</param>
+        /// <param name="offset">Objects Offset</param>
+        /// <param name="args">filter values</param>
+        /// <returns>Array of requested objects</returns>
+        /// <example>
+        /// <code>
+        /// ViewRecordType[] list = DbGateway.Instance.LoadRecords{ViewRecordType}("SELECT ***.... ", 7, 7, "UserId", UserId)
+        /// </code>
+        /// </example>
+        public T[] LoadRecords<T>(string query, int limit, int offset, params object[] args)
+        {
             DbRecordInfo info = DbAttributesManager.GetRecordInfo(typeof(T));
-            return loadRecords<T>(info, query, args);
+            return loadRecords<T>(info, query, limit, offset, args);
         }
 
         /// <summary>
@@ -688,8 +804,17 @@ namespace ITCreatings.Ndb
 
         private T[] loadRecords<T>(DbRecordInfo info, string query, params object[] args)
         {
-            List<T> list = new List<T>();
+            return loadRecords<T>(info, query, 0, 0, args);
+        }
 
+        private T[] loadRecords<T>(DbRecordInfo info, string query, int limit, int offset, params object[] args)
+        {
+            if (limit != 0 || offset != 0)
+            {
+                query = Accessor.BuildLimits(query, limit, offset);
+            }
+
+            List<T> list = new List<T>();
             using (IDataReader reader = Accessor.ExecuteReader(query, args))
             {
                 try
