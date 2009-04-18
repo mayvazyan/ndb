@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<developerConceptualDocument
+  xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+  <!--
+  <summary>
+    <para>Optional summary abstract</para>
+  </summary>
+  -->
+
+  <introduction>
+    <!-- Uncomment this to generate an outline of the section and sub-section
+         titles.  Specify a numeric value as the inner text to limit it to
+         a specific number of sub-topics when creating the outline.  Specify
+         zero (0) to limit it to top-level sections only.  -->
+    <!-- <autoOutline /> -->
+
+    <para>Below you can find notes about each supported database engine</para>
+  </introduction>
+
+  <section address="Section1">
+    <title>MySQL</title>
+    <content>
+      <autoOutline />
+		<list class="bullet">
+		  <listItem>Ndb works with InnoDB tables engine (since it has foreign keys constraints)</listItem>
+		</list>
+    </content>
+  </section>
+  <section address="Section2">
+    <title>Postgre</title>
+    <content>
+		<list class="bullet">
+		  <listItem>Database and column names in database are lowercased</listItem>
+		  <listItem>There are no unsigned types in PostgreSQL therefore system use bigger type. For example Ndb uses int8 for UInt32 values storing</listItem>
+		</list>
+    </content>
+  </section>
+  <section address="Section3">
+    <title>SqLite</title>
+    <content>
+		<list class="bullet">
+		  <listItem>SqLite doesn't have foreign keys functionality therefore Ndb emulate them by generating triggers</listItem>
+		  <listItem>Besides poor ALTER TABLE support by SqLite, Ndb can't update it's tables now</listItem>
+		</list>
+    </content>
+  </section>  
+  <section address="Section4">
+    <title>MS SQL</title>
+    <content>
+		<list class="bullet">
+		  <listItem>MS SQL and MS SQL CE will be added soon</listItem>
+		</list>
+    </content>
+  </section>
+  <section address="Section5">
+    <title>Oracle</title>
+    <content>
+		<list class="bullet">
+		  <listItem>Sorry, but only in plans...</listItem>
+		</list>
+    </content>
+  </section>
+</developerConceptualDocument>

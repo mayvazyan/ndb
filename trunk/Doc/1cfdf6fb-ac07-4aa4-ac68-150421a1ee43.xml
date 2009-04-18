@@ -1,0 +1,212 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<developerConceptualDocument
+  xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+  <summary>
+    <para></para>
+  </summary>
+
+  <introduction>
+    <autoOutline />
+
+    <para>Ndb Library is an database access layer for .NET platform. It's provides the following features:</para>
+    
+	<list class="bullet">
+	  <listItem>Allows you to easily map your .NET classes to a database tables</listItem>
+	  <listItem>Using DbGateway - you can store, update, remove and load instances of the mapped classes</listItem>
+	  <listItem>Using DbStructureGateway - you can create, update, delete tables associated with your .NET classes</listItem>
+	</list>
+
+	<para>Ndb Library has the following advantages:</para>
+	<list class="bullet">
+		<listItem>You don't need to code standart actions like storing object to database</listItem>
+		<listItem>You can create database structure (tables, primary and foreign keys, indexes) for you project just from your assemblies</listItem>
+	</list>
+  </introduction>
+
+  <!-- Add one or more top-level section elements.  These are collapsible.
+       If using <autoOutline /> tag, add an address attribute to identify
+       it so that it can be jumped to with a hyperlink. -->
+  <section address="Section1">
+    <title>Connect to Database</title>
+    <content>
+      <autoOutline />
+      <para>Ndb implements several approaches to working with database. Below is a quick overview.</para>
+    </content>
+    <sections>
+        <section address="SubSection2">
+            <title>Singleton pattern approach (only one database supported)</title>
+            <content>
+                <para>All that you need is just use DbAccess.Instance property</para>
+				<code language="cs">
+				// connection settings being load from config
+				ulong count = DbAccessor.Instance.LoadCount("MyTable");
+				
+				// connections settings being set manually
+				// first approach
+				DbAccessor.InitInstance(Provider.MySql, "User=root;Database=my_db");
+
+				// second approach
+				DbAccessor.InitInstance(Provider.MySql);
+				DbAccessor.Instance.ConnectionString = "User=root;Database=my_db");
+				</code>
+            </content>
+        </section>
+        <section address="SubSection2">
+            <title>Factory Method pattern approach (several databases can be used at the same time)</title>
+            <content>
+                <para>All that you need is just use DbAccess.Instance property</para>
+				<code language="cs">
+				//first approach
+				DbAccessor dbAccessor = DbAccessor.Create(Provider.MySql, "User=root;Database=my_db");
+				ulong count = dbAccessor.LoadCount("MyTable");
+				
+				//second approach
+				DbAccessor dbAccessor = DbAccessor.Create(Provider.MySql);
+				dbAccessor.ConnectionString = "User=root;Database=my_db";
+				ulong count = dbAccessor.LoadCount("MyTable");
+				</code>
+            </content>
+        </section>
+        <section address="SubSection1">
+            <title>Configure database connection using application config file</title>
+            <content>
+                <code language="xml">
+				&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+				&lt;configuration&gt;
+				  &lt;connectionStrings&gt;
+				    &lt;clear/&gt;
+				    &lt;add connectionString=&quot;User=root;Database=my_db&quot; name=&quot;NdbConnection&quot; providerName=&quot;MySql&quot; /&gt;
+				  &lt;/connectionStrings&gt;
+				&lt;/configuration&gt;
+				</code>
+            </content>
+        </section>
+    </sections>
+  </section>
+  <section>
+  	<title>Database Data Access</title>
+  	<content>
+  		<para>
+			Ndb implements two patters: Gateway and Active Record.
+			It uses attributes to define objects mapping.
+		</para>
+  	</content>
+  	<sections>
+  		<section>
+  			<title>Gateway Pattern approach</title>
+  			<content>
+				<code language="cs">
+	  				User user = DbGateway.Instance.Load&lt;User&gt;(userId);
+
+				    [DbRecord]
+				    public class User
+				    {
+				    	[DbPrimaryKey] public ulong Id;
+				        [DbField] public RolesManager.Ids RoleId;
+				        [DbField] public string Email;
+				        [DbField] public string Password;
+				        [DbField] public string FirstName;
+				        [DbField] public string LastName;
+				
+				        public string FullName { get { return FirstName + " " + LastName; } }
+				    }
+				</code>
+  			</content>
+  		</section>
+  		<section>
+  			<title>Active Record Pattern approach</title>
+  			<content>
+				<code language="cs">
+	  				User user = new User { Id = userId };
+	  				bool success = user.Load();
+	  				if (success)
+		  				user.Delete();
+		  				
+
+				    [DbRecord]
+				    public class User : DbIdentityRecord
+				    {
+				        // class User inherits below field from DbIdentityRecord class
+				    	// [DbPrimaryKey] public ulong Id;
+				        [DbField] public RolesManager.Ids RoleId;
+				        [DbField] public string Email;
+				        [DbField] public string Password;
+				        [DbField] public string FirstName;
+				        [DbField] public string LastName;
+				
+				        public string FullName { get { return FirstName + " " + LastName; } }
+				    }
+				</code>
+  			</content>
+  		</section>
+  		<section>
+		  	<title>Database Structure Access</title>
+		  	<content>
+		  		<para>
+					Ndb allows you to create database structure based on your assemblies and types.
+					Also it can check is database structure and your types are syncronized, ie what all required tables and fields present in database
+				</para>
+
+			    <codeEntityReference>T:ITCreatings.DbStructureGateway</codeEntityReference> class provides all functionality needed to work this database structure
+				
+				<codeEntityReference>M:ITCreatings.DbStructureGateway.CreateTable</codeEntityReference>
+				<codeEntityReference>M:ITCreatings.DbStructureGateway.AlterTable</codeEntityReference>
+				<codeEntityReference>M:ITCreatings.DbStructureGateway.DropTable</codeEntityReference>
+				<codeEntityReference>M:ITCreatings.DbStructureGateway.IsValid</codeEntityReference>
+				
+				<code language="cs">
+				DbStructureGateway.Instance.CreateTable(typeof(User));
+				DbStructureGateway.Instance.AlterTable(typeof(User));
+				DbStructureGateway.Instance.DropTable(typeof(User));
+				DbStructureGateway.Instance.IsValid(typeof(User))
+				</code>
+
+		  	</content>
+		</section>
+  	</sections>
+  </section>
+  <relatedTopics>
+    <!-- One or more of the following:
+         - A local link
+         - An external link
+         - A code entity reference
+
+    <link xlink:href="Other Topic's ID"/>
+    <link xlink:href="Other Topic's ID">Link inner text</link>
+
+    <externalLink>
+        <linkText>Link text</linkText>
+        <linkAlternateText>Optional alternate link text</linkAlternateText>
+        <linkUri>URI</linkUri>
+    </externalLink>
+
+    <codeEntityReference>API member ID</codeEntityReference>
+
+    Examples:
+
+    <link xlink:href="00e97994-e9e6-46e0-b420-5be86b2f8270" />
+    <link xlink:href="00e97994-e9e6-46e0-b420-5be86b2f8278">Some other topic</link>
+
+    <externalLink>
+        <linkText>SHFB on CodePlex</linkText>
+        <linkAlternateText>Go to CodePlex</linkAlternateText>
+        <linkUri>http://www.codeplex.com/SHFB</linkUri>
+    </externalLink>
+
+    <codeEntityReference>T:TestDoc.TestClass</codeEntityReference>
+    <codeEntityReference>P:TestDoc.TestClass.SomeProperty</codeEntityReference>
+    <codeEntityReference>M:TestDoc.TestClass.#ctor</codeEntityReference>
+    <codeEntityReference>M:TestDoc.TestClass.#ctor(System.String,System.Int32)</codeEntityReference>
+    <codeEntityReference>M:TestDoc.TestClass.ToString</codeEntityReference>
+    <codeEntityReference>M:TestDoc.TestClass.FirstMethod</codeEntityReference>
+    <codeEntityReference>M:TestDoc.TestClass.SecondMethod(System.Int32,System.String)</codeEntityReference>
+    -->
+    <!--
+    <codeEntityReference>T:Ndb.DbAccessor</codeEntityReference>
+    <codeEntityReference>T:Ndb.DbGateway</codeEntityReference>
+    <codeEntityReference>T:Ndb.DbStructureGateway</codeEntityReference>
+  -->
+  </relatedTopics>
+</developerConceptualDocument>
