@@ -1,0 +1,62 @@
+﻿<project schemaVersion="1.6.0.7">
+    <assemblies>
+        <assembly assemblyPath=".\ITCreatings.Ndb\bin\Release\ITCreatings.Ndb.dll" xmlCommentsPath=".\ITCreatings.Ndb\bin\Release\ITCreatings.Ndb.xml" commentsOnly="False" />
+    </assemblies>
+    <namespaceSummaries>
+        <namespaceSummaryItem name="" isDocumented="False" />
+        <namespaceSummaryItem name="ITCreatings.Ndb" isDocumented="True">Contains core objects of the Ndb library</namespaceSummaryItem>
+        <namespaceSummaryItem name="ITCreatings.Ndb.ActiveRecord" isDocumented="True">Contains implementation of the "ActiveRecord" pattern</namespaceSummaryItem>
+        <namespaceSummaryItem name="ITCreatings.Ndb.Attributes" isDocumented="True">Contains attributes which needed in order to use Ndb library</namespaceSummaryItem>
+        <namespaceSummaryItem name="ITCreatings.Ndb.Attributes.Indexes" isDocumented="True">Contains attributes which allow to define indexes</namespaceSummaryItem>
+        <namespaceSummaryItem name="ITCreatings.Ndb.Attributes.Keys" isDocumented="True">Contains attributes which allow to define Primary and Foreign keys</namespaceSummaryItem>
+        <namespaceSummaryItem name="ITCreatings.Ndb.Exceptions" isDocumented="True">Contains exceptions which can be throwed by Ndb</namespaceSummaryItem>
+        <namespaceSummaryItem name="ITCreatings.Ndb.Tests" isDocumented="True">Constains helper methods for Unit Tests</namespaceSummaryItem>
+    </namespaceSummaries>
+    <conceptualContent snippetFile="">
+        <topics defaultTopic="1cfdf6fb-ac07-4aa4-ac68-150421a1ee43">
+            <topic id="1cfdf6fb-ac07-4aa4-ac68-150421a1ee43" file=".\Doc\1cfdf6fb-ac07-4aa4-ac68-150421a1ee43.xml" title="Overview" revision="1" visible="True" />
+            <topic id="4887827b-f073-4b11-8496-0959eac404d3" file=".\Doc\4887827b-f073-4b11-8496-0959eac404d3.xml" title="Database providers notes" revision="1" visible="True" />
+        </topics>
+    </conceptualContent>
+    <ProjectSummary>Root namespace of the Ndb .NET Data Access Library.</ProjectSummary>
+    <MissingTags>Summary, AutoDocumentCtors, Namespace</MissingTags>
+    <VisibleItems>InheritedMembers, Protected</VisibleItems>
+    <HtmlHelp1xCompilerPath path="" />
+    <HtmlHelp2xCompilerPath path="" />
+    <OutputPath>.\Help\</OutputPath>
+    <SandcastlePath path="" />
+    <WorkingPath path="" />
+    <CleanIntermediates>True</CleanIntermediates>
+    <KeepLogFile>False</KeepLogFile>
+    <BuildLogFile path="" />
+    <HelpFileFormat>Help1xAndWebsite</HelpFileFormat>
+    <CppCommentsFixup>False</CppCommentsFixup>
+    <FrameworkVersion>2.0.50727</FrameworkVersion>
+    <IndentHtml>False</IndentHtml>
+    <Preliminary>False</Preliminary>
+    <RootNamespaceContainer>False</RootNamespaceContainer>
+    <RootNamespaceTitle />
+    <HelpTitle>Ndb Library</HelpTitle>
+    <HtmlHelpName>Ndb Documentation</HtmlHelpName>
+    <Language>en-US</Language>
+    <CopyrightHref />
+    <CopyrightText>Copyright © all rights reserved</CopyrightText>
+    <FeedbackEMailAddress />
+    <FeedbackEMailLinkText />
+    <HeaderText />
+    <FooterText />
+    <ProjectLinkType>Local</ProjectLinkType>
+    <SdkLinkType>Msdn</SdkLinkType>
+    <SdkLinkTarget>Blank</SdkLinkTarget>
+    <PresentationStyle>vs2005</PresentationStyle>
+    <NamingMethod>MemberName</NamingMethod>
+    <SyntaxFilters>Standard</SyntaxFilters>
+    <ShowFeedbackControl>True</ShowFeedbackControl>
+    <BinaryTOC>True</BinaryTOC>
+    <IncludeFavorites>True</IncludeFavorites>
+    <CollectionTocStyle>Hierarchical</CollectionTocStyle>
+    <IncludeStopWordList>True</IncludeStopWordList>
+    <PlugInNamespaces>ms.vsipcc+, ms.vsexpresscc+</PlugInNamespaces>
+    <HelpFileVersion>1.0.7.46</HelpFileVersion>
+    <ContentPlacement>AboveNamespaces</ContentPlacement>
+</project>
