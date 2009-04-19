@@ -11,19 +11,36 @@ namespace ITCreatings.Ndb.ActiveRecord
     public abstract class DbActiveRecord
     {
         /// <summary>
+        /// Underlaid Db Gateway
+        /// </summary>
+        public DbGateway Gateway { get; private set; }
+
+        /// <summary>
         /// Accessor table name
         /// </summary>
         protected string TableName { get { return DbAttributesManager.GetTableName(GetType()); } }
 
         /// <summary>
-        /// Helper accessor
-        /// </summary>
-        protected static DbAccessor Db { get { return DbAccessor.Instance; } }
-
-        /// <summary>
         /// Loads Record Count from Database
         /// </summary>
-        public ulong Count { get { return DbGateway.Instance.LoadCount(GetType()); } }
+        public ulong Count { get { return Gateway.LoadCount(GetType()); } }
+
+        /// <summary>
+        /// By default ActiveRecord uses DbGateway.Instance in database access purposes
+        /// </summary>
+        protected DbActiveRecord()
+            : this(DbGateway.Instance)
+        {
+        }
+        
+        ///<summary>
+        /// Main constructor for ActiveRecord
+        ///</summary>
+        ///<param name="gateway"></param>
+        protected DbActiveRecord(DbGateway gateway)
+        {
+            Gateway = gateway;
+        }
 
         /// <summary>
         /// Removes Object from Database
@@ -31,7 +48,7 @@ namespace ITCreatings.Ndb.ActiveRecord
         /// <returns></returns>
         public bool Delete()
         {
-            return DbGateway.Instance.Delete(this);
+            return Gateway.Delete(this);
         }
         
         /// <summary>
@@ -39,7 +56,7 @@ namespace ITCreatings.Ndb.ActiveRecord
         /// </summary>
         public void Save()
         {
-            DbGateway.Instance.Save(this);
+            Gateway.Save(this);
         }
 
         /// <summary>
@@ -49,7 +66,7 @@ namespace ITCreatings.Ndb.ActiveRecord
         /// <param name="args"></param>
         public bool LoadByMatch(params object[] args)
         {
-            return DbGateway.Instance.Load(this, args);
+            return Gateway.Load(this, args);
         }
 
         /// <summary>
@@ -64,7 +81,7 @@ namespace ITCreatings.Ndb.ActiveRecord
         /// </example>
         public uint Delete(params object[] args)
         {
-            return DbGateway.Instance.Delete(GetType(), args);
+            return Gateway.Delete(GetType(), args);
         }
 
         /// <summary>
@@ -73,7 +90,7 @@ namespace ITCreatings.Ndb.ActiveRecord
         /// <returns>Removed Records Count</returns>
         protected uint DeleteByAllFields()
         {
-            return DbGateway.Instance.DeleteByAllFields(this);
+            return Gateway.DeleteByAllFields(this);
         }
 
     }

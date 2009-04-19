@@ -1,5 +1,4 @@
-﻿#if DEBUG
-using Enyim.Caching;
+﻿using Enyim.Caching;
 using Enyim.Caching.Memcached;
 
 namespace ITCreatings.Ndb
@@ -18,6 +17,7 @@ namespace ITCreatings.Ndb
         {
             get
             {
+                //TODO: add multithread support?
                 if (cache == null)
                     cache = new MemcachedClient();
 
@@ -60,4 +60,3 @@ namespace ITCreatings.Ndb
         }
     }
 }
-#endif

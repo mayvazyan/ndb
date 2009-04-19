@@ -11,15 +11,17 @@ namespace ITCreatings.Ndb.Tests.Core
         [Test]
         public void LoadListTest()
         {
-            DbCachedGateway gateway = new DbCachedGateway(DbGateway.Instance);
-            const string key = "key";
+            DbCachedGateway cachedGateway = new DbCachedGateway(DbGateway.Instance);
+            const string KEY = "key";
 
-            Assert.IsNull(DbCachedGateway.Cache.Get(key));
+            Assert.IsNull(DbCachedGateway.Cache.Get(KEY));
 
-            var list = gateway.LoadList<TestUser>(key);
+            var list = cachedGateway.LoadList<TestUser>(KEY);
             Assert.Less(0, list.Length);
 
-            Assert.IsNotNull(DbCachedGateway.Cache.Get(key));
+            Assert.IsNotNull(DbCachedGateway.Cache.Get(KEY));
+            var list2 = cachedGateway.LoadList<TestUser>(KEY);
+            Assert.Less(list.Length, list2.Length);
         }
     }
 }
