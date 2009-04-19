@@ -18,9 +18,15 @@
             <topic id="4887827b-f073-4b11-8496-0959eac404d3" file=".\Doc\4887827b-f073-4b11-8496-0959eac404d3.xml" title="Database providers notes" revision="1" visible="True" />
         </topics>
     </conceptualContent>
+    <dependencies>
+        <dependencyItem depPath=".\ITCreatings.Ndb\bin\Release\Enyim.Caching.dll" />
+        <dependencyItem depPath=".\ITCreatings.Ndb\bin\Release\MySql.Data.dll" />
+        <dependencyItem depPath=".\ITCreatings.Ndb\bin\Release\Npgsql.dll" />
+        <dependencyItem depPath=".\ITCreatings.Ndb\bin\Release\System.Data.SQLite.DLL" />
+    </dependencies>
     <ProjectSummary>Root namespace of the Ndb .NET Data Access Library.</ProjectSummary>
-    <MissingTags>Summary, AutoDocumentCtors, Namespace</MissingTags>
-    <VisibleItems>InheritedMembers, Protected</VisibleItems>
+    <MissingTags>Summary, Namespace</MissingTags>
+    <VisibleItems>Protected</VisibleItems>
     <HtmlHelp1xCompilerPath path="" />
     <HtmlHelp2xCompilerPath path="" />
     <OutputPath>.\Help\</OutputPath>
