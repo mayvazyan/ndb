@@ -134,7 +134,7 @@ namespace ITCreatings.Ndb.Accessors
             }
 
             List<string> list = new List<string>(info.Fields.Length);
-            foreach (FieldInfo field in info.Fields)
+            foreach (DbFieldInfo field in info.Fields)
             {
                 list.Add(field.Name);
             }
@@ -175,7 +175,7 @@ ALTER SEQUENCE tablename_colname_seq OWNED BY tablename.colname;*/
             StringBuilder sb = new StringBuilder("CREATE TABLE " + info.TableName + " (");
             if (info is DbIdentityRecordInfo)
             {
-                FieldInfo pk = (info as DbIdentityRecordInfo).PrimaryKey;
+                DbFieldInfo pk = (info as DbIdentityRecordInfo).PrimaryKey;
 
                 string sequenceName = string.Format("{0}_{1}_seq", info.TableName, pk.Name);
                 sb.Insert(0, "CREATE SEQUENCE " + sequenceName + ";");
@@ -186,7 +186,7 @@ ALTER SEQUENCE tablename_colname_seq OWNED BY tablename.colname;*/
                 sb.Append(',');
             }
 
-            foreach (FieldInfo field in info.Fields)
+            foreach (DbFieldInfo field in info.Fields)
             {
                 sb.Append(getDefinition(field));
                 sb.Append(',');
@@ -206,7 +206,7 @@ ALTER SEQUENCE tablename_colname_seq OWNED BY tablename.colname;*/
 //            ProcessIndexes(sb, indexes.FullText, ",FULLTEXT KEY {1} ({0})");
 
             //process foreign keys
-            foreach (KeyValuePair<Type, FieldInfo> key in info.ForeignKeys)
+            foreach (KeyValuePair<Type, DbFieldInfo> key in info.ForeignKeys)
             {
                 DbIdentityRecordInfo ri = DbAttributesManager.GetRecordInfo(key.Key) as DbIdentityRecordInfo;
                 if (ri == null)

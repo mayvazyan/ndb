@@ -8,13 +8,13 @@ namespace ITCreatings.Ndb.Core
     /// </summary>
     internal class DbIdentityRecordInfo : DbRecordInfo
     {
-        public FieldInfo PrimaryKey;
+        public DbFieldInfo PrimaryKey;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="primaryKey"></param>
-        public DbIdentityRecordInfo(FieldInfo primaryKey)
+        public DbIdentityRecordInfo(DbFieldInfo primaryKey)
         {
             PrimaryKey = primaryKey;
         }

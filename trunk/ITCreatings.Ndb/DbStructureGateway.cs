@@ -176,7 +176,7 @@ namespace ITCreatings.Ndb
             if (IsTableExists(info.TableName))
                 return;
 
-            foreach (KeyValuePair<Type, FieldInfo> key in info.ForeignKeys)
+            foreach (KeyValuePair<Type, DbFieldInfo> key in info.ForeignKeys)
             {
                 DbIdentityRecordInfo primaryInfo = DbAttributesManager.GetRecordInfo(key.Key) as DbIdentityRecordInfo;
                 if (primaryInfo == null)
@@ -326,7 +326,7 @@ namespace ITCreatings.Ndb
 
         private void AlterTableEx(DbRecordInfo info)
         {
-            foreach (KeyValuePair<Type, FieldInfo> key in info.ForeignKeys)
+            foreach (KeyValuePair<Type, DbFieldInfo> key in info.ForeignKeys)
             {
                 DbIdentityRecordInfo primaryInfo = DbAttributesManager.GetRecordInfo(key.Key) as DbIdentityRecordInfo;
                 if (primaryInfo == null)

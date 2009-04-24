@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace ITCreatings.Ndb.Core
 {
@@ -11,8 +10,8 @@ namespace ITCreatings.Ndb.Core
     {
         public Type RecordType;
         public string TableName;
-        public FieldInfo[] Fields;
-        public Dictionary<Type, FieldInfo> ForeignKeys;
+        public DbFieldInfo[] Fields;
+        public Dictionary<Type, DbFieldInfo> ForeignKeys;
 
         /// <summary>
         /// returns Key-Value collection

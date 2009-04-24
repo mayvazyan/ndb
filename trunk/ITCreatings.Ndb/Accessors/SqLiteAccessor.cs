@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
@@ -126,7 +125,7 @@ namespace ITCreatings.Ndb.Accessors
                 sb.Append(',');
             }
 
-            foreach (FieldInfo field in info.Fields)
+            foreach (DbFieldInfo field in info.Fields)
             {
                 sb.Append(getDefinition(field));
                 sb.Append(',');
@@ -153,7 +152,7 @@ namespace ITCreatings.Ndb.Accessors
 
         private void createTriggers(DbRecordInfo info)
         {
-            foreach (KeyValuePair<Type, FieldInfo> key in info.ForeignKeys)
+            foreach (KeyValuePair<Type, DbFieldInfo> key in info.ForeignKeys)
             {
                 DbIdentityRecordInfo keyInfo = DbAttributesManager.GetRecordInfo(key.Key) as DbIdentityRecordInfo;
                 if (keyInfo == null)

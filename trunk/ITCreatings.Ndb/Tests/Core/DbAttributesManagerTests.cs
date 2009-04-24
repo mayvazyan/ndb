@@ -26,6 +26,8 @@ namespace ITCreatings.Ndb.Tests.Core
             Assert.AreEqual(1, info.ForeignKeys.Count);
             Assert.IsNotNull(info.ForeignKeys[typeof(TestUser)]);
             Assert.AreEqual("WorkLogs", info.TableName);
+            Assert.AreEqual("SpentMinutes", info.Fields[2].Name);
+            Assert.AreEqual("CreationDate", info.Fields[3].Name);
             Assert.AreEqual(6, info.Fields.Length);
         }
 

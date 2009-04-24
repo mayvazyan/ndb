@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.Common;
-using System.Reflection;
 using System.Text;
 using ITCreatings.Ndb.Accessors;
 using ITCreatings.Ndb.Core;
@@ -598,7 +597,7 @@ namespace ITCreatings.Ndb
         /// </summary>
         /// <param name="field"></param>
         /// <returns>SDL column definition</returns>
-        protected string getDefinition(FieldInfo field)
+        protected string getDefinition(DbFieldInfo field)
         {
             StringBuilder sb = new StringBuilder(field.Name);
             sb.Append(' ');

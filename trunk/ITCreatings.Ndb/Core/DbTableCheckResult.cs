@@ -30,7 +30,7 @@ namespace ITCreatings.Ndb.Core
             FieldsToUpdate = new Dictionary<string, string>();
 
             DbFieldCheckResult checker = new DbFieldCheckResult(accessor);
-            foreach (FieldInfo fi in info.Fields)
+            foreach (DbFieldInfo fi in info.Fields)
             {
                 checker.Process(fields, fi);
 
@@ -49,7 +49,7 @@ namespace ITCreatings.Ndb.Core
 
             DbFieldCheckResult checker = new DbFieldCheckResult(accessor);
 
-            foreach (FieldInfo fi in info.Fields)
+            foreach (DbFieldInfo fi in info.Fields)
             {
                 checker.Process(fields, fi);
 

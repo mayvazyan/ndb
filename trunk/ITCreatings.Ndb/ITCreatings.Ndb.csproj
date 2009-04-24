@@ -107,6 +107,7 @@
     <Compile Include="Core\DbIdentityRecordInfo.cs" />
     <Compile Include="Core\DbIndexesInfo.cs" />
     <Compile Include="Core\DbTableCheckResult.cs" />
+    <Compile Include="Core\DbFieldInfo.cs" />
     <Compile Include="DbCachedGateway.cs" />
     <Compile Include="DbStructureGateway.cs" />
     <Compile Include="DbGateway.cs" />

@@ -29,7 +29,7 @@ namespace ITCreatings.Ndb.Tests.Data
 
         [DbField]
         public uint SpentMinutes;
-        [DbField]
+        [DbField(Name = "CreationDate")]
         public DateTime Date;
         [DbField]
         public string Description;

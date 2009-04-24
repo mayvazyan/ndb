@@ -4,6 +4,7 @@ using System.Reflection;
 using ITCreatings.Ndb.Attributes;
 using ITCreatings.Ndb.Attributes.Indexes;
 using ITCreatings.Ndb.Attributes.Keys;
+using NUnit.Framework.SyntaxHelpers;
 
 namespace ITCreatings.Ndb.Core
 {
@@ -47,9 +48,9 @@ namespace ITCreatings.Ndb.Core
         {
             if (!records.ContainsKey(type))
             {
-                FieldInfo primaryKey = null;
-                List<FieldInfo> dbFields = new List<FieldInfo>();
-                Dictionary<Type, FieldInfo> foreignKeys = new Dictionary<Type, FieldInfo>();
+                DbFieldInfo primaryKey = null;
+                List<DbFieldInfo> dbFields = new List<DbFieldInfo>();
+                Dictionary<Type, DbFieldInfo> foreignKeys = new Dictionary<Type, DbFieldInfo>();
 
                 FieldInfo[] fields = type.GetFields();
                 foreach (FieldInfo field in fields)
@@ -57,20 +58,41 @@ namespace ITCreatings.Ndb.Core
                     object[] attributes = field.GetCustomAttributes(typeof(DbFieldAttribute), true);
                     if (attributes.Length > 0)
                     {
+                        List<Type> foreignTypes = new List<Type>(attributes.Length);
+                        bool isPrimary = false;
+                        string Name = null;
                         foreach (DbFieldAttribute attribute in attributes)
                         {
-//                            DbFieldAttribute attribute = (DbFieldAttribute)attributes[0];// as DbPrimaryKeyFieldAttribute;
+                            if (string.IsNullOrEmpty(Name))
+                                Name = attribute.Name;
+
                             if (attribute is DbPrimaryKeyFieldAttribute)
-                                primaryKey = field;
+                            {
+                                isPrimary = true;
+                            }
                             else
                             {
                                 var dbForeignKeyFieldAttribute = attribute as DbForeignKeyFieldAttribute;
                                 if (dbForeignKeyFieldAttribute != null)
-                                    foreignKeys.Add(dbForeignKeyFieldAttribute.Type, field);
+                                    foreignTypes.Add(dbForeignKeyFieldAttribute.Type);
+//                                    foreignKeys.Add(dbForeignKeyFieldAttribute.Type, dbFieldInfo);
                             }
                         }
-                        if (primaryKey != field)
-                            dbFields.Add(field);
+                        DbFieldInfo dbFieldInfo = new DbFieldInfo(field, Name);
+
+                        if (isPrimary)
+                        {
+                            primaryKey = dbFieldInfo;
+                        }
+                        else
+                        {
+                            dbFields.Add(dbFieldInfo);
+                        }
+
+                        foreach (Type foreignType in foreignTypes)
+                        {
+                            foreignKeys.Add(foreignType, dbFieldInfo);
+                        }
                     }
                 }
 
@@ -121,13 +143,6 @@ namespace ITCreatings.Ndb.Core
             return views[type];
         }*/
 
-
-//        public static Type[] LoadDbRecordTypes()
-//        {
-//            return LoadDbRecordTypes(Assembly);
-//        }
-
-        
         /// <summary>
         /// Load all types with DbRecordAttribute
         /// </summary>
@@ -147,13 +162,13 @@ namespace ITCreatings.Ndb.Core
             return list.ToArray();
         }
 
-        public static DbIndexesInfo GetIndexes(FieldInfo[] fields)
+        public static DbIndexesInfo GetIndexes(DbFieldInfo[] fields)
         {
             var indexesInfo = new DbIndexesInfo();
 
             foreach (var field in fields)
             {
-                object[] attributes = field.GetCustomAttributes(true);
+                object[] attributes = field.GetCustomAttributes();
                 foreach (var _attribute in attributes)
                 {
                     var attribute = _attribute as DbIndexedFieldAttribute;

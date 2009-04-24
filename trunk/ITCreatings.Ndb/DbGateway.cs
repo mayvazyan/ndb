@@ -677,7 +677,7 @@ namespace ITCreatings.Ndb
             var identityRecordInfo = info as DbIdentityRecordInfo;
             if (identityRecordInfo != null)
             {
-                FieldInfo primaryKey = identityRecordInfo.PrimaryKey;
+                DbFieldInfo primaryKey = identityRecordInfo.PrimaryKey;
 
                 return 0 < Accessor.Delete(
                                 info.TableName,
@@ -742,14 +742,14 @@ namespace ITCreatings.Ndb
             if (identityRecordInfo != null)
                 setValue(identityRecordInfo.PrimaryKey, data, row[identityRecordInfo.PrimaryKey.Name]);
 
-            foreach (FieldInfo field in info.Fields)
+            foreach (DbFieldInfo field in info.Fields)
             {
                 setValue(field, data, row[field.Name]);
                 
             }
         }
 
-        private static void setValue(FieldInfo field, object data, object value)
+        private static void setValue(DbFieldInfo field, object data, object value)
         {
             try
             {

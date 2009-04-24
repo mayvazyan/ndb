@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace ITCreatings.Ndb.Core
 {
@@ -26,7 +25,7 @@ namespace ITCreatings.Ndb.Core
             this.accessor = accessor;
         }
 
-        public void Process(Dictionary<string, string> fields, FieldInfo fi)
+        public void Process(Dictionary<string, string> fields, DbFieldInfo fi)
         {
             Type fieldType = fi.FieldType;
             SqlType = accessor.GetSqlType(fieldType);
