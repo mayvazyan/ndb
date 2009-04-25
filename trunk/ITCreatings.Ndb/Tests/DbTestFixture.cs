@@ -1,6 +1,7 @@
 ﻿#if DEBUG
 using System;
 using System.Reflection;
+using ITCreatings.Ndb.Accessors;
 using ITCreatings.Ndb.Tests.Data;
 using NUnit.Framework;
 
@@ -40,15 +41,25 @@ namespace ITCreatings.Ndb.Tests
 
         public void CreateTables()
         {
-            var types = new []
-                            {
-//                                typeof (TestGuidRecord), 
-                                typeof (TestUser), 
-                                typeof (TasksAssignment), 
-                                typeof (Task), 
-                                typeof (Event), 
-                                typeof (TestWorkLog)
-                            };
+            //Add to GUID support to Postgree and SQLite and remove below fix
+            var types = (gateway.Accessor is MySqlAccessor)
+                            ? new[]
+                                  {
+                                      typeof (TestGuidRecord),
+                                      typeof (TestUser),
+                                      typeof (TasksAssignment),
+                                      typeof (Task),
+                                      typeof (Event),
+                                      typeof (TestWorkLog)
+                                  }
+                            : new[]
+                                  {
+                                      typeof (TestUser),
+                                      typeof (TasksAssignment),
+                                      typeof (Task),
+                                      typeof (Event),
+                                      typeof (TestWorkLog)
+                                  };
 
             sgateway.CreateTables(types);
         }

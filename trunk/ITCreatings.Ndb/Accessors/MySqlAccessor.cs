@@ -192,7 +192,14 @@ namespace ITCreatings.Ndb.Accessors
             StringBuilder sb = new StringBuilder("CREATE TABLE " + info.TableName + "(");
             if (info is DbIdentityRecordInfo)
             {
-                sb.Append(getDefinition((info as DbIdentityRecordInfo).PrimaryKey) + " NOT NULL auto_increment");
+                DbFieldInfo key = ((DbIdentityRecordInfo)info).PrimaryKey;
+                if (key.FieldType == typeof(Guid))
+                {
+                    sb.Append(getDefinition(key) + " NOT NULL");
+                }
+                else
+                    sb.Append(getDefinition(key) + " NOT NULL auto_increment");
+
                 sb.Append(',');
             }
 

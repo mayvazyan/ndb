@@ -20,9 +20,9 @@ namespace ITCreatings.Ndb.Core
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public object [] GetValues(object data)
+        public object [] GetValues(object data, params object[] argsToAppend)
         {
-            object[] args = new object[Fields.Length*2];
+            object[] args = new object[Fields.Length * 2 + argsToAppend.Length];
 
             int j = 0;
             for (int i = 0; i < Fields.Length; i++)
@@ -30,9 +30,11 @@ namespace ITCreatings.Ndb.Core
                 args[j++] = Fields[i].Name;
                 args[j++] = Fields[i].GetValue(data);
             }
+            argsToAppend.CopyTo(args, j);
 
             return args;
         }
+        
 
         public static bool IsNull(object value)
         {

@@ -23,28 +23,29 @@ namespace ITCreatings.Ndb.Tests
             Assert.IsTrue(gateway.Accessor.CanConnect);
         }
         
-        /*[Test]
+        [Test]
         public void GuidTest()
         {
             TestGuidRecord record = TestData.CreateTestGuidRecord("test");
-            DbTestUtils.SaveTest(record);
+            Assert.IsTrue(DbTestUtils.SaveTest(record));
 
             record.Title = "test2";
-            DbTestUtils.UpdateTest(record);
+            Assert.IsTrue(DbTestUtils.UpdateTest(record));
 
 
             var workLog2 = gateway.Load<TestGuidRecord>(record.Guid);
-
+            
+            Assert.IsNotNull(workLog2);
             assert(record, workLog2);
 
             var workLog3 = new TestGuidRecord();
-            Assert.IsTrue(gateway.Load(workLog3, "Id", record.Guid));
+            Assert.IsTrue(gateway.Load(workLog3, "Guid", record.Guid));
             assert(record, workLog3);
 
             DbTestUtils.DeleteTest(record);
 
             Assert.IsNull(gateway.Load<TestGuidRecord>(record.Guid));
-        }*/
+        }
 
         [Test]
         public void GatewayCoreTest()
@@ -141,6 +142,12 @@ namespace ITCreatings.Ndb.Tests
             Assert.IsNotNull(testUser);
             Assert.AreEqual(testUser.Id, TestData.TestUser.Id);
             Assert.AreEqual(testUser.FullName, TestData.TestUser.FullName);
+        }
+
+        [Test]
+        public void LoadSetTest()
+        {
+            
         }
 
         [Test]

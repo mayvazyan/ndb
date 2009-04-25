@@ -585,8 +585,12 @@ namespace ITCreatings.Ndb
         {
             var info = DbAttributesManager.GetRecordInfo(data.GetType());
 
-            if (info is DbIdentityRecordInfo)
-                save(data, info as DbIdentityRecordInfo);
+            DbIdentityRecordInfo identityInfo = info as DbIdentityRecordInfo;
+
+            if (identityInfo != null)
+            {
+                save(data, identityInfo);
+            }
             else
                 Accessor.Insert(info.TableName, info.GetValues(data));
         }
@@ -740,7 +744,17 @@ namespace ITCreatings.Ndb
             var identityRecordInfo = info as DbIdentityRecordInfo;
 
             if (identityRecordInfo != null)
-                setValue(identityRecordInfo.PrimaryKey, data, row[identityRecordInfo.PrimaryKey.Name]);
+            {
+                DbFieldInfo pkey = identityRecordInfo.PrimaryKey;
+                object value = row[pkey.Name];
+
+                if (pkey.FieldType == typeof(Guid) && value is string) // fix for MySQL since it doesn't have Guid column type
+                {
+                    value = new Guid((string)value);
+                }
+                
+                setValue(pkey, data, value);
+            }
 
             foreach (DbFieldInfo field in info.Fields)
             {
@@ -778,9 +792,20 @@ namespace ITCreatings.Ndb
 
         private void save(object data, DbIdentityRecordInfo info)
         {
+            DbFieldInfo primaryKey = info.PrimaryKey;
+                
             if (!info.IsPrimaryKeyValid(data))
             {
-                insert(info, data);
+                if (primaryKey.FieldType == typeof(Guid))
+                {
+                    Guid guid = Guid.NewGuid();
+                    primaryKey.SetValue(data, guid);
+
+                    object[] values = info.GetValues(data, primaryKey.Name, guid);
+                    Accessor.Insert(info.TableName, values);
+                }
+                else
+                    insert(info, data);
             }
             else
                 update(info, data);
