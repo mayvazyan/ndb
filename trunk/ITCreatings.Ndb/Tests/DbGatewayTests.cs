@@ -26,6 +26,9 @@ namespace ITCreatings.Ndb.Tests
         [Test]
         public void GuidTest()
         {
+            if (!gateway.Accessor.IsMySql)
+                Assert.Ignore("Supported only by MySQL currently");
+
             TestGuidRecord record = TestData.CreateTestGuidRecord("test");
             Assert.IsTrue(DbTestUtils.SaveTest(record));
 

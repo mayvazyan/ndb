@@ -41,8 +41,8 @@ namespace ITCreatings.Ndb.Tests
 
         public void CreateTables()
         {
-            //Add to GUID support to Postgree and SQLite and remove below fix
-            var types = (gateway.Accessor is MySqlAccessor)
+            //TODO: Add to GUID support to Postgree and SQLite and remove below fix
+            var types = (gateway.Accessor.IsMySql)
                             ? new[]
                                   {
                                       typeof (TestGuidRecord),
