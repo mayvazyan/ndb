@@ -98,7 +98,11 @@ namespace ITCreatings.Ndb.Accessors
             if (type == typeof(DateTime))
                 return "timestamp";
 
-            throw new NdbException("can't find MySql type for the .NET Type" + type);
+            if (type == typeof(Double)) return "float";
+            if (type == typeof(Decimal)) return "float";
+            if (type == typeof(Boolean)) return "BOOLEAN";
+
+            throw new NdbException("can't find Postgre type for the .NET Type - " + type);
         }
 
         public override bool DropTable(string TableName)

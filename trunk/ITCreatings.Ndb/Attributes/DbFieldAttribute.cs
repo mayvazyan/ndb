@@ -26,5 +26,21 @@ namespace ITCreatings.Ndb.Attributes
         /// </example>
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="name">Name of the associated column</param>
+        public DbFieldAttribute(string name)
+        {
+            Name = name;
+        }
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public DbFieldAttribute()
+        {
+        }
     }
 }

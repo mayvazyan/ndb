@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.Common;
+using System.Diagnostics;
 using System.Text;
 using ITCreatings.Ndb.Accessors;
 using ITCreatings.Ndb.Core;
@@ -239,7 +240,11 @@ namespace ITCreatings.Ndb
         /// <returns></returns>
         protected virtual DbCommand Command(string query, params object[] par)
         {
-            var command = Command(Format(query));
+            string formatedQuery = Format(query);
+            
+            Debug.WriteLine(formatedQuery);
+
+            var command = Command(formatedQuery);
 
             for (int i = 0; i < par.Length; i += 2)
             {

@@ -91,7 +91,11 @@ namespace ITCreatings.Ndb.Accessors
             }
 
             if (type == typeof(DateTime))
-                return "datetime";
+                return "TIMESTAMP";
+
+            if (type == typeof(Double)) return "FLOAT";
+            if (type == typeof(Decimal)) return "FLOAT";
+            if (type == typeof(Boolean)) return "BOOLEAN";
 
             throw new NdbException("can't find SqLite type for the .NET Type" + type);
         }

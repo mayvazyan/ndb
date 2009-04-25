@@ -178,19 +178,22 @@ namespace ITCreatings.Ndb
 
             foreach (KeyValuePair<Type, DbFieldInfo> key in info.ForeignKeys)
             {
-                DbIdentityRecordInfo primaryInfo = DbAttributesManager.GetRecordInfo(key.Key) as DbIdentityRecordInfo;
-                if (primaryInfo == null)
-                    throw new NdbNotIdentityException(string.Format(
-                        "Records without primary kes can't be used as foreign keys.\r\nRecord {0}.\r\nPrimary record type {1}"
-                        , info.TableName, key.Key));
+                if (key.Key != info.RecordType)
+                {
+                    DbIdentityRecordInfo primaryInfo = DbAttributesManager.GetRecordInfo(key.Key) as DbIdentityRecordInfo;
+                    if (primaryInfo == null)
+                        throw new NdbNotIdentityException(string.Format(
+                            "Records without primary kes can't be used as foreign keys.\r\nRecord {0}.\r\nPrimary record type {1}"
+                            , info.TableName, key.Key));
 
-                if (primaryInfo.PrimaryKey.FieldType != key.Value.FieldType)
-                    throw new NdbException(
-                        "Primary key {0} in {1} is {2}. But Foreign key {3} in {4} is {5}",
-                        primaryInfo.PrimaryKey.Name, primaryInfo.TableName, primaryInfo.PrimaryKey.FieldType,
-                        key.Value.Name, info.TableName, key.Value.FieldType);
+                    if (primaryInfo.PrimaryKey.FieldType != key.Value.FieldType)
+                        throw new NdbException(
+                            "Primary key {0} in {1} is {2}. But Foreign key {3} in {4} is {5}",
+                            primaryInfo.PrimaryKey.Name, primaryInfo.TableName, primaryInfo.PrimaryKey.FieldType,
+                            key.Value.Name, info.TableName, key.Value.FieldType);
 
-                CreateTableEx(primaryInfo);
+                    CreateTableEx(primaryInfo);
+                }
             }
 
             accessor.CreateTable(info);

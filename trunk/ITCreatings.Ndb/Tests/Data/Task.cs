@@ -32,6 +32,10 @@ namespace ITCreatings.Ndb.Tests.Data
 
         [DbField]
         public DateTime Timestamp;
+
+        [DbField] public bool IsDone;
+        [DbField] public double SpentMinutes;
+        [DbField] public decimal Price;
     }
 }
 #endif

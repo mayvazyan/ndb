@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace ITCreatings.Ndb.Core
 {
     /// <summary>
     /// Internal class. Contains all required information about mapped object
     /// </summary>
+    [DebuggerDisplay("Table={TableName} Type={RecordType}")]
     internal class DbRecordInfo
     {
         public Type RecordType;

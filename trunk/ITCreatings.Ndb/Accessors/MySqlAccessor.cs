@@ -95,10 +95,12 @@ namespace ITCreatings.Ndb.Accessors
                 return GetSqlType(_type);
             }
                 
-            if (type == typeof(DateTime))
-                return "datetime";
+            if (type == typeof(DateTime))   return "datetime";
+            if (type == typeof(Double))     return "float";
+            if (type == typeof(Decimal))    return "float";
+            if (type == typeof(Boolean))    return "BOOLEAN";
 
-            throw new NdbException("can't find MySql type for the .NET Type" + type);
+            throw new NdbException("can't find MySql type for the .NET Type - " + type);
         }
 
         internal override Type GetType(string desc)
