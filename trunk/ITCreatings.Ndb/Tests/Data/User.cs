@@ -8,7 +8,7 @@ using ITCreatings.Ndb.Attributes.Keys;
 namespace ITCreatings.Ndb.Tests.Data
 {
     [DbRecord]
-    public class TestUser : DbActiveRecord
+    public class User : DbActiveRecord
     {
         [DbPrimaryKeyField] public UInt64 Id;
 
@@ -17,6 +17,7 @@ namespace ITCreatings.Ndb.Tests.Data
 
         [DbUniqueField]
         public string Email;
+
         [DbField]
         public string Password;
 
@@ -33,6 +34,9 @@ namespace ITCreatings.Ndb.Tests.Data
         public DateTime Dob;
 
         public string FullName { get { return FirstName + " " + LastName; } }
+
+        [DbChildRecords] public Event[] Events;
+        [DbChildRecords] public TasksAssignment[] TasksAssignments;
     }
 }
 #endif

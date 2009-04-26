@@ -11,7 +11,7 @@ namespace ITCreatings.Ndb.Tests.Data
     {
         [DbPrimaryKeyField] public ulong Id;
         [DbField] public uint TaskId;
-        [DbForeignKeyField(typeof(TestUser))] public ulong UserId;
+        [DbForeignKeyField(typeof(User))] public ulong UserId;
         [DbField] public uint SpentMinutes;
         [DbField] public DateTime Date;
         [DbField] public string Description;

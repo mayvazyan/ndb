@@ -11,14 +11,16 @@ namespace ITCreatings.Ndb.Tests.Data
         [DbPrimaryKeyField]
         public ulong Id;
 
-        [DbForeignKeyField(typeof(TestUser))]
+        [DbForeignKeyField(typeof(User))]
         public ulong UserId;
 
         [DbField]
         public EventType EventTypeId;
+
         [DbField]
         public DateTime Timestamp;
-    }
 
+        [DbParentRecord] public User User;
+    }
 }
 #endif

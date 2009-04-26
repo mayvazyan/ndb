@@ -1,7 +1,5 @@
 ﻿#if DEBUG
-using System;
 using System.Reflection;
-using ITCreatings.Ndb.Accessors;
 using ITCreatings.Ndb.Tests.Data;
 using NUnit.Framework;
 
@@ -46,7 +44,7 @@ namespace ITCreatings.Ndb.Tests
                             ? new[]
                                   {
                                       typeof (TestGuidRecord),
-                                      typeof (TestUser),
+                                      typeof (User),
                                       typeof (TasksAssignment),
                                       typeof (Task),
                                       typeof (Event),
@@ -54,7 +52,7 @@ namespace ITCreatings.Ndb.Tests
                                   }
                             : new[]
                                   {
-                                      typeof (TestUser),
+                                      typeof (User),
                                       typeof (TasksAssignment),
                                       typeof (Task),
                                       typeof (Event),

@@ -36,6 +36,8 @@ namespace ITCreatings.Ndb.Tests.Data
         [DbField] public bool IsDone;
         [DbField] public double SpentMinutes;
         [DbField] public decimal Price;
+
+        [DbChildRecords] public TasksAssignment[] TasksAssignment;
     }
 }
 #endif

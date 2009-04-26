@@ -1,6 +1,8 @@
 ﻿#if DEBUG
 using System;
+using System.Collections.Generic;
 using System.Reflection;
+using ITCreatings.Ndb.Attributes;
 using ITCreatings.Ndb.Core;
 using ITCreatings.Ndb.Tests.Data;
 using NUnit.Framework;
@@ -24,11 +26,21 @@ namespace ITCreatings.Ndb.Tests.Core
             Assert.IsNotNull(info);
             Assert.IsNotNull(info.PrimaryKey);
             Assert.AreEqual(1, info.ForeignKeys.Count);
-            Assert.IsNotNull(info.ForeignKeys[typeof(TestUser)]);
+            Assert.IsNotNull(info.ForeignKeys[typeof(User)]);
             Assert.AreEqual("WorkLogs", info.TableName);
             Assert.AreEqual("SpentMinutes", info.Fields[2].Name);
             Assert.AreEqual("CreationDate", info.Fields[3].Name);
             Assert.AreEqual(6, info.Fields.Length);
+            Assert.AreEqual(0, info.Childs.Count);
+            Assert.AreEqual(0, info.Parents.Count);
+
+            info = DbAttributesManager.GetRecordInfo(typeof(User)) as DbIdentityRecordInfo;
+            Assert.IsNotNull(info);
+            Assert.AreEqual(2, info.Childs.Count);
+
+            var info2 = DbAttributesManager.GetRecordInfo(typeof(TasksAssignment));
+            Assert.IsNotNull(info2);
+            Assert.AreEqual(2, info2.Parents.Count);
         }
 
         [Test]
@@ -37,8 +49,8 @@ namespace ITCreatings.Ndb.Tests.Core
             var name = DbAttributesManager.GetTableName(typeof(TestWorkLogItem));
             Assert.AreEqual("WorkLogs", name);
 
-            var tableName = DbAttributesManager.GetTableName(typeof(TestUser));
-            Assert.AreEqual("TestUsers", tableName);
+            var tableName = DbAttributesManager.GetTableName(typeof(User));
+            Assert.AreEqual("Users", tableName);
         }
     }
 }

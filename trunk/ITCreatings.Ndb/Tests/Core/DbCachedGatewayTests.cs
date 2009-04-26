@@ -16,11 +16,11 @@ namespace ITCreatings.Ndb.Tests.Core
 
             Assert.IsNull(DbCachedGateway.Cache.Get(KEY));
 
-            var list = cachedGateway.LoadList<TestUser>(KEY);
+            var list = cachedGateway.LoadList<User>(KEY);
             Assert.Less(0, list.Length);
 
             Assert.IsNotNull(DbCachedGateway.Cache.Get(KEY));
-            var list2 = cachedGateway.LoadList<TestUser>(KEY);
+            var list2 = cachedGateway.LoadList<User>(KEY);
             Assert.Less(list.Length, list2.Length);
         }
     }

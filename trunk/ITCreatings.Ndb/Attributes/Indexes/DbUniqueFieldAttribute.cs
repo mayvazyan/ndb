@@ -15,7 +15,7 @@
     ///        public ulong TaskId;
     ///
     ///        [DbUniqueField(IndexName = IndexName)]
-    ///        [DbForeignKeyField(typeof(TestUser))]
+    ///        [DbForeignKeyField(typeof(User))]
     ///        public ulong UserId;
     ///    }
     /// </code></example>

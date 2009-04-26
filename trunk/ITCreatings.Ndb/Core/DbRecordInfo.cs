@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace ITCreatings.Ndb.Core
 {
@@ -13,12 +14,15 @@ namespace ITCreatings.Ndb.Core
         public Type RecordType;
         public string TableName;
         public DbFieldInfo[] Fields;
+        public Dictionary<Type, FieldInfo> Childs;
+        public Dictionary<Type, FieldInfo> Parents;
         public Dictionary<Type, DbFieldInfo> ForeignKeys;
 
         /// <summary>
         /// returns Key-Value collection
         /// </summary>
         /// <param name="data"></param>
+        /// <param name="argsToAppend"></param>
         /// <returns></returns>
         public object [] GetValues(object data, params object[] argsToAppend)
         {

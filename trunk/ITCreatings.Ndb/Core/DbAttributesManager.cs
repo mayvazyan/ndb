@@ -4,7 +4,7 @@ using System.Reflection;
 using ITCreatings.Ndb.Attributes;
 using ITCreatings.Ndb.Attributes.Indexes;
 using ITCreatings.Ndb.Attributes.Keys;
-using NUnit.Framework.SyntaxHelpers;
+using ITCreatings.Ndb.Exceptions;
 
 namespace ITCreatings.Ndb.Core
 {
@@ -50,13 +50,30 @@ namespace ITCreatings.Ndb.Core
             {
                 DbFieldInfo primaryKey = null;
                 List<DbFieldInfo> dbFields = new List<DbFieldInfo>();
+                Dictionary<Type, FieldInfo> childs = new Dictionary<Type, FieldInfo>();
+                Dictionary<Type, FieldInfo> parents = new Dictionary<Type, FieldInfo>();
                 Dictionary<Type, DbFieldInfo> foreignKeys = new Dictionary<Type, DbFieldInfo>();
 
                 FieldInfo[] fields = type.GetFields();
                 foreach (FieldInfo field in fields)
                 {
+                    object[] parentRecordsAttributes = field.GetCustomAttributes(typeof(DbParentRecordAttribute), true);
+                    if (parentRecordsAttributes != null && parentRecordsAttributes.Length > 0)
+                    {
+                        parents.Add(field.FieldType, field);
+                    }
+
+                    object[] childRecordsAttributes = field.GetCustomAttributes(typeof(DbChildRecordsAttribute), true);
+                    if (childRecordsAttributes != null && childRecordsAttributes.Length > 0)
+                    {
+                        if (field.FieldType.BaseType != typeof(Array))
+                            throw new NdbException("DbChildRecordsAttribute can belong to Array field ONLY");
+
+                        childs.Add(field.FieldType.GetElementType(), field);
+                    }
+
                     object[] attributes = field.GetCustomAttributes(typeof(DbFieldAttribute), true);
-                    if (attributes.Length > 0)
+                    if (attributes != null && attributes.Length > 0)
                     {
                         List<Type> foreignTypes = new List<Type>(attributes.Length);
                         bool isPrimary = false;
@@ -102,6 +119,8 @@ namespace ITCreatings.Ndb.Core
                 info.ForeignKeys = foreignKeys;
                 info.TableName = LoadTableName(type);
                 info.Fields = dbFields.ToArray();
+                info.Childs = childs;
+                info.Parents = parents;
                 records.Add(type, info);
             }
 

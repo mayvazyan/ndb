@@ -92,6 +92,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Accessors\PostgreAccessor.cs" />
+    <Compile Include="Attributes\DbChildRecords.cs" />
+    <Compile Include="Attributes\DbParentRecordAttribute.cs" />
     <Compile Include="Attributes\Keys\DbForeignKeyFieldAttribute.cs" />
     <Compile Include="Attributes\Indexes\DbFullTextIndexedFieldAttribute.cs" />
     <Compile Include="Attributes\Indexes\DbIndexedFieldAttribute.cs" />
@@ -104,8 +106,11 @@
     </Compile>
     <Compile Include="Accessors\SqLiteAccessor.cs" />
     <Compile Include="Attributes\Indexes\DbUniqueFieldAttribute.cs" />
+    <Compile Include="Core\DbDependenciesResolver.cs" />
     <Compile Include="Core\DbIdentityRecordInfo.cs" />
     <Compile Include="Core\DbIndexesInfo.cs" />
+    <Compile Include="Core\DbRecords.cs" />
+    <Compile Include="Core\DbRecordsMapper.cs" />
     <Compile Include="Core\DbTableCheckResult.cs" />
     <Compile Include="Core\DbFieldInfo.cs" />
     <Compile Include="DbCachedGateway.cs" />
@@ -123,8 +128,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Exceptions\NdbNotIdentityException.cs" />
+    <Compile Include="Exceptions\NdbRelationException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\DbFieldCheckResult.cs" />
+    <Compile Include="Tests\Core\DbMapperTests.cs" />
     <Compile Include="Tests\PostgreTests.cs" />
     <Compile Include="Tests\Data\NewsItem.cs" />
     <Compile Include="Tests\Data\TestData.cs" />
@@ -135,7 +142,7 @@
     <Compile Include="Tests\Data\TasksAssignments.cs" />
     <Compile Include="Tests\Data\TestDataObjects.cs" />
     <Compile Include="Tests\Data\TestGuidRecord.cs" />
-    <Compile Include="Tests\Data\TestUser.cs" />
+    <Compile Include="Tests\Data\User.cs" />
     <Compile Include="Tests\Data\TestWorkLog.cs" />
     <Compile Include="Tests\Core\DbAttributesManagerTests.cs" />
     <Compile Include="Tests\Core\DbCachedGatewayTests.cs" />
@@ -148,9 +155,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Tests\App.config" />
-    <Content Include="Tests\testdb.sdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">

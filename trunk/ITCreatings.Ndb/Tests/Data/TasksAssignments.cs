@@ -17,20 +17,11 @@ namespace ITCreatings.Ndb.Tests.Data
         public ulong TaskId;
 
         [DbUniqueField(IndexName = IndexName)]
-        [DbForeignKeyField(typeof(TestUser))]
+        [DbForeignKeyField(typeof(User))]
         public ulong UserId;
-    }
-/*
-    [DbRecord("TasksAssignments2")]
-    public class TasksAssignment2
-    {
-        [DbForeignKeyField(typeof(Task))]
-        [DbPrimaryKeyField]
-        public ulong TaskId;
 
-        [DbPrimaryKeyField]
-        [DbForeignKeyField(typeof(TestUser))]
-        public ulong UserId;
-    }*/
+        [DbParentRecord] public readonly Task Task;
+        [DbParentRecord] public readonly User User;
+    }
 }
 #endif

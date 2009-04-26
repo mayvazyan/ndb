@@ -1,5 +1,6 @@
 #if DEBUG
 using System;
+using System.Data;
 using ITCreatings.Ndb;
 using ITCreatings.Ndb.Tests.Data;
 using NUnit.Framework;
@@ -84,25 +85,12 @@ namespace ITCreatings.Ndb.Tests
 
         }
 
-        private void assert(TestGuidRecord r1, TestGuidRecord r2)
+        private static void assert(TestGuidRecord r1, TestGuidRecord r2)
         {
             Assert.AreEqual(r1.Guid, r2.Guid);
             Assert.AreEqual(r1.Title, r2.Title);
-
-//            Assert.AreEqual(0, DbTestUtils.DiffInSeconds(workLog.Date, workLog2.Date));
-//            Assert.AreEqual(0, DbTestUtils.DiffInSeconds(workLog.Timestamp, workLog2.Timestamp));
         }
 
-
-/*
-        [Test]
-        public void LoadKeyValueTest()
-        {
-            Dictionary<string, string> fields =
-                gateway.LoadKeyValue<string, string>("SELECT 'test' as `Key`, 'test2' as `Value`", "Key", "Value");
-            Assert.Less(0, fields.Count);
-        }
-*/
 
         /// <summary>
         /// native to sql engine cascade delete should work
@@ -129,7 +117,7 @@ namespace ITCreatings.Ndb.Tests
             var oTask = TestData.CreateTask("title #1");
             TestData.Assign(oTask);
             
-            Task []task = gateway.LoadAssociated<Task, TasksAssignment>(TestData.TestUser);
+            Task [] task = gateway.LoadAssociated<Task, TasksAssignment>(TestData.TestUser);
 
             Assert.AreEqual(1, task.Length);
             Assert.AreEqual(oTask.Title, task[0].Title);
@@ -141,16 +129,10 @@ namespace ITCreatings.Ndb.Tests
             var item = new TestWorkLog {UserId = TestData.TestUser.Id, Description = "test"};
             gateway.Save(item);
 
-            TestUser testUser = gateway.LoadParent<TestUser>(item);
+            User testUser = gateway.LoadParent<User>(item);
             Assert.IsNotNull(testUser);
             Assert.AreEqual(testUser.Id, TestData.TestUser.Id);
             Assert.AreEqual(testUser.FullName, TestData.TestUser.FullName);
-        }
-
-        [Test]
-        public void LoadSetTest()
-        {
-            
         }
 
         [Test]
@@ -170,39 +152,32 @@ namespace ITCreatings.Ndb.Tests
 
             events = gateway.LoadChilds<Event>(TestData.TestUser, "EventTypeId", EventType.ActivityLog);
             Assert.AreEqual(1, events.Length);
-
-//            events = TestData.TestUser.Events("EventTypeId", EventType.ActivityLog);
-//            Assert.AreEqual(1, events.Length);
-//
-//            events = TestData.TestUser.Events();
-//            Assert.AreEqual(3, events.Length);
-
         }
 
         [Test]
         public void UpdateTest()
         {
-            TestUser user = TestData.TestUser;
+            User user = TestData.TestUser;
             user.Email = "test2@example.com";
             gateway.Insert(user);
 
-            Assert.AreEqual(2, gateway.LoadList<TestUser>("LastName", "Doe").Length);
-//            Assert.AreEqual(2, gateway.LoadList<TestUser>(new { LastName = "Doe" }).Length);
+            Assert.AreEqual(2, gateway.LoadList<User>("LastName", "Doe").Length);
+//            Assert.AreEqual(2, gateway.LoadList<User>(new { LastName = "Doe" }).Length);
 
-//            int affected = gateway.Update(new TestUser { LastName = "Not a Doe" }, "Email", user.Email);
-            int affected = gateway.Update(typeof(TestUser),
+//            int affected = gateway.Update(new User { LastName = "Not a Doe" }, "Email", user.Email);
+            int affected = gateway.Update(typeof(User),
                 new object [] { "LastName", "Not a Doe" }, 
                 "Email", user.Email);
 
             Assert.AreEqual(1, affected);
 
-            Assert.AreEqual(1, gateway.LoadList<TestUser>("LastName", "Doe").Length);
+            Assert.AreEqual(1, gateway.LoadList<User>("LastName", "Doe").Length);
         }
 
         [Test]
         public void LoadLimitedTest()
         {
-            TestUser user = TestData.TestUser;
+            User user = TestData.TestUser;
             user.Email = "user2@example.com";
             gateway.Insert(user);
 
@@ -213,17 +188,81 @@ namespace ITCreatings.Ndb.Tests
             gateway.Insert(user);
 
 
-            TestUser[] users = gateway.LoadListLimited<TestUser>(2, 2);
+            User[] users = gateway.LoadListLimited<User>(2, 2);
             Assert.AreEqual(2, users.Length);
             Assert.AreEqual("user3@example.com", users[0].Email);
             Assert.AreEqual("user4@example.com", users[1].Email);
 
-            users = gateway.LoadListLimited<TestUser>(3, 1);
+            users = gateway.LoadListLimited<User>(3, 1);
             Assert.AreEqual(3, users.Length);
             Assert.AreEqual("user2@example.com", users[0].Email);
             Assert.AreEqual("user3@example.com", users[1].Email);
             Assert.AreEqual("user4@example.com", users[2].Email);
         }
+
+        #region DbDependenciesResolver Related
+
+        [Test]
+        //TODO: move 
+        public void LoadWithDependencies1LevelTest()
+        {
+            TestData.AddEvent(EventType.Logon, DateTime.Now);
+            ulong userId2 = TestData.AddUser("user2@example.com");
+
+            string query = @"
+SELECT * FROM Users;
+SELECT * FROM Events;
+";
+            User[] users = gateway.LoadWithDependencies<User>(query, typeof(Event));
+            
+            User user1 = users[0];
+            User user2 = users[1];
+            
+            Assert.AreEqual(user2.Id, userId2);
+
+            Assert.IsNotNull(user1.Events);
+            Assert.IsNotNull(user2.Events);
+
+            Assert.AreEqual(1, user1.Events.Length);
+            Assert.AreEqual(0, user2.Events.Length);
+            Assert.AreEqual(user1.Id, user1.Events[0].UserId);
+        }
+
+        [Test]
+        public void LoadWithDependencies2LevelTest()
+        {
+            var oTask = TestData.CreateTask("title #1-1");
+            TestData.Assign(oTask);
+            var oTask3 = TestData.CreateTask("title #1-2");
+            TestData.Assign(oTask3);
+
+            ulong userId2 = TestData.AddUser("user22@example.com");
+            var oTask2 = TestData.CreateTask("title #2-1");
+            TestData.Assign(oTask2, userId2);
+            
+            string query = @"
+SELECT * FROM Users;
+SELECT * FROM TasksAssignments;
+SELECT * FROM Tasks;
+";
+            User[] users = gateway.LoadWithDependencies<User>(query, typeof(TasksAssignment), typeof(Task));
+
+            User user1 = users[0];
+            User user2 = users[1];
+
+            Assert.AreEqual(user2.Id, userId2);
+
+            Assert.IsNotNull(user1.TasksAssignments);
+            Assert.IsNotNull(user2.TasksAssignments);
+
+            Assert.AreEqual(2, user1.TasksAssignments.Length);
+            Assert.AreEqual(1, user2.TasksAssignments.Length);
+
+            Assert.IsNotNull(user1.TasksAssignments[0].Task);
+            Assert.IsNotNull(user2.TasksAssignments[0].Task);
+        }
+
+        #endregion
     }
 }
 #endif

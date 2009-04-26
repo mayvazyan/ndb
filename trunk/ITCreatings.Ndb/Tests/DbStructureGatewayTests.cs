@@ -66,22 +66,22 @@ namespace ITCreatings.Ndb.Tests
         [Test]
         public void TableExistsTest()
         {
-            Assert.IsFalse(gateway.IsTableExists(typeof(TestUser)), "Table Exists test failed");
+            Assert.IsFalse(gateway.IsTableExists(typeof(User)), "Table Exists test failed");
 
-            gateway.CreateTable(typeof(TestUser));
-            Assert.IsTrue(gateway.IsTableExists(typeof(TestUser)));
+            gateway.CreateTable(typeof(User));
+            Assert.IsTrue(gateway.IsTableExists(typeof(User)));
         }
 
         [Test]
         public void CreateTableTest()
         {
-            Assert.IsFalse(gateway.IsTableExists(typeof(TestUser)));
+            Assert.IsFalse(gateway.IsTableExists(typeof(User)));
 
-            gateway.CreateTable(typeof (TestUser));
-            Assert.IsTrue(gateway.IsTableExists(typeof(TestUser)));
+            gateway.CreateTable(typeof (User));
+            Assert.IsTrue(gateway.IsTableExists(typeof(User)));
 
-            gateway.DropTable(typeof(TestUser));
-            Assert.IsFalse(gateway.IsTableExists(typeof(TestUser)));
+            gateway.DropTable(typeof(User));
+            Assert.IsFalse(gateway.IsTableExists(typeof(User)));
 
         }
 
@@ -91,7 +91,7 @@ namespace ITCreatings.Ndb.Tests
             if (gateway.Accessor.IsSqLite)
                 Assert.Ignore("SQLite has poor types collection");
 
-            gateway.CreateTable(typeof(TestUser));
+            gateway.CreateTable(typeof(User));
             gateway.CreateTable(typeof(TestWorkLogItem));
 
             Assert.IsFalse(gateway.IsValid(typeof(TestWorkLogItem2)));
@@ -117,9 +117,9 @@ namespace ITCreatings.Ndb.Tests
         {
             TestData TestData = new TestData(gateway.Accessor);
             DbGateway dbGateway = new DbGateway(gateway.Accessor);
-            gateway.CreateTable(typeof(TestUser));
+            gateway.CreateTable(typeof(User));
 
-            TestUser user = TestData.TestUser;
+            User user = TestData.TestUser;
             dbGateway.Insert(user);
 
             try
@@ -138,10 +138,10 @@ namespace ITCreatings.Ndb.Tests
         public void PrimaryKey2ColumnsTest()
         {
             gateway.CreateTable(typeof(Task));
-            gateway.CreateTable(typeof(TestUser));
+            gateway.CreateTable(typeof(User));
             gateway.CreateTable(typeof(TasksAssignment2));
 
-            TestUser user = TestData.TestUser;
+            User user = TestData.User;
             DbGateway.Instance.Insert(user);
 
             var oTask = TestData.CreateTask("title #1");

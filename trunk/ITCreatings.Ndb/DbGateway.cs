@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Reflection;
 using ITCreatings.Ndb.Core;
 using ITCreatings.Ndb.Exceptions;
 
@@ -57,6 +57,82 @@ namespace ITCreatings.Ndb
         #region Relations
 
         /// <summary>
+        /// Loads all records and process Child\Parent relations
+        /// <example>
+        /// <code></code>
+        /// string query = @"
+        ///         SELECT * FROM Users;
+        ///         SELECT * FROM TasksAssignments;
+        ///         SELECT * FROM Tasks;
+        ///     ";
+        /// 
+        /// User[] users = gateway.LoadAndProcessRelations<User>(query, typeof(TasksAssignment), typeof(Task));
+        /// 
+        /// Task taks1 = users[0].TasksAssignments[0].Task);
+        /// 
+        /// 
+        /// Types Definitions:
+        /// 
+        ///     [DbRecord]
+        ///        public class TasksAssignment
+        ///        {
+        ///            [DbForeignKeyField(typeof(Task))]
+        ///            public ulong TaskId;
+        ///
+        ///            [DbForeignKeyField(typeof(User))]
+        ///            public ulong UserId;
+        /// 
+        ///            ...
+        /// 
+        ///            [DbParentRecord] public readonly Task Task; 
+        ///            [DbParentRecord] public readonly User User;
+        ///       }
+        /// 
+        ///     [DbRecord]
+        ///     public class Task
+        ///     {
+        ///         [DbPrimaryKeyField]
+        ///         public ulong Id;
+        /// 
+        ///         ...
+        /// 
+        ///         [DbChildRecords] public TasksAssignment[] TasksAssignment;
+        ///     }
+        /// 
+        ///     [DbRecord]
+        ///     public class User
+        ///     {
+        ///         [DbPrimaryKeyField]
+        ///         public ulong Id;
+        /// 
+        ///         ...
+        /// 
+        ///         [DbChildRecords] public TasksAssignment[] TasksAssignments;
+        ///     }
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query">query which returns several records sets</param>
+        /// <param name="dependenciesTypes">Related types to map</param>
+        /// <returns>Array of records</returns>
+        public T[] LoadAndProcessRelations<T>(string query, params Type[] dependenciesTypes)
+        {
+            using (IDataReader reader = Accessor.ExecuteReader(query))
+            {
+                try
+                {
+                    DbDependenciesResolver<T> resolver = new DbDependenciesResolver<T>(reader, dependenciesTypes);
+                    return resolver.Root;
+                }
+                finally
+                {
+                    reader.Close();
+                }
+            }
+        }
+
+        /// <summary>
         /// Load records using association table
         /// </summary>
         /// <typeparam name="TargetType">Type we want to Load</typeparam>
@@ -65,7 +141,7 @@ namespace ITCreatings.Ndb
         /// <returns>Array of Requested Objects</returns>
         /// <example>
         /// <code>
-        /// Task []tasks = DbGateway.Instance.LoadAssociated{Task, TasksAssignment}(TestData.TestUser);
+        /// Task []tasks = DbGateway.Instance.LoadAssociated{Task, TasksAssignment}(TestData.User);
         /// 
         /// Types Definitions:
         /// 
@@ -138,7 +214,7 @@ namespace ITCreatings.Ndb
         /// <returns>Array of childs</returns>
         /// <example>
         /// <code>
-        /// Event[] events = DbGateway.Instance.LoadChilds{Event}(TestData.TestUser);
+        /// Event[] events = DbGateway.Instance.LoadChilds{Event}(TestData.User);
         /// 
         /// Types Definitions:
         /// 
@@ -170,7 +246,6 @@ namespace ITCreatings.Ndb
 
             if (primaryRecordInfo == null)
                 throw new NdbNotIdentityException("Only DbIdentityRecord objects can have childs");
-
 
             object [] _args = UnionArgs(args,
                       childRecordInfo.ForeignKeys[primaryType].Name,
@@ -759,7 +834,6 @@ namespace ITCreatings.Ndb
             foreach (DbFieldInfo field in info.Fields)
             {
                 setValue(field, data, row[field.Name]);
-                
             }
         }
 
@@ -838,28 +912,42 @@ namespace ITCreatings.Ndb
             {
                 query = Accessor.BuildLimits(query, limit, offset);
             }
-
-            List<T> list = new List<T>();
+            
             using (IDataReader reader = Accessor.ExecuteReader(query, args))
             {
                 try
                 {
-                    while (reader.Read())
-                    {
-                        T data = Activator.CreateInstance<T>();
-                        Bind(data, reader, info);
-                        list.Add(data);
-                    }
+                    return loadRecords<T>(reader, info);
                 }
                 finally
                 {
                     reader.Close();
                 }
             }
+        }
 
+        private static T[] loadRecords<T>(IDataReader reader, DbRecordInfo info)
+        {
+            List<T> list = new List<T>();
+            while (reader.Read())
+            {
+                T data = Activator.CreateInstance<T>();
+                Bind(data, reader, info);
+                list.Add(data);
+            }
             return list.ToArray();
+        }
 
-
+        internal static Array LoadRecords(Type type, IDataReader reader, DbRecordInfo info)
+        {
+            ArrayList list = new ArrayList();
+            while (reader.Read())
+            {
+                object data = Activator.CreateInstance(type);
+                Bind(data, reader, info);
+                list.Add(data);
+            }
+            return list.ToArray(type);
         }
 
         private void insert(DbIdentityRecordInfo info, object data)

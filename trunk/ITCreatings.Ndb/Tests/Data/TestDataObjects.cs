@@ -24,7 +24,7 @@ namespace ITCreatings.Ndb.Tests.Data
         [DbField]
         public UInt32 TaskId;
 
-        [DbForeignKeyField(typeof(TestUser))]
+        [DbForeignKeyField(typeof(User))]
         public UInt64 UserId;
 
         [DbField]
@@ -56,7 +56,7 @@ namespace ITCreatings.Ndb.Tests.Data
         [DbField]
         public UInt32 TaskId;
 
-        [DbForeignKeyField(typeof(TestUser))]
+        [DbForeignKeyField(typeof(User))]
         public Int16 UserId;
 
         [DbField]
