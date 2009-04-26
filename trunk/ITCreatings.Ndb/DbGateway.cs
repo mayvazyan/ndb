@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using ITCreatings.Ndb.Core;
 using ITCreatings.Ndb.Exceptions;
+using ITCreatings.Ndb.Query;
 
 namespace ITCreatings.Ndb
 {
@@ -59,14 +60,14 @@ namespace ITCreatings.Ndb
         /// <summary>
         /// Loads all records and process Child\Parent relations
         /// <example>
-        /// <code></code>
+        /// <code>
         /// string query = @"
         ///         SELECT * FROM Users;
         ///         SELECT * FROM TasksAssignments;
         ///         SELECT * FROM Tasks;
         ///     ";
         /// 
-        /// User[] users = gateway.LoadAndProcessRelations<User>(query, typeof(TasksAssignment), typeof(Task));
+        /// User[] users = gateway.LoadAndProcessRelations{User}(query, typeof(TasksAssignment), typeof(Task));
         /// 
         /// Task taks1 = users[0].TasksAssignments[0].Task);
         /// 

@@ -530,6 +530,7 @@ namespace ITCreatings.Ndb
         #region Utils Methods
 
         internal abstract string GetIdentity(string pk);
+//        internal abstract string ExpressionToString(DbExpressionType expressionType);
 
         private object ExecuteInsert(string query, string pk, params object[] args)
         {
@@ -552,7 +553,7 @@ namespace ITCreatings.Ndb
 
         private static string BuildInsertQuery(string tableName, object[] args)
         {
-            StringBuilder sb = new StringBuilder("INSERT INTO  " + tableName);
+            StringBuilder sb = new StringBuilder("INSERT INTO " + tableName);
 
             StringBuilder columnsSb = new StringBuilder();
             StringBuilder valuesSb = new StringBuilder();

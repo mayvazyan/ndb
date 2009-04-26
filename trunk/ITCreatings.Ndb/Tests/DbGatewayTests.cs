@@ -2,6 +2,7 @@
 using System;
 using System.Data;
 using ITCreatings.Ndb;
+using ITCreatings.Ndb.Query;
 using ITCreatings.Ndb.Tests.Data;
 using NUnit.Framework;
 
@@ -162,9 +163,7 @@ namespace ITCreatings.Ndb.Tests
             gateway.Insert(user);
 
             Assert.AreEqual(2, gateway.LoadList<User>("LastName", "Doe").Length);
-//            Assert.AreEqual(2, gateway.LoadList<User>(new { LastName = "Doe" }).Length);
 
-//            int affected = gateway.Update(new User { LastName = "Not a Doe" }, "Email", user.Email);
             int affected = gateway.Update(typeof(User),
                 new object [] { "LastName", "Not a Doe" }, 
                 "Email", user.Email);
@@ -200,69 +199,32 @@ namespace ITCreatings.Ndb.Tests
             Assert.AreEqual("user4@example.com", users[2].Email);
         }
 
-        #region DbDependenciesResolver Related
-
         [Test]
-        //TODO: move 
-        public void LoadWithDependencies1LevelTest()
+        public void DbQueryTest()
         {
-            TestData.AddEvent(EventType.Logon, DateTime.Now);
-            ulong userId2 = TestData.AddUser("user2@example.com");
+            User user = TestData.TestUser;
+            user.Email = "user2@example.com";
+            gateway.Insert(user);
 
-            string query = @"
-SELECT * FROM Users;
-SELECT * FROM Events;
-";
-            User[] users = gateway.LoadWithDependencies<User>(query, typeof(Event));
-            
-            User user1 = users[0];
-            User user2 = users[1];
-            
-            Assert.AreEqual(user2.Id, userId2);
+            user.Email = "user3@example.com";
+            gateway.Insert(user);
 
-            Assert.IsNotNull(user1.Events);
-            Assert.IsNotNull(user2.Events);
+            user.Email = "user4@example.com";
+            gateway.Insert(user);
 
-            Assert.AreEqual(1, user1.Events.Length);
-            Assert.AreEqual(0, user2.Events.Length);
-            Assert.AreEqual(user1.Id, user1.Events[0].UserId);
+            User[] list = DbQuery<User>
+                .Create()
+                .Load(gateway);
+
+            Assert.AreEqual(4, list.Length);
+
+            list = DbQuery<User>
+                .Create()
+                .Contains("Email", "ser3")
+                .Load(gateway);
+
+            Assert.AreEqual(1, list.Length);
         }
-
-        [Test]
-        public void LoadWithDependencies2LevelTest()
-        {
-            var oTask = TestData.CreateTask("title #1-1");
-            TestData.Assign(oTask);
-            var oTask3 = TestData.CreateTask("title #1-2");
-            TestData.Assign(oTask3);
-
-            ulong userId2 = TestData.AddUser("user22@example.com");
-            var oTask2 = TestData.CreateTask("title #2-1");
-            TestData.Assign(oTask2, userId2);
-            
-            string query = @"
-SELECT * FROM Users;
-SELECT * FROM TasksAssignments;
-SELECT * FROM Tasks;
-";
-            User[] users = gateway.LoadWithDependencies<User>(query, typeof(TasksAssignment), typeof(Task));
-
-            User user1 = users[0];
-            User user2 = users[1];
-
-            Assert.AreEqual(user2.Id, userId2);
-
-            Assert.IsNotNull(user1.TasksAssignments);
-            Assert.IsNotNull(user2.TasksAssignments);
-
-            Assert.AreEqual(2, user1.TasksAssignments.Length);
-            Assert.AreEqual(1, user2.TasksAssignments.Length);
-
-            Assert.IsNotNull(user1.TasksAssignments[0].Task);
-            Assert.IsNotNull(user2.TasksAssignments[0].Task);
-        }
-
-        #endregion
     }
 }
 #endif

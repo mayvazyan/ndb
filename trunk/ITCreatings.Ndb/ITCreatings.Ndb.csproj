@@ -122,16 +122,30 @@
     <Compile Include="Core\DbRecordInfo.cs" />
     <Compile Include="ActiveRecord\DbIdentityRecord.cs" />
     <Compile Include="DbAccessor.cs" />
-    <Compile Include="Enums.cs" />
+    <Compile Include="DbProvider.cs" />
+    <Compile Include="Exceptions\DbInvalidFilterException.cs" />
     <Compile Include="Exceptions\NdbConnectionFailedException.cs" />
     <Compile Include="Exceptions\NdbException.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Exceptions\NdbNotIdentityException.cs" />
     <Compile Include="Exceptions\NdbRelationException.cs" />
+    <Compile Include="Execution\ExecutionError.cs" />
+    <Compile Include="Execution\ExecutionErrorCode.cs" />
+    <Compile Include="Execution\IExecution.cs" />
+    <Compile Include="Query\DbColumnFilterExpression.cs" />
+    <Compile Include="Query\DbColumnToColumnFilterExpression.cs" />
+    <Compile Include="Query\DbExpressionType.cs" />
+    <Compile Include="Query\DbFilterExpression.cs" />
+    <Compile Include="Query\DbQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\DbFieldCheckResult.cs" />
+    <Compile Include="Query\DbSorting.cs" />
+    <Compile Include="Query\DbSortingDirection.cs" />
+    <Compile Include="Execution\DbExecution.cs" />
     <Compile Include="Tests\Core\DbMapperTests.cs" />
+    <Compile Include="Tests\Core\DbDependenciesResolverTests.cs" />
+    <Compile Include="Tests\Execution\DbExecutionTests.cs" />
     <Compile Include="Tests\PostgreTests.cs" />
     <Compile Include="Tests\Data\NewsItem.cs" />
     <Compile Include="Tests\Data\TestData.cs" />

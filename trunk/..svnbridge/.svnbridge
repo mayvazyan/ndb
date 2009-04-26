@@ -8,4 +8,10 @@ _ReSharper.ITCreatings.Ndb
 _ReSharper.ITCreatings.Ndb
 ITCreatings.Ndb.4.0.resharper
 ITCreatings.Ndb.4.0.resharper.user
+</Value></Property><Property><Name>svn:ignore</Name><Value>Help
+*.suo
+_ReSharper.ITCreatings.Ndb
+ITCreatings.Ndb.4.0.resharper
+ITCreatings.Ndb.4.0.resharper.user
+automate
 </Value></Property></Properties></ItemProperties>
