@@ -72,6 +72,20 @@ namespace ITCreatings.Ndb.Execution
         /// Validates given expression to be a true
         /// </summary>
         /// <param name="expression"></param>
+        /// <param name="customErrorCode"></param>
+        /// <returns></returns>
+        public DbExecution<T> Validate(bool expression, int customErrorCode)
+        {
+            if (!IsError && expression)
+                Error = customErrorCode;
+
+            return this;
+        }
+
+        /// <summary>
+        /// Validates given expression to be a true
+        /// </summary>
+        /// <param name="expression"></param>
         /// <param name="message"></param>
         /// <returns></returns>
         public DbExecution<T> Validate(bool expression, string message)
