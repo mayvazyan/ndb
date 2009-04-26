@@ -3,7 +3,7 @@ namespace ITCreatings.Ndb.Execution
     /// <summary>
     /// Execution Error Code
     /// </summary>
-    public enum ExecutionErrorCode
+    public enum DbExecutionErrorCode
     {
         /// <summary>
         /// Means custom error

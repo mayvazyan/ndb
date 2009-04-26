@@ -39,13 +39,13 @@ namespace ITCreatings.Ndb.Tests.Execution
             Assert.AreEqual(1, user.Id);
 
             var executor = DbExecution<User>.Create()
-                .Execute(delegate (IExecution<User> execution) { execution.Error = "Test"; });
+                .Execute(delegate (IDbExecution<User> execution) { execution.Error = "Test"; });
 
             Assert.IsTrue(executor.IsError);
             Assert.AreEqual("Test", executor.Error.Message);
 
             executor = DbExecution<User>.Create()
-               .Execute(delegate(IExecution<User> execution)
+               .Execute(delegate(IDbExecution<User> execution)
                             {
                                 user.Id = 5;
                                 execution.Result = user;
@@ -55,7 +55,7 @@ namespace ITCreatings.Ndb.Tests.Execution
             Assert.AreEqual(5, executor.Result.Id);
         }
 
-        private User LoginUser(object data, IExecution<User> execution)
+        private User LoginUser(object data, IDbExecution<User> execution)
         {
             User user = (User)data;
             user.Id = 7;

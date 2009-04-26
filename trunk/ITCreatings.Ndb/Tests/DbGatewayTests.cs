@@ -203,13 +203,13 @@ namespace ITCreatings.Ndb.Tests
         public void DbQueryTest()
         {
             User user = TestData.TestUser;
-            user.Email = "user2@example.com";
+            user.Email = "duser2@example.com";
             gateway.Insert(user);
 
-            user.Email = "user3@example.com";
+            user.Email = "duser3@example.com";
             gateway.Insert(user);
 
-            user.Email = "user4@example.com";
+            user.Email = "duser4@example.com";
             gateway.Insert(user);
 
             User[] list = DbQuery<User>

@@ -130,9 +130,9 @@
     </Compile>
     <Compile Include="Exceptions\NdbNotIdentityException.cs" />
     <Compile Include="Exceptions\NdbRelationException.cs" />
-    <Compile Include="Execution\ExecutionError.cs" />
-    <Compile Include="Execution\ExecutionErrorCode.cs" />
-    <Compile Include="Execution\IExecution.cs" />
+    <Compile Include="Execution\DbExecutionError.cs" />
+    <Compile Include="Execution\DbExecutionErrorCode.cs" />
+    <Compile Include="Execution\IDbExecution.cs" />
     <Compile Include="Query\DbColumnFilterExpression.cs" />
     <Compile Include="Query\DbColumnToColumnFilterExpression.cs" />
     <Compile Include="Query\DbExpressionType.cs" />
