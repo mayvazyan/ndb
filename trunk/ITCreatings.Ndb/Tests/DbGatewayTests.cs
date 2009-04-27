@@ -24,7 +24,7 @@ namespace ITCreatings.Ndb.Tests
         {
             Assert.IsTrue(gateway.Accessor.CanConnect);
         }
-        
+
         [Test]
         public void GuidTest()
         {
@@ -33,6 +33,9 @@ namespace ITCreatings.Ndb.Tests
 
             TestGuidRecord record = TestData.CreateTestGuidRecord("test");
             Assert.IsTrue(DbTestUtils.SaveTest(record));
+
+            var recordLoaded = gateway.Load<TestGuidRecord>(record.Guid);
+            assert(record, recordLoaded);
 
             record.Title = "test2";
             Assert.IsTrue(DbTestUtils.UpdateTest(record));
@@ -50,6 +53,39 @@ namespace ITCreatings.Ndb.Tests
             DbTestUtils.DeleteTest(record);
 
             Assert.IsNull(gateway.Load<TestGuidRecord>(record.Guid));
+        }
+
+        [Test]
+        public void InsertGuidTest()
+        {
+            if (!gateway.Accessor.IsMySql)
+                Assert.Ignore("Supported only by MySQL currently");
+
+            TestGuidRecord record = TestData.CreateTestGuidRecord("test");
+            ulong count = gateway.LoadCount(typeof(TestGuidRecord));
+            gateway.Insert(record);
+            ulong count2 = gateway.LoadCount(typeof(TestGuidRecord));
+            Assert.AreEqual(count + 1, count2);
+
+            gateway.Delete(record);
+
+            count2 = gateway.LoadCount(typeof(TestGuidRecord));
+            Assert.AreEqual(count, count2);
+
+        }
+
+        [Test]
+        public void EmptyGuidTest()
+        {
+            if (!gateway.Accessor.IsMySql)
+                Assert.Ignore("Supported only by MySQL currently");
+
+            TestGuidRecord record2 = TestData.CreateTestGuidRecord("test");
+            record2.TestGuidField = Guid.Empty;
+            Assert.IsTrue(DbTestUtils.SaveTest(record2));
+
+            var record2Loaded = gateway.Load<TestGuidRecord>(record2.Guid);
+            assert(record2, record2Loaded);
         }
 
         [Test]
@@ -90,6 +126,7 @@ namespace ITCreatings.Ndb.Tests
         {
             Assert.AreEqual(r1.Guid, r2.Guid);
             Assert.AreEqual(r1.Title, r2.Title);
+            Assert.AreEqual(r1.TestGuidField, r2.TestGuidField);
         }
 
 

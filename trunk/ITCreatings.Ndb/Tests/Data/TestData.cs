@@ -151,7 +151,7 @@ namespace ITCreatings.Ndb.Tests.Data
 
         public TestGuidRecord CreateTestGuidRecord(string title)
         {
-            return new TestGuidRecord {Title = title};
+            return new TestGuidRecord {Title = title, TestGuidField = Guid.NewGuid()};
         }
     }
 }

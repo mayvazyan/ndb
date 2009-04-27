@@ -648,8 +648,6 @@ namespace ITCreatings.Ndb
         }
 
         #endregion
-
-
         
         #region DDL
 
@@ -772,7 +770,5 @@ namespace ITCreatings.Ndb
         }
 
         #endregion
-
-        
     }
 }

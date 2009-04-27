@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Data;
 using ITCreatings.Ndb.Core;
 using ITCreatings.Ndb.Exceptions;
-using ITCreatings.Ndb.Query;
 
 namespace ITCreatings.Ndb
 {
@@ -815,6 +814,14 @@ namespace ITCreatings.Ndb
             return _args;
         }
 
+        private static object fixData(Type fieldType, object value)
+        {
+            if (fieldType == typeof(Guid) && value is string)
+                return new Guid((string)value);
+
+            return value;
+        }
+
         private static void Bind(object data, IDataRecord row, DbRecordInfo info)
         {
             var identityRecordInfo = info as DbIdentityRecordInfo;
@@ -822,19 +829,14 @@ namespace ITCreatings.Ndb
             if (identityRecordInfo != null)
             {
                 DbFieldInfo pkey = identityRecordInfo.PrimaryKey;
-                object value = row[pkey.Name];
-
-                if (pkey.FieldType == typeof(Guid) && value is string) // fix for MySQL since it doesn't have Guid column type
-                {
-                    value = new Guid((string)value);
-                }
-                
+                object value = fixData(pkey.FieldType, row[pkey.Name]);
                 setValue(pkey, data, value);
             }
 
             foreach (DbFieldInfo field in info.Fields)
             {
-                setValue(field, data, row[field.Name]);
+                object value = fixData(field.FieldType, row[field.Name]);
+                setValue(field, data, value);
             }
         }
 
@@ -867,21 +869,8 @@ namespace ITCreatings.Ndb
 
         private void save(object data, DbIdentityRecordInfo info)
         {
-            DbFieldInfo primaryKey = info.PrimaryKey;
-                
             if (!info.IsPrimaryKeyValid(data))
-            {
-                if (primaryKey.FieldType == typeof(Guid))
-                {
-                    Guid guid = Guid.NewGuid();
-                    primaryKey.SetValue(data, guid);
-
-                    object[] values = info.GetValues(data, primaryKey.Name, guid);
-                    Accessor.Insert(info.TableName, values);
-                }
-                else
-                    insert(info, data);
-            }
+                insert(info, data);
             else
                 update(info, data);
         }
@@ -953,8 +942,20 @@ namespace ITCreatings.Ndb
 
         private void insert(DbIdentityRecordInfo info, object data)
         {
-            object newId = Accessor.InsertIdentity(info.TableName, info.PrimaryKey.Name, info.GetValues(data));
-            info.PrimaryKey.SetValue(data, Convert.ChangeType(newId, info.PrimaryKey.FieldType));
+            DbFieldInfo primaryKey = info.PrimaryKey;
+            if (primaryKey.FieldType == typeof(Guid))
+            {
+                Guid guid = Guid.NewGuid();
+                primaryKey.SetValue(data, guid);
+
+                object[] values = info.GetValues(data, primaryKey.Name, guid);
+                Accessor.Insert(info.TableName, values);
+            }
+            else
+            {
+                object newId = Accessor.InsertIdentity(info.TableName, primaryKey.Name, info.GetValues(data));
+                primaryKey.SetValue(data, Convert.ChangeType(newId, primaryKey.FieldType));
+            }
         }
 
         private int update(DbIdentityRecordInfo info, object data)

@@ -10,6 +10,7 @@ namespace ITCreatings.Ndb.Tests.Data
     {
         [DbPrimaryKeyField] public Guid Guid;
         [DbField] public string Title;
+        [DbField] public Guid TestGuidField;
     }
 }
 #endif
