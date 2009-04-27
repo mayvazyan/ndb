@@ -25,6 +25,9 @@ namespace ITCreatings.Ndb.Execution
     {
         #region Messages
 
+        /// <summary>
+        /// Default message
+        /// </summary>
         public string InvalidArgumentsMessage = @"Invalid arguments";
 
         #endregion
@@ -202,9 +205,11 @@ namespace ITCreatings.Ndb.Execution
         {
             if (!IsError)
             {
+                logInfo("Delegate executing...");
                 try
                 {
                     Result = worker.Invoke(data, this);
+                    logOk();
                 }
                 catch(Exception ex)
                 {
@@ -224,9 +229,11 @@ namespace ITCreatings.Ndb.Execution
         {
             if (!IsError)
             {
+                logInfo("Anonymous delegate executing...");
                 try
                 {
                     action.Invoke(this);
+                    logOk();
                 }
                 catch (Exception ex)
                 {
@@ -240,6 +247,17 @@ namespace ITCreatings.Ndb.Execution
         #endregion
 
         #region utils
+
+        private void logOk()
+        {
+            logInfo("Ok");
+        }
+
+        private void logInfo(string message)
+        {
+            if (logger != null)
+                logger.Info(message);
+        }
 
         private void logError()
         {

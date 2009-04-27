@@ -30,13 +30,24 @@ namespace ITCreatings.Ndb.Tests.Data
             RoleId = RolesManager.Ids.Developer
         };
 
-        public User TestUser = new User
+        public User GetTestUser()
         {
-            Email = "test@example.com",
-            LastName = "Doe",
-            FirstName = "John",
-            RoleId = RolesManager.Ids.Developer
-        };
+                return new User
+                {
+                    Email = "test@example.com",
+                    LastName = "Doe",
+                    FirstName = "John",
+                    RoleId = RolesManager.Ids.Developer
+                };
+        }
+
+        public User TestUser = new User
+                                   {
+                                       Email = "test@example.com",
+                                       LastName = "Doe",
+                                       FirstName = "John",
+                                       RoleId = RolesManager.Ids.Developer
+                                   };
 
         public Event TestEvent = new Event
         {

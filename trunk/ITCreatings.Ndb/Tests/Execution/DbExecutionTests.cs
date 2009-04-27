@@ -1,6 +1,4 @@
 ﻿#if DEBUG
-using System;
-using System.Diagnostics;
 using ITCreatings.Ndb.Execution;
 using ITCreatings.Ndb.Tests.Data;
 using NUnit.Framework;

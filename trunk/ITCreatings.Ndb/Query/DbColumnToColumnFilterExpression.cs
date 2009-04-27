@@ -31,7 +31,7 @@ namespace ITCreatings.Ndb.Query
             ColumnName2 = columnName2;
         }
 
-        internal override string ToString(DbAccessor accessor)
+        internal override string ToString(DbAccessor accessor, int paramIndex)
         {
             switch (ExpressionType)
             {

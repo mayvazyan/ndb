@@ -1,6 +1,5 @@
 #if DEBUG
 using System;
-using System.Data;
 using ITCreatings.Ndb;
 using ITCreatings.Ndb.Query;
 using ITCreatings.Ndb.Tests.Data;
@@ -236,32 +235,102 @@ namespace ITCreatings.Ndb.Tests
             Assert.AreEqual("user4@example.com", users[2].Email);
         }
 
+        #region DbQuery
+
         [Test]
-        public void DbQueryTest()
+        public void DbQueryFiltersTest()
         {
             User user = TestData.TestUser;
             user.Email = "duser2@example.com";
             gateway.Insert(user);
 
-            user.Email = "duser3@example.com";
+            user.Email = "duser'3@example.com";
             gateway.Insert(user);
 
             user.Email = "duser4@example.com";
+            user.LastName = null;
             gateway.Insert(user);
 
-            User[] list = DbQuery<User>
+            User[] usersList = DbQuery<User>
                 .Create()
                 .Load(gateway);
 
-            Assert.AreEqual(4, list.Length);
+            Assert.AreEqual(4, usersList.Length);
+
+            var list = DbQuery<User>
+                .Create()
+                .Contains("Email", "ser'3")
+                .Load(gateway);
+
+            Assert.AreEqual(1, list.Length);
 
             list = DbQuery<User>
                 .Create()
-                .Contains("Email", "ser3")
+                .Contains("Email", "4@e")
+                .StartsWith("Email", "duser4@")
+                .EndsWith("Email", "4@example.com")
+                .IsNotNull("Email")
+                .IsNull("LastName")
+                .Greater("Id", 0)
+                .Less("Id", 100)
                 .Load(gateway);
 
             Assert.AreEqual(1, list.Length);
         }
+
+        [Test]
+        public void DbQueryOrderByTest()
+        {
+            User user = TestData.TestUser;
+            user.Email = "teat@example.com";
+            gateway.Insert(user);
+
+
+            var list = DbQuery<User>.Create()
+                .OrderBy("Email")
+                .Load(gateway);
+
+            Assert.AreEqual(2, list.Length);
+            Assert.AreEqual(user.Email, list[0].Email);
+
+            list = DbQuery<User>.Create()
+                .OrderBy("Email", DbSortingDirection.Desc)
+                .Load(gateway);
+
+            Assert.AreEqual(2, list.Length);
+            Assert.AreEqual(user.Email, list[1].Email);
+        }
+
+        [Test]
+        public void DbQueryLimitest()
+        {
+            User user = TestData.GetTestUser();
+            User user2 = TestData.TestUser2;
+            
+            gateway.Insert(user2);
+
+
+            var list = DbQuery<User>
+                .Create()
+                .OrderBy("Email")
+                .Limit(1)
+                .Load(gateway);
+
+            Assert.AreEqual(1, list.Length);
+            Assert.AreEqual(user.Email, list[0].Email);
+
+            list = DbQuery<User>
+                .Create()
+                .OrderBy("Email")
+                .Limit(1)
+                .Offset(1)
+                .Load(gateway);
+
+            Assert.AreEqual(1, list.Length);
+            Assert.AreEqual(user2.Email, list[0].Email);
+        }
+
+        #endregion
     }
 }
 #endif

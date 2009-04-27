@@ -251,9 +251,8 @@ namespace ITCreatings.Ndb
                 if (!string.IsNullOrEmpty(par[i].ToString()))
                 {
                     DbParameter parameter = command.CreateParameter();
-                    parameter.Value = par[i + 1];
-//                    parameter.ParameterName = par[i].ToString();
                     parameter.ParameterName = Format(par[i].ToString());
+                    parameter.Value = par[i + 1];
                     command.Parameters.Add(parameter);
                 }
             }

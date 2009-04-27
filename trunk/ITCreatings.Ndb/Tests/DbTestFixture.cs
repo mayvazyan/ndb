@@ -39,7 +39,7 @@ namespace ITCreatings.Ndb.Tests
 
         public void CreateTables()
         {
-            //TODO: Add to GUID support to Postgree and SQLite and remove below fix
+            //TODO: Add GUID support to Postgree and SQLite and remove below fix
             var types = (gateway.Accessor.IsMySql)
                             ? new[]
                                   {

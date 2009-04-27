@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using ITCreatings.Ndb.Exceptions;
 
 namespace ITCreatings.Ndb.Query
@@ -35,7 +36,7 @@ namespace ITCreatings.Ndb.Query
             ColumnName = columnName;
         }
 
-        internal virtual string ToString(DbAccessor accessor)
+        internal virtual string ToString(DbAccessor accessor, int paramIndex)
         {
             switch(ExpressionType)
             {
@@ -48,6 +49,10 @@ namespace ITCreatings.Ndb.Query
                 default:
                     throw new DbInvalidFilterException(ExpressionType, GetType());
             }
+        }
+
+        internal virtual void AddParameters(List<object> args)
+        {
         }
     }
 }

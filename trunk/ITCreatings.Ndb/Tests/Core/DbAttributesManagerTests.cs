@@ -1,8 +1,6 @@
 ﻿#if DEBUG
 using System;
-using System.Collections.Generic;
 using System.Reflection;
-using ITCreatings.Ndb.Attributes;
 using ITCreatings.Ndb.Core;
 using ITCreatings.Ndb.Tests.Data;
 using NUnit.Framework;

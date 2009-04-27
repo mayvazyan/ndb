@@ -1,12 +1,12 @@
 ﻿namespace ITCreatings.Ndb.Query
 {
     /// <summary>
-    /// Sorting info holder
+    /// Order info holder
     /// </summary>
-    public class DbSorting
+    public class DbOrder
     {
         /// <summary>
-        /// Sorting Direction
+        /// Order Direction
         /// </summary>
         public DbSortingDirection SortingDirection;
 
@@ -18,7 +18,7 @@
         /// <summary>
         /// Default constructor
         /// </summary>
-        public DbSorting()
+        public DbOrder()
         {}
 
         /// <summary>
@@ -26,7 +26,7 @@
         /// </summary>
         /// <param name="columnName"></param>
         /// <param name="sortingDirection"></param>
-        public DbSorting(string columnName, DbSortingDirection sortingDirection)
+        public DbOrder(string columnName, DbSortingDirection sortingDirection)
         {
             ColumnName = columnName;
             SortingDirection = sortingDirection;

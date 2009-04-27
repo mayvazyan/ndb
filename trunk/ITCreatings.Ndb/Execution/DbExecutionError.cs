@@ -9,9 +9,9 @@ namespace ITCreatings.Ndb.Execution
     {
         #region Messages
 
-        public const string NO_ERRORS_MESSAGE = @"No errors";
-        public const string NDB_ERROR_CODE_MESSAGE = @"Ndb Error Code: ";
-        public const string CUSTOM_ERROR_CODE_MESSAGE = @"Custom Error Code: ";
+        internal const string NO_ERRORS_MESSAGE = @"No errors";
+        internal const string NDB_ERROR_CODE_MESSAGE = @"Ndb Error Code: ";
+        internal const string CUSTOM_ERROR_CODE_MESSAGE = @"Custom Error Code: ";
 
         #endregion
 
