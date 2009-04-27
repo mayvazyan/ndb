@@ -7,7 +7,16 @@ namespace ITCreatings.Ndb.Execution
     ///</summary>
     public class DbExecutionError
     {
-        #region Conditions Helpers 
+        #region Messages
+
+        public const string NO_ERRORS_MESSAGE = @"No errors";
+        public const string NDB_ERROR_CODE_MESSAGE = @"Ndb Error Code: ";
+        public const string CUSTOM_ERROR_CODE_MESSAGE = @"Custom Error Code: ";
+
+        #endregion
+
+
+        #region Conditions Helpers
 
         /// <summary>
         /// Exception occured
@@ -22,7 +31,12 @@ namespace ITCreatings.Ndb.Execution
         /// <summary>
         /// Custom Error Code was set
         /// </summary>
-        public bool IsCustomError { get { return CustomErrorCode > 0; } }
+        public bool IsCustomError { get { return CustomErrorCode >= 0; } }
+
+        /// <summary>
+        /// string message  was set
+        /// </summary>
+        public bool IsTextMessageError { get { return message != null; } }
 
         #endregion
 
@@ -51,18 +65,37 @@ namespace ITCreatings.Ndb.Execution
         {
             get
             {
-                if (IsCustomError)
-                    return "Custom Error: " + CustomErrorCode;
+                if (ErrorCode != DbExecutionErrorCode.Custom)
+                    return NDB_ERROR_CODE_MESSAGE + ErrorCode;
+
+                if (message != null)
+                    return message;
 
                 if (Exception != null)
                     return Exception.Message;
 
-                return (ErrorCode == DbExecutionErrorCode.Custom) ? message : ErrorCode.ToString();
+                if (IsCustomError)
+                    return CUSTOM_ERROR_CODE_MESSAGE + CustomErrorCode;
+
+                return NO_ERRORS_MESSAGE;
             }
             private set { message = value; }
         }
 
         #endregion
+
+        /// <summary>
+        /// Empty error
+        /// </summary>
+        public static readonly DbExecutionError Empty = new DbExecutionError();
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        private DbExecutionError()
+        {
+            CustomErrorCode = -1;
+        }
 
         #region Convertors
 
@@ -109,6 +142,19 @@ namespace ITCreatings.Ndb.Execution
             return new DbExecutionError
                        {
                            CustomErrorCode = customErrorCode
+                       };
+        }
+
+        /// <summary>
+        /// Creates DbExecutionError instance from Custom Error Codes enum
+        /// </summary>
+        /// <param name="customErrorCode"></param>
+        /// <returns></returns>
+        public static implicit operator DbExecutionError(Enum customErrorCode)
+        {
+            return new DbExecutionError
+                       {
+                           CustomErrorCode = (int) (object) customErrorCode
                        };
         }
 

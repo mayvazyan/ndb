@@ -1,4 +1,6 @@
 ﻿#if DEBUG
+using System;
+using System.Diagnostics;
 using ITCreatings.Ndb.Execution;
 using ITCreatings.Ndb.Tests.Data;
 using NUnit.Framework;
@@ -21,6 +23,9 @@ namespace ITCreatings.Ndb.Tests.Execution
                 .Execute(user, LoginUser);
 
             Assert.IsFalse(executor.IsError);
+            Assert.IsNotNull(executor.Error);
+            Assert.AreEqual(DbExecutionError.NO_ERRORS_MESSAGE, executor.Error.Message);
+
             Assert.AreEqual(7, executor.Result.Id);
 
             executor = DbExecution<User>.Create()

@@ -14,5 +14,10 @@ namespace ITCreatings.Ndb.Execution
         /// Result container
         /// </summary>
         T Result { get; set; }
+
+        /// <summary>
+        /// Accessor to underlayed logger
+        /// </summary>
+        log4net.ILog Logger { get; }
     }
 }

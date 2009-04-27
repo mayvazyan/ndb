@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using ITCreatings.Ndb.Core;
+using ITCreatings.Ndb.Exceptions;
+using log4net;
 
 namespace ITCreatings.Ndb.Execution
 {
@@ -14,12 +17,20 @@ namespace ITCreatings.Ndb.Execution
     /// 
     /// bool isError = executor.IsError;
     /// User user = executor.Result;
-    /// DbExecutionError executionError = executor.DbExecutionError;
+    /// DbExecutionError executionError = executor.Error;
     /// </code>
     /// </example>
     /// </summary>
     public class DbExecution<T> : IDbExecution<T>
     {
+        #region Messages
+
+        public string InvalidArgumentsMessage = @"Invalid arguments";
+
+        #endregion
+
+        #region data
+
         /// <summary>
         /// Result
         /// </summary>
@@ -28,13 +39,44 @@ namespace ITCreatings.Ndb.Execution
         /// <summary>
         /// Error
         /// </summary>
-        public DbExecutionError Error { get; set;}
+        public DbExecutionError Error 
+        { 
+            get { return error; }
+            set
+            {
+                error = value;
+
+                logError();
+            }
+        }
+
+        private DbExecutionError error;
         
         /// <summary>
         /// Is an Error occured during validate
         /// </summary>
-        public bool IsError { get { return Error != null; } }
+        public bool IsError { get { return Error != DbExecutionError.Empty; } }
+
+        private readonly ILog logger;
         
+        /// <summary>
+        /// Logger
+        /// </summary>
+        public ILog Logger 
+        { 
+            get
+            {
+                if (logger == null)
+                    throw new NdbException("Logger wasn't set");
+
+                return logger;
+            }
+        }
+
+        #endregion
+
+        #region Delegates
+
         /// <summary>
         /// Execution delegate
         /// </summary>
@@ -42,6 +84,8 @@ namespace ITCreatings.Ndb.Execution
         /// <param name="execution"></param>
         /// <returns></returns>
         public delegate T ExecuteDelegate(object data, IDbExecution<T> execution);
+
+        #endregion
 
         #region Factory
 
@@ -54,6 +98,27 @@ namespace ITCreatings.Ndb.Execution
             return new DbExecution<T>();
         }
 
+        /// <summary>
+        /// Factory Method
+        /// </summary>
+        /// <param name="logger">logger can be accessed later as IDbExecution.Logger</param>
+        /// <returns></returns>
+        public static DbExecution<T> Create(ILog logger)
+        {
+            return new DbExecution<T>(logger);
+        }
+
+        private DbExecution()
+        {
+            Error = DbExecutionError.Empty;    
+        }
+
+        private DbExecution(ILog log) : this()
+        {
+            logger = log;
+        }
+        
+
         #endregion
 
         #region Validate
@@ -65,7 +130,7 @@ namespace ITCreatings.Ndb.Execution
         /// <returns></returns>
         public DbExecution<T> Validate(bool expression)
         {
-            return Validate(expression, "Invalid arguments");
+            return Validate(expression, InvalidArgumentsMessage);
         }
 
         /// <summary>
@@ -77,7 +142,9 @@ namespace ITCreatings.Ndb.Execution
         public DbExecution<T> Validate(bool expression, int customErrorCode)
         {
             if (!IsError && expression)
+            {
                 Error = customErrorCode;
+            }
 
             return this;
         }
@@ -91,7 +158,9 @@ namespace ITCreatings.Ndb.Execution
         public DbExecution<T> Validate(bool expression, string message)
         {
             if (!IsError && expression)
+            {
                 Error = message;
+            }
 
             return this;
         }
@@ -166,6 +235,26 @@ namespace ITCreatings.Ndb.Execution
             }
             
             return this;
+        }
+
+        #endregion
+
+        #region utils
+
+        private void logError()
+        {
+            if (logger != null)
+            {
+                if (error.IsException)
+                {
+                    logger.Error(error.Message, error.Exception);
+                }
+                else
+                {
+                    StackTrace stackTrace = new StackTrace();
+                    logger.Error(string.Format("{0}. Stack Trace:\r\n{1}", error.Message, stackTrace));
+                }
+            }
         }
 
         #endregion
