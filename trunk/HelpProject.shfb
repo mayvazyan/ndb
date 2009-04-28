@@ -9,8 +9,12 @@
         <namespaceSummaryItem name="ITCreatings.Ndb.Attributes" isDocumented="True">Contains attributes which needed in order to use Ndb library</namespaceSummaryItem>
         <namespaceSummaryItem name="ITCreatings.Ndb.Attributes.Indexes" isDocumented="True">Contains attributes which allow to define indexes</namespaceSummaryItem>
         <namespaceSummaryItem name="ITCreatings.Ndb.Attributes.Keys" isDocumented="True">Contains attributes which allow to define Primary and Foreign keys</namespaceSummaryItem>
+        <namespaceSummaryItem name="ITCreatings.Ndb.Core" isDocumented="True">Ndb core objects</namespaceSummaryItem>
         <namespaceSummaryItem name="ITCreatings.Ndb.Exceptions" isDocumented="True">Contains exceptions which can be throwed by Ndb</namespaceSummaryItem>
+        <namespaceSummaryItem name="ITCreatings.Ndb.Execution" isDocumented="True">Execution flow helper related files</namespaceSummaryItem>
+        <namespaceSummaryItem name="ITCreatings.Ndb.Query" isDocumented="True">Query builder related files</namespaceSummaryItem>
         <namespaceSummaryItem name="ITCreatings.Ndb.Tests" isDocumented="True">Constains helper methods for Unit Tests</namespaceSummaryItem>
+        <namespaceSummaryItem name="ITCreatings.Ndb.Utils" isDocumented="True">Ndb utilites</namespaceSummaryItem>
     </namespaceSummaries>
     <conceptualContent snippetFile="">
         <topics defaultTopic="1cfdf6fb-ac07-4aa4-ac68-150421a1ee43">
@@ -27,7 +31,7 @@
         <dependencyItem depPath=".\ITCreatings.Ndb\bin\Release\System.Data.SQLite.DLL" />
         <dependencyItem depPath=".\libs\log4net.dll" />
     </dependencies>
-    <ProjectSummary>Root namespace of the Ndb .NET Data Access Library.</ProjectSummary>
+    <ProjectSummary>Root namespace of the Ndb Library.</ProjectSummary>
     <MissingTags>Summary, Namespace</MissingTags>
     <VisibleItems>Protected</VisibleItems>
     <HtmlHelp1xCompilerPath path="" />

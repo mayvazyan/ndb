@@ -28,7 +28,7 @@
   </introduction>
   
   <section address="Section1">
-    <title>Pass List&lt;DbFilterExpression&rt; to DbGateway.Select method</title>
+    <title>Pass List&lt;DbFilterExpression&gt; to DbGateway.Select method</title>
     <content>
       <!-- Uncomment this to create a sub-section outline
       <autoOutline /> -->
