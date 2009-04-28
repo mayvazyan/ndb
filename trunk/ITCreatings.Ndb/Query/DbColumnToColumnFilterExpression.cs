@@ -45,7 +45,7 @@ namespace ITCreatings.Ndb.Query
                     return string.Concat(ColumnName, "<", ColumnName2);
 
                 default:
-                    throw new DbInvalidFilterException(ExpressionType, GetType());
+                    throw new NdbInvalidFilterException(ExpressionType, GetType());
             }
         }
     }

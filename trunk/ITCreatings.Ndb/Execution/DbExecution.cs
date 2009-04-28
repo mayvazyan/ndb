@@ -246,6 +246,36 @@ namespace ITCreatings.Ndb.Execution
 
         #endregion
 
+        #region Log methods
+
+        /// <summary>
+        /// Logs the info.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns></returns>
+        public DbExecution<T> LogInfo(string message)
+        {
+            if (!IsError && logger != null)
+                logger.Info(message);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Logs the debug.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns></returns>
+        public DbExecution<T> LogDebug(string message)
+        {
+            if (!IsError && logger != null)
+                logger.Debug(message);
+
+            return this;
+        }
+
+        #endregion
+
         #region utils
 
         private void logOk()

@@ -23,13 +23,14 @@ namespace ITCreatings.Ndb.Tests
             sgateway = new DbStructureGateway(accessor);
             gateway = new DbGateway(accessor);
 
-            TestData = new TestData(accessor);
-            DbTestUtils = new DbTestUtils(accessor);
         }
 
         [SetUp]
         public void SetUp()
         {
+            TestData = new TestData(gateway.Accessor);
+            DbTestUtils = new DbTestUtils(gateway.Accessor);
+
             sgateway.DropTables(Assembly);
 
             CreateTables();
@@ -48,7 +49,7 @@ namespace ITCreatings.Ndb.Tests
                                       typeof (TasksAssignment),
                                       typeof (Task),
                                       typeof (Event),
-                                      typeof (TestWorkLog)
+                                      typeof (WorkLog)
                                   }
                             : new[]
                                   {
@@ -56,7 +57,7 @@ namespace ITCreatings.Ndb.Tests
                                       typeof (TasksAssignment),
                                       typeof (Task),
                                       typeof (Event),
-                                      typeof (TestWorkLog)
+                                      typeof (WorkLog)
                                   };
 
             sgateway.CreateTables(types);

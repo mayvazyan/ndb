@@ -47,7 +47,7 @@ namespace ITCreatings.Ndb.Query
                     return ColumnName + " IS NOT NULL";
 
                 default:
-                    throw new DbInvalidFilterException(ExpressionType, GetType());
+                    throw new NdbInvalidFilterException(ExpressionType, GetType());
             }
         }
 

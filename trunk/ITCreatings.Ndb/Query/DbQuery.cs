@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using ITCreatings.Ndb.Core;
+using ITCreatings.Ndb.Exceptions;
 
 namespace ITCreatings.Ndb.Query
 {
@@ -10,19 +11,33 @@ namespace ITCreatings.Ndb.Query
     /// <typeparam name="T">Type to Load</typeparam>
     public class DbQuery<T>
     {
+        #region Data
+
         /// <summary>
         /// List of Filter Expressions
         /// </summary>
         public List<DbFilterExpression> FilterExpressions { get; private set; }
 
+        /// <summary>
+        /// Underlayed gateway.
+        /// </summary>
+        /// <value>The gateway.</value>
+        public DbGateway Gateway { get; private set; }
         private DbOrder Order;
         private int limit;
         private int offset;
 
+        #endregion
+
+        #region Constructors & Factory methods
+
+        #region Constructors
+
         /// <summary>
         /// Default constructor
         /// </summary>
-        public DbQuery() : this(new List<DbFilterExpression>())
+        private DbQuery(DbGateway gateway)
+            : this(gateway, new List<DbFilterExpression>())
         {
         }
 
@@ -30,10 +45,45 @@ namespace ITCreatings.Ndb.Query
         /// Allows to specify Filter Expression
         /// </summary>
         /// <param name="filterExpressions"></param>
-        public DbQuery(List<DbFilterExpression> filterExpressions)
+        private DbQuery(DbGateway gateway, List<DbFilterExpression> filterExpressions)
         {
+            foreach (DbFilterExpression expression in filterExpressions)
+            {
+                if (!Utils.DbValidator.IsValidColumnName(expression.ColumnName))
+                    throw new NdbInvalidColumnNameException(expression.ColumnName);
+            }
+
+            Gateway = gateway;
             FilterExpressions = filterExpressions;
         }
+
+        #endregion 
+
+        #region Factory methods
+
+        /// <summary>
+        /// Creates this instance.
+        /// </summary>
+        /// <returns></returns>
+        public static DbQuery<T> Create(DbGateway gateway)
+        {
+            return new DbQuery<T>(gateway);
+        }
+
+        /// <summary>
+        /// Creates this instance using specified filter expressions.
+        /// </summary>
+        /// <param name="gateway">The gateway</param>
+        /// <param name="filterExpressions">The filter expressions.</param>
+        /// <returns></returns>
+        public static DbQuery<T> Create(DbGateway gateway, List<DbFilterExpression> filterExpressions)
+        {
+            return new DbQuery<T>(gateway, filterExpressions);
+        }
+
+        #endregion
+
+        #endregion
 
         #region Paging
 
@@ -57,6 +107,18 @@ namespace ITCreatings.Ndb.Query
         {
             offset = Offset;
             return this;
+        }
+
+        /// <summary>
+        /// Sets records limit and offset
+        /// </summary>
+        /// <param name="limit">The limit.</param>
+        /// <param name="offset">The offset.</param>
+        /// <returns></returns>
+        public DbQuery<T> Limit(int limit, int offset)
+        {
+            return Limit(limit)
+                .Offset(offset);
         }
 
         #endregion
@@ -198,35 +260,23 @@ namespace ITCreatings.Ndb.Query
 
         #endregion
 
-        #region Factory methods
-
-        /// <summary>
-        /// Factory method
-        /// </summary>
-        /// <returns></returns>
-        public static DbQuery<T> Create()
-        {
-            return new DbQuery<T>();
-        }
-
-        #endregion
+        #region Load & query build
 
         /// <summary>
         /// Loads Array of objects
         /// </summary>
-        /// <param name="gateway"></param>
         /// <returns></returns>
-        public T[] Load(DbGateway gateway)
+        public T[] Load()
         {
             string tableName = DbAttributesManager.GetTableName(typeof(T));
             
             StringBuilder sb = new StringBuilder("SELECT * FROM ");
             sb.Append(tableName);
 
-            object [] args = buildWhere(sb, gateway);
+            object [] args = buildWhere(sb, Gateway);
             buildOrderBy(sb);
 
-            return gateway.LoadRecords<T>(sb.ToString(), limit, offset, args);
+            return Gateway.LoadRecords<T>(sb.ToString(), limit, offset, args);
         }
 
         private void buildOrderBy(StringBuilder sb)
@@ -259,5 +309,7 @@ namespace ITCreatings.Ndb.Query
 
             return args.ToArray();
         }
+
+        #endregion
     }
 }

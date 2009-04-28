@@ -7,7 +7,7 @@ using ITCreatings.Ndb.Attributes.Keys;
 namespace ITCreatings.Ndb.Tests.Data
 {
     [DbRecord("WorkLogs")]
-    public class TestWorkLog : DbActiveRecord
+    public class WorkLog : DbActiveRecord
     {
         [DbPrimaryKeyField] public ulong Id;
         [DbField] public uint TaskId;

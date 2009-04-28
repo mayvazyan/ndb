@@ -32,9 +32,14 @@ namespace ITCreatings.Ndb.Tests.Data
 
         public User GetTestUser()
         {
+            return GetTestUser("test@example.com");
+        }
+
+        public User GetTestUser(string email)
+        {
                 return new User
                 {
-                    Email = "test@example.com",
+                    Email = email,
                     LastName = "Doe",
                     FirstName = "John",
                     RoleId = RolesManager.Ids.Developer
@@ -96,7 +101,7 @@ namespace ITCreatings.Ndb.Tests.Data
             if (TestUser != null)
                 gateway.Delete(TestUser);
 
-            gateway.Delete(typeof(TestWorkLog), "UserId", TestUser.Id);
+            gateway.Delete(typeof(WorkLog), "UserId", TestUser.Id);
 
             gateway.Delete(typeof(Event), "UserId", TestUser.Id);
         }
@@ -109,7 +114,7 @@ namespace ITCreatings.Ndb.Tests.Data
 
         public void AddWorkLog(uint minutes, DateTime day)
         {
-            TestWorkLog testWorkLog = new TestWorkLog
+            WorkLog workLog = new WorkLog
                                   {
                                       SpentMinutes = minutes,
                                       Date = day,
@@ -117,7 +122,7 @@ namespace ITCreatings.Ndb.Tests.Data
                                       UserId = TestUser.Id
                                   };
 
-            gateway.Save(testWorkLog);
+            gateway.Save(workLog);
         }
 
         public Task CreateTask(string title)
@@ -148,9 +153,9 @@ namespace ITCreatings.Ndb.Tests.Data
             gateway.Save(assignment);
         }*/
 
-        public TestWorkLog CreateWorkLog(string title)
+        public WorkLog CreateWorkLog(string title)
         {
-            return new TestWorkLog
+            return new WorkLog
                        {
                            Date = DateTime.Now,
                            Description = title,

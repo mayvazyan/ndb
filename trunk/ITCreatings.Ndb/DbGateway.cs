@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using ITCreatings.Ndb.Core;
 using ITCreatings.Ndb.Exceptions;
+using ITCreatings.Ndb.Query;
 
 namespace ITCreatings.Ndb
 {
@@ -53,6 +54,33 @@ namespace ITCreatings.Ndb
         #endregion
 
         #region Interface
+
+        #region DbQuery
+
+        //TODO: add Delete method
+
+        /// <summary>
+        /// Creates select query object
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public DbQuery<T> Select<T>()
+        {
+            return DbQuery<T>.Create(this);
+        }
+
+        /// <summary>
+        /// Creates select query object using specified expressions.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="expressions">The expressions.</param>
+        /// <returns></returns>
+        public DbQuery<T> Select<T>(List<DbFilterExpression> expressions)
+        {
+            return DbQuery<T>.Create(this, expressions);
+        }
+
+        #endregion
 
         #region Relations
 

@@ -1,6 +1,8 @@
 #if DEBUG
 using System;
+using System.Collections.Generic;
 using ITCreatings.Ndb;
+using ITCreatings.Ndb.Exceptions;
 using ITCreatings.Ndb.Query;
 using ITCreatings.Ndb.Tests.Data;
 using NUnit.Framework;
@@ -98,20 +100,20 @@ namespace ITCreatings.Ndb.Tests
             DbTestUtils.UpdateTest(workLog);
 
 
-            var workLog2 = gateway.Load<TestWorkLog>(workLog.Id);
+            var workLog2 = gateway.Load<WorkLog>(workLog.Id);
 
             AssertWorkLog(workLog, workLog2);
 
-            var workLog3 = new TestWorkLog();
+            var workLog3 = new WorkLog();
             Assert.IsTrue(gateway.Load(workLog3, "Id", workLog.Id));
             AssertWorkLog(workLog, workLog3);
     
             DbTestUtils.DeleteTest(workLog);
 
-            Assert.IsNull(gateway.Load<TestWorkLog>(workLog.Id));
+            Assert.IsNull(gateway.Load<WorkLog>(workLog.Id));
         }
 
-        private void AssertWorkLog(TestWorkLog workLog, TestWorkLog workLog2)
+        private void AssertWorkLog(WorkLog workLog, WorkLog workLog2)
         {
             Assert.AreEqual(workLog.Id, workLog2.Id);
             Assert.AreEqual(workLog.Description, workLog2.Description);
@@ -163,7 +165,7 @@ namespace ITCreatings.Ndb.Tests
         [Test]
         public void LoadParentTest()
         {
-            var item = new TestWorkLog {UserId = TestData.TestUser.Id, Description = "test"};
+            var item = new WorkLog {UserId = TestData.TestUser.Id, Description = "test"};
             gateway.Save(item);
 
             User testUser = gateway.LoadParent<User>(item);
@@ -235,6 +237,33 @@ namespace ITCreatings.Ndb.Tests
             Assert.AreEqual("user4@example.com", users[2].Email);
         }
 
+        [Test]
+        [ExpectedException(typeof(NdbInvalidColumnNameException))]
+        public void LoadListFilterExpressionExceptionTest()
+        {
+            var expression = new DbColumnFilterExpression(DbExpressionType.Equal, "Em?ail", "some email");
+            var expressions = new List<DbFilterExpression>();
+            expressions.Add(expression);
+
+            User[] load = gateway.Select<User>(expressions).Load();
+        }
+
+        [Test]
+        public void LoadListFilterExpressionTest()
+        {
+            var expression = new DbColumnFilterExpression(
+                DbExpressionType.Equal, "Email", TestData.TestUser.Email);
+            var expressions = new List<DbFilterExpression>();
+            expressions.Add(expression);
+
+            User[] list = gateway.Select<User>(expressions).Load();
+            Assert.AreEqual(1, list.Length);
+
+            expression.Value = "other@example.com";
+            list = gateway.Select<User>(expressions).Load();
+            Assert.AreEqual(0, list.Length);
+        }
+
         #region DbQuery
 
         [Test]
@@ -252,20 +281,20 @@ namespace ITCreatings.Ndb.Tests
             gateway.Insert(user);
 
             User[] usersList = DbQuery<User>
-                .Create()
-                .Load(gateway);
+                .Create(gateway)
+                .Load();
 
             Assert.AreEqual(4, usersList.Length);
 
             var list = DbQuery<User>
-                .Create()
+                .Create(gateway)
                 .Contains("Email", "ser'3")
-                .Load(gateway);
+                .Load();
 
             Assert.AreEqual(1, list.Length);
 
             list = DbQuery<User>
-                .Create()
+                .Create(gateway)
                 .Contains("Email", "4@e")
                 .StartsWith("Email", "duser4@")
                 .EndsWith("Email", "4@example.com")
@@ -273,7 +302,7 @@ namespace ITCreatings.Ndb.Tests
                 .IsNull("LastName")
                 .Greater("Id", 0)
                 .Less("Id", 100)
-                .Load(gateway);
+                .Load();
 
             Assert.AreEqual(1, list.Length);
         }
@@ -286,16 +315,16 @@ namespace ITCreatings.Ndb.Tests
             gateway.Insert(user);
 
 
-            var list = DbQuery<User>.Create()
+            var list = DbQuery<User>.Create(gateway)
                 .OrderBy("Email")
-                .Load(gateway);
+                .Load();
 
             Assert.AreEqual(2, list.Length);
             Assert.AreEqual(user.Email, list[0].Email);
 
-            list = DbQuery<User>.Create()
+            list = DbQuery<User>.Create(gateway)
                 .OrderBy("Email", DbSortingDirection.Desc)
-                .Load(gateway);
+                .Load();
 
             Assert.AreEqual(2, list.Length);
             Assert.AreEqual(user.Email, list[1].Email);
@@ -304,27 +333,27 @@ namespace ITCreatings.Ndb.Tests
         [Test]
         public void DbQueryLimitest()
         {
-            User user = TestData.GetTestUser();
+            User user = TestData.TestUser;
             User user2 = TestData.TestUser2;
             
             gateway.Insert(user2);
 
 
             var list = DbQuery<User>
-                .Create()
+                .Create(gateway)
                 .OrderBy("Email")
                 .Limit(1)
-                .Load(gateway);
+                .Load();
 
             Assert.AreEqual(1, list.Length);
             Assert.AreEqual(user.Email, list[0].Email);
 
             list = DbQuery<User>
-                .Create()
+                .Create(gateway)
                 .OrderBy("Email")
                 .Limit(1)
                 .Offset(1)
-                .Load(gateway);
+                .Load();
 
             Assert.AreEqual(1, list.Length);
             Assert.AreEqual(user2.Email, list[0].Email);

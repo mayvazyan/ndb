@@ -60,7 +60,7 @@ namespace ITCreatings.Ndb.Query
                     return string.Concat(ColumnName, "<@", ParamName);
 
                 default:
-                    throw new DbInvalidFilterException(ExpressionType, GetType());
+                    throw new NdbInvalidFilterException(ExpressionType, GetType());
             }
         }
 
