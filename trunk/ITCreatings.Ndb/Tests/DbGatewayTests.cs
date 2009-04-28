@@ -242,10 +242,9 @@ namespace ITCreatings.Ndb.Tests
         public void LoadListFilterExpressionExceptionTest()
         {
             var expression = new DbColumnFilterExpression(DbExpressionType.Equal, "Em?ail", "some email");
-            var expressions = new List<DbFilterExpression>();
-            expressions.Add(expression);
+            var expressions = new List<DbFilterExpression> {expression};
 
-            User[] load = gateway.Select<User>(expressions).Load();
+            User[] users = gateway.Select<User>(expressions).Load();
         }
 
         [Test]
@@ -338,7 +337,6 @@ namespace ITCreatings.Ndb.Tests
             
             gateway.Insert(user2);
 
-
             var list = DbQuery<User>
                 .Create(gateway)
                 .OrderBy("Email")
@@ -348,8 +346,7 @@ namespace ITCreatings.Ndb.Tests
             Assert.AreEqual(1, list.Length);
             Assert.AreEqual(user.Email, list[0].Email);
 
-            list = DbQuery<User>
-                .Create(gateway)
+            list = gateway.Select<User>()
                 .OrderBy("Email")
                 .Limit(1)
                 .Offset(1)

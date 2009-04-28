@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<developerConceptualDocument
+  xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+  <summary>
+    <para>
+    	<legacyBold>Although complex query generation isn't the goal of Ndb, it contains some features for such tasks.</legacyBold>
+    </para>
+  </summary>
+
+  <introduction>
+    <para>
+    	In order to generate an query you can use Select method of the DbGateway object.
+    </para>
+    <para>
+    Ndb support the following types of filters:
+    <list class="bullet">
+	  <listItem>DbFilterExpression - one column filters (IsNull, IsNotNull)</listItem>
+	  <listItem>DbColumnFilterExpression - one column &amp; one value filters (for example Email contains "@example.com")</listItem>
+	  <listItem>DbColumnToColumnFilterExpression - two colums filters (for example OneColumn value is bigger than other column value)</listItem>
+	</list>
+	</para>
+	
+	<para>
+		<legacyBold>There are two methods to specify filters.</legacyBold>
+	</para>
+  </introduction>
+  
+  <section address="Section1">
+    <title>Pass List&lt;DbFilterExpression&rt; to DbGateway.Select method</title>
+    <content>
+      <!-- Uncomment this to create a sub-section outline
+      <autoOutline /> -->
+      <para>Please review below example. It will load user with the following email duser4@example.com</para>
+      <content>
+                
+        <code language="cs">			
+            var expression = new DbColumnFilterExpression(DbExpressionType.Equal, "Email", "duser4@example.com");
+            var expressions = new List{DbFilterExpression} {expression};
+
+            User[] users = gateway.Select{User}(expressions).Load();
+		</code>
+	  </content>
+    </content>
+  </section>
+  
+  <section address="Section2">
+    <title>Create filter using DbQuery object methods</title>
+    <content>
+      <!-- Uncomment this to create a sub-section outline
+      <autoOutline /> -->
+      <para>Please review below example. It will load user with the following email duser4@example.com, null last name, and Id in range from 0 to 100 </para>
+      <content>
+                
+        <code language="cs">			
+	            User [] list = DbGateway.Instance.Select{User}()
+	                .Contains("Email", "4@e")
+	                .StartsWith("Email", "duser4@")
+	                .EndsWith("Email", "4@example.com")
+	                .IsNotNull("Email")
+	                .IsNull("LastName")
+	                .Greater("Id", 0)
+	                .Less("Id", 100)
+	                .Load();
+		</code>
+	  </content>
+    </content>
+  </section>
+
+  <relatedTopics>
+    <!-- One or more of the following:
+         - A local link
+         - An external link
+         - A code entity reference
+
+    <link xlink:href="Other Topic's ID"/>
+    <link xlink:href="Other Topic's ID">Link inner text</link>
+
+    <externalLink>
+        <linkText>Link text</linkText>
+        <linkAlternateText>Optional alternate link text</linkAlternateText>
+        <linkUri>URI</linkUri>
+    </externalLink>
+
+    <codeEntityReference>API member ID</codeEntityReference>
+
+    Examples:
+
+    <link xlink:href="00e97994-e9e6-46e0-b420-5be86b2f8270" />
+    <link xlink:href="00e97994-e9e6-46e0-b420-5be86b2f8278">Some other topic</link>
+
+    <externalLink>
+        <linkText>SHFB on CodePlex</linkText>
+        <linkAlternateText>Go to CodePlex</linkAlternateText>
+        <linkUri>http://www.codeplex.com/SHFB</linkUri>
+    </externalLink>
+
+    <codeEntityReference>T:TestDoc.TestClass</codeEntityReference>
+    <codeEntityReference>P:TestDoc.TestClass.SomeProperty</codeEntityReference>
+    <codeEntityReference>M:TestDoc.TestClass.#ctor</codeEntityReference>
+    <codeEntityReference>M:TestDoc.TestClass.#ctor(System.String,System.Int32)</codeEntityReference>
+    <codeEntityReference>M:TestDoc.TestClass.ToString</codeEntityReference>
+    <codeEntityReference>M:TestDoc.TestClass.FirstMethod</codeEntityReference>
+    <codeEntityReference>M:TestDoc.TestClass.SecondMethod(System.Int32,System.String)</codeEntityReference>
+    -->
+  </relatedTopics>
+</developerConceptualDocument>

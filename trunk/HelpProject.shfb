@@ -14,8 +14,10 @@
     </namespaceSummaries>
     <conceptualContent snippetFile="">
         <topics defaultTopic="1cfdf6fb-ac07-4aa4-ac68-150421a1ee43">
-            <topic id="1cfdf6fb-ac07-4aa4-ac68-150421a1ee43" file=".\Doc\1cfdf6fb-ac07-4aa4-ac68-150421a1ee43.xml" title="Overview" revision="1" visible="True" />
-            <topic id="4887827b-f073-4b11-8496-0959eac404d3" file=".\Doc\4887827b-f073-4b11-8496-0959eac404d3.xml" title="Database providers notes" revision="1" visible="True" />
+            <topic id="1cfdf6fb-ac07-4aa4-ac68-150421a1ee43" file=".\Doc\1cfdf6fb-ac07-4aa4-ac68-150421a1ee43.xml" title="Overview" revision="1" visible="True">
+                <topic id="1842fec5-d024-4019-9b66-312bca265ec2" file=".\Doc\1842fec5-d024-4019-9b66-312bca265ec2.xml" title="Complex query generation" revision="1" visible="True" />
+                <topic id="4887827b-f073-4b11-8496-0959eac404d3" file=".\Doc\4887827b-f073-4b11-8496-0959eac404d3.xml" title="Database providers notes" revision="1" visible="True" />
+            </topic>
         </topics>
     </conceptualContent>
     <dependencies>
@@ -23,6 +25,7 @@
         <dependencyItem depPath=".\ITCreatings.Ndb\bin\Release\MySql.Data.dll" />
         <dependencyItem depPath=".\ITCreatings.Ndb\bin\Release\Npgsql.dll" />
         <dependencyItem depPath=".\ITCreatings.Ndb\bin\Release\System.Data.SQLite.DLL" />
+        <dependencyItem depPath=".\libs\log4net.dll" />
     </dependencies>
     <ProjectSummary>Root namespace of the Ndb .NET Data Access Library.</ProjectSummary>
     <MissingTags>Summary, Namespace</MissingTags>
