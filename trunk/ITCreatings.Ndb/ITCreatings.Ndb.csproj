@@ -92,8 +92,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Accessors\PostgreAccessor.cs" />
-    <Compile Include="Attributes\DbChildRecords.cs" />
-    <Compile Include="Attributes\DbParentRecordAttribute.cs" />
+    <Compile Include="Attributes\Relations\DbChildRecords.cs" />
+    <Compile Include="Attributes\Relations\DbParentRecordAttribute.cs" />
     <Compile Include="Attributes\Keys\DbForeignKeyFieldAttribute.cs" />
     <Compile Include="Attributes\Indexes\DbFullTextIndexedFieldAttribute.cs" />
     <Compile Include="Attributes\Indexes\DbIndexedFieldAttribute.cs" />
@@ -148,6 +148,7 @@
     <Compile Include="Tests\Core\DbDependenciesResolverTests.cs" />
     <Compile Include="Tests\Execution\DbExecutionErrorTests.cs" />
     <Compile Include="Tests\Execution\DbExecutionTests.cs" />
+    <Compile Include="Tests\MySqlTests.cs" />
     <Compile Include="Tests\PostgreTests.cs" />
     <Compile Include="Tests\Data\NewsItem.cs" />
     <Compile Include="Tests\Data\TestData.cs" />

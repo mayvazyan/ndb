@@ -1,14 +1,10 @@
 ﻿#if DEBUG
-using System;
-using System.Data.Common;
 using System.Reflection;
-using ITCreatings.Ndb.Core;
 using ITCreatings.Ndb.Tests.Data;
 using NUnit.Framework;
 
 namespace ITCreatings.Ndb.Tests
 {
-    [TestFixture]
     public class DbStructureGatewayTests
     {
         private readonly Assembly Assembly = Assembly.GetExecutingAssembly();

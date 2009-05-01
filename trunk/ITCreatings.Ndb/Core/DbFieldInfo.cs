@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace ITCreatings.Ndb.Core
@@ -6,6 +7,7 @@ namespace ITCreatings.Ndb.Core
     /// <summary>
     /// Contains all required info about field
     /// </summary>
+    [DebuggerDisplay("DbFieldInfo ({Name}, {FieldType})")]
     public class DbFieldInfo
     {
         private readonly FieldInfo FieldInfo;

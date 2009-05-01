@@ -1,8 +1,6 @@
 ﻿#if DEBUG
 using ITCreatings.Ndb.ActiveRecord;
 using ITCreatings.Ndb.Attributes;
-using ITCreatings.Ndb.Attributes.Indexes;
-using ITCreatings.Ndb.Attributes.Keys;
 using ITCreatings.Ndb.Tests.Data;
 
 namespace ITCreatings.Ndb.Tests.Data

@@ -2,7 +2,6 @@
 using System;
 using ITCreatings.Ndb.ActiveRecord;
 using ITCreatings.Ndb.Attributes;
-using ITCreatings.Ndb.Attributes.Keys;
 
 namespace ITCreatings.Ndb.Tests.Data
 {

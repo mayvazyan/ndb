@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Reflection;
 using ITCreatings.Ndb.Attributes;
-using ITCreatings.Ndb.Attributes.Indexes;
-using ITCreatings.Ndb.Attributes.Keys;
 using ITCreatings.Ndb.Exceptions;
 
 namespace ITCreatings.Ndb.Core

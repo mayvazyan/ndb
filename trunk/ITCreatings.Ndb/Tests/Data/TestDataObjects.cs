@@ -1,7 +1,6 @@
 ﻿#if DEBUG
 using System;
 using ITCreatings.Ndb.Attributes;
-using ITCreatings.Ndb.Attributes.Keys;
 
 namespace ITCreatings.Ndb.Tests.Data
 {
@@ -29,7 +28,8 @@ namespace ITCreatings.Ndb.Tests.Data
 
         [DbField]
         public uint SpentMinutes;
-        [DbField(Name = "CreationDate")]
+
+        [DbField("CreationDate")]
         public DateTime Date;
         [DbField]
         public string Description;

@@ -699,6 +699,12 @@ namespace ITCreatings.Ndb
 
         /// <summary>
         /// Inserts a record into specifyed table
+        /// 
+        /// <example>
+        /// <code>
+        /// DbAccessor.Instance.InsertIdentity("Users", "Id", "Email", "empty@example.com", "Dob", DateTime.Now);
+        /// </code>
+        /// </example>
         /// </summary>
         /// <param name="tableName">Target table</param>
         /// <param name="autoIncrementColumnName">Auto increment column name</param>

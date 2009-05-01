@@ -9,7 +9,6 @@ using NUnit.Framework;
 
 namespace ITCreatings.Ndb.Tests
 {
-    [TestFixture]
     public class DbGatewayTests : DbTestFixture
     {
         internal DbGatewayTests(DbAccessor accessor) : base(accessor)
@@ -355,6 +354,12 @@ namespace ITCreatings.Ndb.Tests
             Assert.AreEqual(1, list.Length);
             Assert.AreEqual(user2.Email, list[0].Email);
         }
+
+        #endregion
+
+        #region types conversion
+
+        
 
         #endregion
     }

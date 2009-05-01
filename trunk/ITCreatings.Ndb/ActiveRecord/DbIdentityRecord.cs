@@ -1,5 +1,5 @@
 ﻿using System;
-using ITCreatings.Ndb.Attributes.Keys;
+using ITCreatings.Ndb.Attributes;
 
 namespace ITCreatings.Ndb.ActiveRecord
 {

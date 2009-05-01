@@ -44,6 +44,7 @@ namespace ITCreatings.Ndb.Query
         /// <summary>
         /// Allows to specify Filter Expression
         /// </summary>
+        /// <param name="gateway"></param>
         /// <param name="filterExpressions"></param>
         private DbQuery(DbGateway gateway, List<DbFilterExpression> filterExpressions)
         {
