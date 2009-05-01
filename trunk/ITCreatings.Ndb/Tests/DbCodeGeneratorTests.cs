@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using ITCreatings.Ndb.Core;
 using ITCreatings.Ndb.Tests.Data;
+using ITCreatings.Ndb.Utils;
 using NUnit.Framework;
 
 namespace ITCreatings.Ndb.Tests
@@ -31,7 +32,7 @@ namespace ITCreatings.Ndb.Tests
         {
             var classToGenerate = "GeneratedUser";
             string generateClass = generator.GenerateClass("Users", classToGenerate);
-            Assembly assembly = CompilerUtils.Compile(generateClass);
+            Assembly assembly = DbCompilerUtils.Compile(generateClass);
             Type type = assembly.GetType(generator.Namespace + "." + classToGenerate);
 
             ulong count = DbGateway.Instance.LoadCount(type);

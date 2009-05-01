@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<developerConceptualDocument
+  xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+  <introduction>
+    <para>
+    	Ndb contains an Execution Flow helper - NdbExecution.
+    	It's simplifies input validation and makes the code more readable. 
+    	Consider examples below.
+   	</para>
+  </introduction>
+
+  <section address="Section1">
+    <title>Execute through Anonymous Delegate.</title>
+    <content>
+      <code language="cs">
+         var executor = DbExecution{User}.Create()
+             .Validate(user.Id == 0, "Invalid Id")
+             .Validate(string.IsNullOrEmpty(user.Password), "Password is empty")
+             .Execute(delegate (IDbExecution{User} execution) { execution.Error = "Test"; });
+     
+	     bool isError = executor.IsError;
+	     User user = executor.Result;
+	     DbExecutionError executionError = executor.Error;
+      </code>
+    </content>
+  </section>
+  
+  <section address="Section2">
+    <title>Execute using delegate.</title>
+    <content>
+      Delegate:
+      <code language="cs">
+        public delegate T ExecuteDelegate(object data, IDbExecution{T} execution);
+      </code>
+      
+      Example:
+      <code language="cs">
+      	var executor = DbExecution{User}.Create()
+             .Validate(user.Id == 0, "Invalid Id")
+             .Execute(user, LoginUser);
+     
+	    bool isError = executor.IsError;
+	    User user = executor.Result;
+	    DbExecutionError executionError = executor.Error;
+	     
+	    ...
+	    
+	    private User LoginUser(object data, IDbExecution{User} execution)
+        {
+            User user = (User)data;
+            user.Id = 7;
+            return user;
+        }
+
+      </code>
+    </content>
+  </section>
+
+  <relatedTopics>
+    <!-- One or more of the following:
+         - A local link
+         - An external link
+         - A code entity reference
+
+    <link xlink:href="Other Topic's ID"/>
+    <link xlink:href="Other Topic's ID">Link inner text</link>
+
+    <externalLink>
+        <linkText>Link text</linkText>
+        <linkAlternateText>Optional alternate link text</linkAlternateText>
+        <linkUri>URI</linkUri>
+    </externalLink>
+
+    <codeEntityReference>API member ID</codeEntityReference>
+
+    Examples:
+
+    <link xlink:href="00e97994-e9e6-46e0-b420-5be86b2f8270" />
+    <link xlink:href="00e97994-e9e6-46e0-b420-5be86b2f8278">Some other topic</link>
+
+    <externalLink>
+        <linkText>SHFB on CodePlex</linkText>
+        <linkAlternateText>Go to CodePlex</linkAlternateText>
+        <linkUri>http://www.codeplex.com/SHFB</linkUri>
+    </externalLink>
+
+    <codeEntityReference>T:TestDoc.TestClass</codeEntityReference>
+    <codeEntityReference>P:TestDoc.TestClass.SomeProperty</codeEntityReference>
+    <codeEntityReference>M:TestDoc.TestClass.#ctor</codeEntityReference>
+    <codeEntityReference>M:TestDoc.TestClass.#ctor(System.String,System.Int32)</codeEntityReference>
+    <codeEntityReference>M:TestDoc.TestClass.ToString</codeEntityReference>
+    <codeEntityReference>M:TestDoc.TestClass.FirstMethod</codeEntityReference>
+    <codeEntityReference>M:TestDoc.TestClass.SecondMethod(System.Int32,System.String)</codeEntityReference>
+    -->
+  </relatedTopics>
+</developerConceptualDocument>

@@ -1,12 +1,23 @@
-﻿using System.CodeDom.Compiler;
+﻿#if DEBUG
+using System.CodeDom.Compiler;
 using System.Reflection;
 using ITCreatings.Ndb.Exceptions;
 using Microsoft.CSharp;
 
-namespace ITCreatings.Ndb.Tests
+namespace ITCreatings.Ndb.Utils
 {
-    internal class CompilerUtils
+    /// <summary>
+    /// Compiler Utils (just for Unit Tests purposes... at least now)
+    /// </summary>
+    public class DbCompilerUtils
     {
+        private static string ndbAssembly { get { return typeof (DbStructureGateway).Assembly.Location; } }
+
+        /// <summary>
+        /// Compiles the specified sources.
+        /// </summary>
+        /// <param name="sources">The sources.</param>
+        /// <returns></returns>
         public static Assembly Compile(params string [] sources)
         {
             CompilerParameters compilerParameters = new CompilerParameters
@@ -16,10 +27,9 @@ namespace ITCreatings.Ndb.Tests
                                                             TreatWarningsAsErrors = false,
                                                             CompilerOptions = "/optimize"
                                                         };
-            string ndbAssembly = typeof (DbStructureGateway).Assembly.Location;
+            
             compilerParameters.ReferencedAssemblies.Add(ndbAssembly);
             CSharpCodeProvider provider = new CSharpCodeProvider();
-            
             CompilerResults results = provider.CompileAssemblyFromSource(compilerParameters, sources);
 
             if (results.Errors.HasErrors)
@@ -29,3 +39,5 @@ namespace ITCreatings.Ndb.Tests
         }
     }
 }
+
+#endif

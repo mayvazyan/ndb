@@ -20,6 +20,7 @@
         <topics defaultTopic="1cfdf6fb-ac07-4aa4-ac68-150421a1ee43">
             <topic id="1cfdf6fb-ac07-4aa4-ac68-150421a1ee43" file=".\Doc\1cfdf6fb-ac07-4aa4-ac68-150421a1ee43.xml" title="Overview" revision="1" visible="True">
                 <topic id="1842fec5-d024-4019-9b66-312bca265ec2" file=".\Doc\1842fec5-d024-4019-9b66-312bca265ec2.xml" title="Complex query generation" revision="1" visible="True" />
+                <topic id="4369c0ef-6031-456c-ac55-63dbd8cd715e" file=".\Doc\4369c0ef-6031-456c-ac55-63dbd8cd715e.xml" title="Execution flow overview" revision="1" visible="True" />
                 <topic id="4887827b-f073-4b11-8496-0959eac404d3" file=".\Doc\4887827b-f073-4b11-8496-0959eac404d3.xml" title="Database providers notes" revision="1" visible="True" />
             </topic>
         </topics>
@@ -50,7 +51,7 @@
     <RootNamespaceContainer>False</RootNamespaceContainer>
     <RootNamespaceTitle />
     <HelpTitle>Ndb Library</HelpTitle>
-    <HtmlHelpName>Ndb Documentation</HtmlHelpName>
+    <HtmlHelpName>NdbDocumentation</HtmlHelpName>
     <Language>en-US</Language>
     <CopyrightHref />
     <CopyrightText>Copyright © all rights reserved</CopyrightText>
@@ -70,6 +71,6 @@
     <CollectionTocStyle>Hierarchical</CollectionTocStyle>
     <IncludeStopWordList>True</IncludeStopWordList>
     <PlugInNamespaces>ms.vsipcc+, ms.vsexpresscc+</PlugInNamespaces>
-    <HelpFileVersion>1.0.7.46</HelpFileVersion>
+    <HelpFileVersion>1.0.51.0</HelpFileVersion>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
 </project>
