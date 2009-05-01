@@ -30,12 +30,11 @@ namespace ITCreatings.Ndb.Accessors
             return ";SELECT LAST_INSERT_ROWID()";
         }
 
-        internal override Dictionary<string, string> LoadFields(Type type)
+        internal override Dictionary<string, string> LoadFields(string tableName)
         {
-            string table = DbAttributesManager.GetTableName(type);
             try
             {
-                object scalar = ExecuteScalar(string.Format("SELECT sql FROM sqlite_master WHERE type='table' and name='{0}'", table));
+                object scalar = ExecuteScalar(string.Format("SELECT sql FROM sqlite_master WHERE type='table' and name='{0}'", tableName));
                 string sql = scalar.ToString();
                 int start = sql.IndexOf('(') + 1;
                 sql = sql.Substring(start, sql.IndexOf(')', start) - start);
@@ -54,7 +53,7 @@ namespace ITCreatings.Ndb.Accessors
             }
             catch (Exception ex)
             {
-                throw new NdbException("Can't load fields information from the following table: " + table, ex);
+                throw new NdbException("Can't load fields information from the following table: " + tableName, ex);
             }
         }
 
@@ -147,6 +146,11 @@ namespace ITCreatings.Ndb.Accessors
 
                 throw;
             }
+        }
+
+        public override string[] LoadTables()
+        {
+            throw new System.NotImplementedException();
         }
 
         private void createTriggers(DbRecordInfo info)

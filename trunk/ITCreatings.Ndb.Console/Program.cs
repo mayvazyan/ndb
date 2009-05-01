@@ -6,6 +6,7 @@ namespace ITCreatings.Ndb.NdbConsole
 {
     public class Program
     {
+        //TODO: add params validation
         public static void Main(string[] args)
         {
             if (args.Length < 4)
@@ -17,13 +18,6 @@ namespace ITCreatings.Ndb.NdbConsole
             string action = args[0];
             string provider = args[1];
             string connectionString = args[2];
-
-            string[] assemblies = new string[args.Length - 3];
-            for (int i = 3; i < args.Length; i++)
-            {
-                string path = args[i];
-                assemblies[i - 3] = path;
-            }
 
             Processor processor = new Processor();
 
@@ -44,7 +38,27 @@ namespace ITCreatings.Ndb.NdbConsole
 
             try
             {
-                processor.Run(assemblies);
+                switch (processor.action)
+                {
+                    case Action.Generate:
+                        string Path = args[3];
+                        
+                        string Namespace = (args.Length > 4) ? args[4] : null;
+                        processor.GenerateClasses(Path, Namespace);
+                        break;
+
+                    default:
+
+                        string[] assemblies = new string[args.Length - 3];
+                        for (int i = 3; i < args.Length; i++)
+                        {
+                            string path = args[i];
+                            assemblies[i - 3] = path;
+                        }
+
+                        processor.Run(assemblies);
+                        break;
+                }
             }
             catch(Exception ex)
             {

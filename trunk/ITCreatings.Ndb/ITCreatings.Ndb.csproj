@@ -114,6 +114,7 @@
     <Compile Include="Core\DbTableCheckResult.cs" />
     <Compile Include="Core\DbFieldInfo.cs" />
     <Compile Include="DbCachedGateway.cs" />
+    <Compile Include="DbCodeGenerator.cs" />
     <Compile Include="DbStructureGateway.cs" />
     <Compile Include="DbGateway.cs" />
     <Compile Include="ActiveRecord\DbActiveRecord.cs" />
@@ -145,10 +146,12 @@
     <Compile Include="Query\DbOrder.cs" />
     <Compile Include="Query\DbSortingDirection.cs" />
     <Compile Include="Execution\DbExecution.cs" />
+    <Compile Include="Tests\CompilerUtils.cs" />
     <Compile Include="Tests\Core\DbMapperTests.cs" />
     <Compile Include="Tests\Core\DbDependenciesResolverTests.cs" />
     <Compile Include="Tests\Data\BinaryDataRecord.cs" />
     <Compile Include="Tests\Data\TestStringLength.cs" />
+    <Compile Include="Tests\DbCodeGeneratorTests.cs" />
     <Compile Include="Tests\Execution\DbExecutionErrorTests.cs" />
     <Compile Include="Tests\Execution\DbExecutionTests.cs" />
     <Compile Include="Tests\MySql\MySqlDbGatewayTests.cs" />
@@ -175,7 +178,7 @@
     <Compile Include="Tests\DbTestUtils.cs" />
     <Compile Include="Tests\SqLite\SqLiteDbGatewayTests.cs" />
     <Compile Include="Tests\SqLite\SqLiteDbStructureGatewayTests.cs" />
-    <Compile Include="Tests\Utils\DbColumnNameValidatorTests.cs" />
+    <Compile Include="Tests\Utils\DbValidatorTests.cs" />
     <Compile Include="Utils\DbValidator.cs" />
   </ItemGroup>
   <ItemGroup>

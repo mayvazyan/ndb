@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Mime;
 using System.Reflection;
 using ITCreatings.Ndb.Exceptions;
 
@@ -8,7 +9,7 @@ namespace ITCreatings.Ndb.NdbConsole
 {
     public class Processor
     {
-        Action action;
+        public Action action { get; private set; }
         DbProvider provider;
         DbAccessor accessor;
         DbStructureGateway gateway;
@@ -83,6 +84,38 @@ namespace ITCreatings.Ndb.NdbConsole
             catch
             {
                 throw new ArgumentException(string.Format("Action {0} doesn't supported", _action));
+            }
+        }
+
+        public void GenerateClasses(string path, string @namespace)
+        {
+            DbCodeGenerator generator = new DbCodeGenerator(gateway);
+            if (!string.IsNullOrEmpty(@namespace))
+                generator.Namespace = @namespace;
+
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            string[] Tables = gateway.Accessor.LoadTables();
+            foreach (string table in Tables)
+            {
+                string generatedClass = generator.GenerateClass(table);
+                string filepath = Path.Combine(path, table + ".cs");
+
+                if (File.Exists(filepath))
+                {
+                    Console.WriteLine("Error: File {0} already exists", filepath);
+                    continue;
+                }
+
+                using (var sw = File.CreateText(filepath))
+                {
+                    sw.Write(generatedClass);
+                    sw.Close();
+                    
+                }
+
+                Console.WriteLine("Success: File {0} generated...", filepath);
             }
         }
     }

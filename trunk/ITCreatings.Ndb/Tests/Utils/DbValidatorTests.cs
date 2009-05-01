@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace ITCreatings.Ndb.Tests.Utils
 {
     [TestFixture]
-    public class DbColumnNameValidatorTests
+    public class DbValidatorTests
     {
         [Test]
         public void IsValidColumnNameTest()

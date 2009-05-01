@@ -372,11 +372,13 @@ namespace ITCreatings.Ndb.Tests
 
         #endregion
 
-        #region types conversion
+        [Test]
+        public void Loadtables()
+        {
+            string[] tables = gateway.Accessor.LoadTables();
+            Assert.Less(0, tables.Length);
+        }
 
-        
-
-        #endregion
     }
 }
 #endif

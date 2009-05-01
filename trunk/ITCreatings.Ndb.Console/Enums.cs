@@ -4,6 +4,11 @@
     {
         Create,
         Drop,
-        Alter
+        Alter,
+
+        /// <summary>
+        /// Generate Classes
+        /// </summary>
+        Generate
     }
 }

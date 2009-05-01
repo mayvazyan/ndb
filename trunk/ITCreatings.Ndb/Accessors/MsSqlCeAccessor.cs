@@ -33,7 +33,7 @@ namespace ITCreatings.Ndb.Accessors
             throw new NotImplementedException();
         }
 
-        internal override Dictionary<string, string> LoadFields(Type type)
+        internal override Dictionary<string, string> LoadFields(string tableName)
         {
             throw new NotImplementedException();
         }
@@ -49,6 +49,11 @@ namespace ITCreatings.Ndb.Accessors
         }
 
         internal override void CreateTable(DbRecordInfo info)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override string[] LoadTables()
         {
             throw new System.NotImplementedException();
         }

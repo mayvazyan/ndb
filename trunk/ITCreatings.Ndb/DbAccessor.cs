@@ -578,7 +578,7 @@ namespace ITCreatings.Ndb
         #region SDL
 
         internal abstract string GetSqlType(Type type, uint size);
-        internal abstract Dictionary<string, string> LoadFields(Type type);
+        internal abstract Dictionary<string, string> LoadFields(string tableName);
 
         /// <summary>
         /// Drops Table from Database
@@ -776,5 +776,13 @@ namespace ITCreatings.Ndb
         }
 
         #endregion
+
+        /// <summary>
+        /// Loads the tables.
+        /// 
+        /// Used in code generation purposes
+        /// </summary>
+        /// <returns></returns>
+        public abstract string[] LoadTables();
     }
 }

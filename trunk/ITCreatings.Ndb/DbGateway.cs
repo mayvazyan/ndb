@@ -675,6 +675,27 @@ namespace ITCreatings.Ndb
             return values;
         }
 
+        /// <summary>
+        /// Loads the array.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query">The query.</param>
+        /// <param name="column">The column.</param>
+        /// <returns></returns>
+        public T[] LoadArray<T>(string query, string column)
+        {
+            var list = new List<T>();
+            using (IDataReader reader = Accessor.ExecuteReader(query))
+            {
+                while (reader.Read())
+                {
+                    list.Add((T)reader[column]);
+                }
+                reader.Close();
+            }
+            return list.ToArray();
+        }
+
         #endregion
 
 

@@ -52,12 +52,18 @@ namespace ITCreatings.Ndb.Accessors
 
         #region SDL
 
-        internal override Dictionary<string, string> LoadFields(Type type)
+        public override string[] LoadTables()
+        {
+            DbGateway gateway = new DbGateway(this);
+            return gateway.LoadArray<string>("show table status where engine is not NULL", "Name");
+        }
+
+        internal override Dictionary<string, string> LoadFields(string tableName)
         {
             DbGateway gateway = new DbGateway(this);
 
             return gateway.LoadKeyValue<string, string>(
-                "describe " + DbAttributesManager.GetTableName(type), "Field", "Type");
+                "describe " + tableName, "Field", "Type");
         }
 
         internal override string GetSqlType(Type type, uint size)
@@ -107,17 +113,21 @@ namespace ITCreatings.Ndb.Accessors
             throw new NdbException("can't find MySql type for the .NET Type - " + type);
         }
 
+        public const uint NORMAL_MINSIZE = 256;
+        public const uint MEDUIM_MINSIZE = 65536;
+        public const uint LONG_MINSIZE = 16777216;
+
         internal static string getSqlType(string type, uint size)
         {
             string prefix;
 
-            if (size < 256)
+            if (size < NORMAL_MINSIZE)
                 prefix = "TINY";
             else
-            if (size < 65536)
+            if (size < MEDUIM_MINSIZE)
                 prefix = "";
             else
-            if (size < 16777216)
+            if (size < LONG_MINSIZE)
                 prefix = "MEDIUM";
             else
 //            if (size < 4294967296)

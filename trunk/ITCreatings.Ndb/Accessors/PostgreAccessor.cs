@@ -43,7 +43,8 @@ namespace ITCreatings.Ndb.Accessors
 
         #region SDL
 
-        internal override Dictionary<string, string> LoadFields(Type type)
+        
+        internal override Dictionary<string, string> LoadFields(string tableName)
         {
             //TODO: load field length also
 
@@ -57,7 +58,7 @@ namespace ITCreatings.Ndb.Accessors
                        AND a.attrelid = c.oid
                        AND a.atttypid = t.oid
                        AND attname NOT IN ('cmin', 'cmax', 'ctid', 'oid', 'tableoid', 'xmin', 'xmax')
-                     ORDER BY a.attnum", DbAttributesManager.GetTableName(type).ToLower()), "field", "type");
+                     ORDER BY a.attnum", tableName.ToLower()), "field", "type");
         }
 
         internal override string GetSqlType(Type type, uint size)
@@ -239,6 +240,11 @@ ALTER SEQUENCE tablename_colname_seq OWNED BY tablename.colname;*/
 //                throw;
 //            }
 
+        }
+
+        public override string[] LoadTables()
+        {
+            throw new System.NotImplementedException();
         }
 
         private static void ProcessIndexes(StringBuilder sb, 

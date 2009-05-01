@@ -24,7 +24,7 @@ namespace ITCreatings.Ndb.Core
             
             TableName = info.TableName;
 
-            Dictionary<string, string> fields = accessor.LoadFields(type);
+            Dictionary<string, string> fields = accessor.LoadFields(TableName);
 
             FieldsToCreate = new Dictionary<string, string>();
             FieldsToUpdate = new Dictionary<string, string>();
@@ -45,7 +45,7 @@ namespace ITCreatings.Ndb.Core
         public bool IsAllFieldValid(Type type)
         {
             DbRecordInfo info = DbAttributesManager.GetRecordInfo(type);
-            Dictionary<string, string> fields = accessor.LoadFields(type);
+            Dictionary<string, string> fields = accessor.LoadFields(info.TableName);
 
             DbFieldCheckResult checker = new DbFieldCheckResult(accessor);
 

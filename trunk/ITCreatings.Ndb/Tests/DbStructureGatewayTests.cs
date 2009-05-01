@@ -121,11 +121,10 @@ namespace ITCreatings.Ndb.Tests
             try
             {
                 dbGateway.Insert(user);
-                Assert.IsFalse(true);
+                Assert.Fail();
             }
             catch
             {
-                Assert.IsTrue(true);
             }
         }
 

@@ -43,7 +43,7 @@ WHERE Pager BETWEEN 2 AND 7*/
             throw new System.NotImplementedException();
         }
 
-        internal override Dictionary<string, string> LoadFields(Type type)
+        internal override Dictionary<string, string> LoadFields(string tableName)
         {
             throw new System.NotImplementedException();
         }
@@ -59,6 +59,11 @@ WHERE Pager BETWEEN 2 AND 7*/
         }
 
         internal override void CreateTable(DbRecordInfo info)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override string[] LoadTables()
         {
             throw new System.NotImplementedException();
         }
