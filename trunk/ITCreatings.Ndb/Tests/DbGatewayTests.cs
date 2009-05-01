@@ -1,6 +1,7 @@
 #if DEBUG
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization.Formatters.Binary;
 using ITCreatings.Ndb;
 using ITCreatings.Ndb.Exceptions;
 using ITCreatings.Ndb.Query;
@@ -25,6 +26,19 @@ namespace ITCreatings.Ndb.Tests
             Assert.IsTrue(gateway.Accessor.CanConnect);
         }
 
+        [Test]
+        public void BinaryTest()
+        {
+            Int32 value = 777;
+
+            BinaryDataRecord record = new BinaryDataRecord {Data = BitConverter.GetBytes(value) };
+            Assert.IsTrue(DbTestUtils.SaveTest(record));
+
+            BinaryDataRecord record2 = gateway.Load<BinaryDataRecord>(record.Id);
+            Assert.AreEqual(record.Data, record2.Data);
+            Assert.AreEqual(value, BitConverter.ToInt32(record2.Data, 0));
+        }
+        
         [Test]
         public void GuidTest()
         {
@@ -124,6 +138,8 @@ namespace ITCreatings.Ndb.Tests
 
         private static void assert(TestGuidRecord r1, TestGuidRecord r2)
         {
+            Assert.IsNotNull(r1);
+            Assert.IsNotNull(r2);
             Assert.AreEqual(r1.Guid, r2.Guid);
             Assert.AreEqual(r1.Title, r2.Title);
             Assert.AreEqual(r1.TestGuidField, r2.TestGuidField);

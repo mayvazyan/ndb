@@ -45,6 +45,7 @@ namespace ITCreatings.Ndb.Tests
                             ? new[]
                                   {
                                       typeof (TestGuidRecord),
+                                      typeof (BinaryDataRecord),
                                       typeof (User),
                                       typeof (TasksAssignment),
                                       typeof (Task),
@@ -53,6 +54,7 @@ namespace ITCreatings.Ndb.Tests
                                   }
                             : new[]
                                   {
+                                      typeof (BinaryDataRecord),
                                       typeof (User),
                                       typeof (TasksAssignment),
                                       typeof (Task),

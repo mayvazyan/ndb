@@ -84,18 +84,13 @@ namespace ITCreatings.Ndb.Accessors
             if (type == typeof(string))
                 return "VARCHAR";
 
-            if (type.BaseType == typeof(Enum))
-            {
-                Type _type = Enum.GetUnderlyingType(type);
-                return GetSqlType(_type);
-            }
-
             if (type == typeof(DateTime))
                 return "TIMESTAMP";
 
             if (type == typeof(Double)) return "FLOAT";
             if (type == typeof(Decimal)) return "FLOAT";
             if (type == typeof(Boolean)) return "BOOLEAN";
+            if (type == typeof(Byte[])) return "BLOB";
 
             throw new NdbException("can't find SqLite type for the .NET Type" + type);
         }

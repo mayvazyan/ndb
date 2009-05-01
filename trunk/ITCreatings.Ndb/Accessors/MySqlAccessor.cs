@@ -89,17 +89,11 @@ namespace ITCreatings.Ndb.Accessors
             if (type == typeof(Guid))
                 return "char(36)";
 
-
-            if (type.BaseType == typeof(Enum))
-            {
-                Type _type = Enum.GetUnderlyingType(type);
-                return GetSqlType(_type);
-            }
-                
             if (type == typeof(DateTime))   return "datetime";
             if (type == typeof(Double))     return "float";
             if (type == typeof(Decimal))    return "float";
             if (type == typeof(Boolean))    return "BOOLEAN";
+            if (type == typeof(Byte[]))     return "BLOB";
 
             throw new NdbException("can't find MySql type for the .NET Type - " + type);
         }

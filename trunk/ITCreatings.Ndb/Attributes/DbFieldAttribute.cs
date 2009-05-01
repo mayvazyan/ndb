@@ -9,7 +9,7 @@ namespace ITCreatings.Ndb.Attributes
     /// [DbField]
     /// public string LastName;
     /// 
-    /// [DbField(Name = "CreationDate")]
+    /// [DbField("CreationDate")]
     /// public DateTime Date;
     /// </code>
     /// </example>
@@ -20,12 +20,20 @@ namespace ITCreatings.Ndb.Attributes
         /// Name of the associated column
         /// <example>
         /// <code>
-        /// [DbField(Name = "CreationDate")]
+        /// [DbField("CreationDate")]
         /// public DateTime Date;
         /// </code>
         /// </example>
         /// </summary>
-        public string Name { get; set; }
+        internal string Name { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the column size.
+        /// </summary>
+        /// <value>The size.</value>
+        public uint Size { get; private set; }
+
+
 
         /// <summary>
         /// Constructor

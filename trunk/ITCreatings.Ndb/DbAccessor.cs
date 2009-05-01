@@ -606,7 +606,15 @@ namespace ITCreatings.Ndb
         {
             StringBuilder sb = new StringBuilder(field.Name);
             sb.Append(' ');
-            sb.Append(GetSqlType(field.FieldType));
+
+            Type type = field.FieldType;
+
+            if (type.BaseType == typeof(Enum))
+            {
+                type = Enum.GetUnderlyingType(type);
+            }
+            
+            sb.Append(GetSqlType(type));
             return sb.ToString();
         }
 

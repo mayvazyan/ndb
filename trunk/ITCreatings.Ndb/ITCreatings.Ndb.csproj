@@ -146,6 +146,7 @@
     <Compile Include="Execution\DbExecution.cs" />
     <Compile Include="Tests\Core\DbMapperTests.cs" />
     <Compile Include="Tests\Core\DbDependenciesResolverTests.cs" />
+    <Compile Include="Tests\Data\BinaryDataRecord.cs" />
     <Compile Include="Tests\Execution\DbExecutionErrorTests.cs" />
     <Compile Include="Tests\Execution\DbExecutionTests.cs" />
     <Compile Include="Tests\MySqlTests.cs" />

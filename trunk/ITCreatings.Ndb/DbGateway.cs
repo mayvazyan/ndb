@@ -844,16 +844,11 @@ namespace ITCreatings.Ndb
 
         private static object fixData(Type fieldType, object value)
         {
-//            if (fieldType == typeof(string) && value is string)
+//            if (fieldType == typeof(DateTime) && value is string)
 //            {
-//                
+//                DateTime dateTime;
+//                return DateTime.TryParse((string) value, out dateTime) ? dateTime : DateTime.MinValue;
 //            }
-//
-            if (fieldType == typeof(DateTime) && value is string)
-            {
-                DateTime dateTime;
-                return DateTime.TryParse((string) value, out dateTime) ? dateTime : DateTime.MinValue;
-            }
 
             if (fieldType == typeof(Guid) && value is string)
                 return new Guid((string)value);

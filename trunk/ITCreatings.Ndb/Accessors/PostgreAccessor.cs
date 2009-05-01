@@ -88,19 +88,13 @@ namespace ITCreatings.Ndb.Accessors
             if (type == typeof(Guid))
                 return "uuid";
 
-
-            if (type.BaseType == typeof(Enum))
-            {
-                Type _type = Enum.GetUnderlyingType(type);
-                return GetSqlType(_type);
-            }
-                
             if (type == typeof(DateTime))
                 return "timestamp";
 
             if (type == typeof(Double)) return "float";
             if (type == typeof(Decimal)) return "float";
             if (type == typeof(Boolean)) return "BOOLEAN";
+            if (type == typeof(Byte[])) return "bytea";
 
             throw new NdbException("can't find Postgre type for the .NET Type - " + type);
         }
