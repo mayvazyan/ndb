@@ -1,6 +1,4 @@
-﻿using ITCreatings.Ndb.Attributes.Indexes;
-
-namespace ITCreatings.Ndb.Attributes.Indexes
+﻿namespace ITCreatings.Ndb.Attributes
 {
     /// <summary>
     /// Marks field as Full Text indexed

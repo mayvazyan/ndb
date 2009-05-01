@@ -1,4 +1,4 @@
-﻿namespace ITCreatings.Ndb.Attributes.Indexes
+﻿namespace ITCreatings.Ndb.Attributes
 {
     /// <summary>
     /// Marks an field as unique

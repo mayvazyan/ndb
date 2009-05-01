@@ -1,4 +1,4 @@
-﻿namespace ITCreatings.Ndb.Attributes.Keys
+﻿namespace ITCreatings.Ndb.Attributes
 {
     /// <summary>
     /// Marks field as PrimaryKey
