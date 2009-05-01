@@ -63,31 +63,28 @@ namespace ITCreatings.Ndb.Accessors
         internal override string GetSqlType(Type type, uint size)
         {
             if (type == typeof(Byte))
-                return "tinyint";
+                return "tinyint(4)";
 
             if (type == typeof(Int32))
-                return "int";
+                return "int(10)";
 
             if (type == typeof(Int64))
-                return "bigint";
+                return "bigint(20)";
 
             if (type == typeof(Int16))
-                return "smallint";
+                return "smallint(10)";
 
             if (type == typeof(UInt32))
-                return "int unsigned";
+                return "int(10) unsigned";
 
             if (type == typeof(UInt64))
-                return "bigint unsigned";
+                return "bigint(20) unsigned";
 
             if (type == typeof(UInt16))
-                return "smallint unsigned";
+                return "smallint(10) unsigned";
 
-            if (type == typeof(string))
+            if (type == typeof(String))
             {
-                if (size == 0)
-                    size = 255;
-
                 if (size < 256)
                     return string.Concat("varchar(", size, ")"); // use varchar to allow indexes
 
@@ -129,29 +126,6 @@ namespace ITCreatings.Ndb.Accessors
 //                throw new NdbInvalidColumnSizeException(type, size);
 
             return string.Concat(prefix, type);
-        }
-
-        internal override Type GetType(string desc)
-        {
-            if (desc.StartsWith("int"))
-                return (desc.EndsWith("unsigned") ? typeof(UInt32) : typeof(Int32));
-
-            if (desc.StartsWith("bigint"))
-                return (desc.EndsWith("unsigned") ? typeof(UInt64) : typeof(Int64));
-
-            if (desc.StartsWith("smallint"))
-                return (desc.EndsWith("unsigned") ? typeof(UInt16) : typeof(Int16));
-
-            if (desc.StartsWith("tinyint"))
-                return (desc.EndsWith("unsigned") ? typeof(Byte) : typeof(Byte));
-
-            if (desc == "datetime")
-                return typeof(DateTime);
-
-            if (desc.StartsWith("char") || desc.StartsWith("varchar") || desc.StartsWith("text"))
-                return typeof(string);
-
-            throw new NdbException("can't find .NET type for MySQL Type " + desc);
         }
 
         public override bool DropTable(string TableName)

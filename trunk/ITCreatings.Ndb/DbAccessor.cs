@@ -577,20 +577,8 @@ namespace ITCreatings.Ndb
 
         #region SDL
 
-        internal string GetSqlType(Type type)
-        {
-            return GetSqlType(type, 0);
-        }
-
         internal abstract string GetSqlType(Type type, uint size);
         internal abstract Dictionary<string, string> LoadFields(Type type);
-
-        internal virtual Type GetType(string desc)
-        {
-            throw new NdbException("this method wasn't overloaded provider: " + dbProvider);
-        }
-
-
 
         /// <summary>
         /// Drops Table from Database

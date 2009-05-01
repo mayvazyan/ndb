@@ -11,8 +11,11 @@ namespace ITCreatings.Ndb.Attributes
     /// 
     /// [DbField("CreationDate")]
     /// public DateTime Date;
-    /// </code>
-    /// </example>
+    /// 
+    /// [DbField(1024)]
+    /// public byte[] Data;
+    /// </code> 
+    /// </example> 
     /// </summary>
     public class DbFieldAttribute : Attribute
     {
@@ -29,10 +32,27 @@ namespace ITCreatings.Ndb.Attributes
 
         /// <summary>
         /// Gets or sets the column size.
+        /// Can be used to specify max size of the string and byte[] fields.
+        /// Default value is 255.
+        /// <example>
+        /// <code>
+        /// [DbField(1024)]
+        /// public byte[] Data;
+        /// 
+        /// [DbField(512)]
+        /// public string Data;
+        /// </code>
+        /// </example>
         /// </summary>
         /// <value>The size.</value>
-        internal uint Size { get; private set; }
+        internal uint Size
+        {
+            get { return size; }
+            private set { size = value;}
+        }
 
+        private uint size = 255;
+        
 
         /// <summary>
         /// Constructor

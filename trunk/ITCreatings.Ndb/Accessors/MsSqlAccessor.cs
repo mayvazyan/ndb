@@ -48,11 +48,6 @@ WHERE Pager BETWEEN 2 AND 7*/
             throw new System.NotImplementedException();
         }
 
-        internal override Type GetType(string desc)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public override bool DropTable(string name)
         {
             throw new System.NotImplementedException();

@@ -45,6 +45,8 @@ namespace ITCreatings.Ndb.Accessors
 
         internal override Dictionary<string, string> LoadFields(Type type)
         {
+            //TODO: load field length also
+
             DbGateway gateway = new DbGateway(this);
 
             return gateway.LoadKeyValue<string, string>(

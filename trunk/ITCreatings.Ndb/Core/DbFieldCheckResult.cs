@@ -27,9 +27,8 @@ namespace ITCreatings.Ndb.Core
 
         public void Process(Dictionary<string, string> fields, DbFieldInfo fi)
         {
-            //TODO: check for column sizes
             Type fieldType = fi.FieldType;
-            SqlType = accessor.GetSqlType(fieldType);
+            SqlType = accessor.GetSqlType(fieldType, fi.Size);
 
             string columnName = (accessor.IsPostgre) ? fi.Name.ToLower() : fi.Name;
 
@@ -39,19 +38,8 @@ namespace ITCreatings.Ndb.Core
             {
                 CurrentSqlType = fields[columnName];
 
-                if (accessor.IsMySql)
-                {
-                    if (fieldType.BaseType == typeof (Enum))
-                        fieldType = Enum.GetUnderlyingType(fieldType);
-
-                    if (fieldType != accessor.GetType(CurrentSqlType))
-                        IsDifferent = true;
-                }
-                else
-                {
-                    if (CurrentSqlType != accessor.GetSqlType(fieldType))
-                        IsDifferent = true;
-                }
+                if (CurrentSqlType != SqlType)
+                    IsDifferent = true;
             }
         }
     }
