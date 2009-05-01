@@ -60,7 +60,7 @@ namespace ITCreatings.Ndb.Accessors
                 "describe " + DbAttributesManager.GetTableName(type), "Field", "Type");
         }
 
-        internal override string GetSqlType(Type type)
+        internal override string GetSqlType(Type type, uint size)
         {
             if (type == typeof(Byte))
                 return "tinyint";
@@ -84,7 +84,20 @@ namespace ITCreatings.Ndb.Accessors
                 return "smallint unsigned";
 
             if (type == typeof(string))
-                return "varchar(255)";
+            {
+                if (size == 0)
+                    size = 255;
+
+                if (size < 256)
+                    return string.Concat("varchar(", size, ")"); // use varchar to allow indexes
+
+                return getSqlType("TEXT", size);
+            }
+
+            if (type == typeof(Byte[]))
+            {
+                return getSqlType("BLOB", size);
+            }
 
             if (type == typeof(Guid))
                 return "char(36)";
@@ -93,9 +106,29 @@ namespace ITCreatings.Ndb.Accessors
             if (type == typeof(Double))     return "float";
             if (type == typeof(Decimal))    return "float";
             if (type == typeof(Boolean))    return "BOOLEAN";
-            if (type == typeof(Byte[]))     return "BLOB";
 
             throw new NdbException("can't find MySql type for the .NET Type - " + type);
+        }
+
+        internal static string getSqlType(string type, uint size)
+        {
+            string prefix;
+
+            if (size < 256)
+                prefix = "TINY";
+            else
+            if (size < 65536)
+                prefix = "";
+            else
+            if (size < 16777216)
+                prefix = "MEDIUM";
+            else
+//            if (size < 4294967296)
+                prefix = "LONG";
+//            else
+//                throw new NdbInvalidColumnSizeException(type, size);
+
+            return string.Concat(prefix, type);
         }
 
         internal override Type GetType(string desc)

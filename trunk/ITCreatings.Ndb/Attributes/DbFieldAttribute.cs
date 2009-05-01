@@ -31,8 +31,7 @@ namespace ITCreatings.Ndb.Attributes
         /// Gets or sets the column size.
         /// </summary>
         /// <value>The size.</value>
-        public uint Size { get; private set; }
-
+        internal uint Size { get; private set; }
 
 
         /// <summary>
@@ -42,6 +41,25 @@ namespace ITCreatings.Ndb.Attributes
         public DbFieldAttribute(string name)
         {
             Name = name;
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="size">The Size of the associated column</param>
+        public DbFieldAttribute(uint size)
+        {
+            Size = size;
+        }
+
+        /// <summary>
+        /// Full Constructor
+        /// </summary>
+        /// <param name="name">The Name of the associated column</param>
+        /// <param name="size">The Size of the associated column</param>
+        public DbFieldAttribute(string name, uint size) : this(name)
+        {
+            Size = size;
         }
 
         /// <summary>

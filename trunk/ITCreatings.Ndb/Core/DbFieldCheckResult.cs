@@ -27,6 +27,7 @@ namespace ITCreatings.Ndb.Core
 
         public void Process(Dictionary<string, string> fields, DbFieldInfo fi)
         {
+            //TODO: check for column sizes
             Type fieldType = fi.FieldType;
             SqlType = accessor.GetSqlType(fieldType);
 

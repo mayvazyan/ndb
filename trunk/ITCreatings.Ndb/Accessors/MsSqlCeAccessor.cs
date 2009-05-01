@@ -28,7 +28,7 @@ namespace ITCreatings.Ndb.Accessors
             return ";SELECT LAST_INSERT_ID()";
         }
 
-        internal override string GetSqlType(Type type)
+        internal override string GetSqlType(Type type, uint size)
         {
             throw new NotImplementedException();
         }

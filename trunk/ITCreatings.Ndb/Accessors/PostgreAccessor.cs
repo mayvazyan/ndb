@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Reflection;
 using System.Text;
 using ITCreatings.Ndb.Core;
 using ITCreatings.Ndb.Exceptions;
@@ -59,7 +58,7 @@ namespace ITCreatings.Ndb.Accessors
                      ORDER BY a.attnum", DbAttributesManager.GetTableName(type).ToLower()), "field", "type");
         }
 
-        internal override string GetSqlType(Type type)
+        internal override string GetSqlType(Type type, uint size)
         {
             if (type == typeof(Byte))
                 return "int2";
@@ -83,7 +82,12 @@ namespace ITCreatings.Ndb.Accessors
                 return "int4";
 
             if (type == typeof(string))
-                return "varchar";
+            {
+                if (size == 0)
+                    size = 255;
+
+                return string.Concat("varchar(", size, ")");
+            }
 
             if (type == typeof(Guid))
                 return "uuid";

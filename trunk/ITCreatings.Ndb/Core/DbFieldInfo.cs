@@ -13,24 +13,32 @@ namespace ITCreatings.Ndb.Core
         private readonly FieldInfo FieldInfo;
 
         /// <summary>
-        /// Field Type
+        /// Gets or sets the Field Type
         /// </summary>
         public Type FieldType { get { return FieldInfo.FieldType; } }
 
         /// <summary>
-        /// Name of the associated column
+        /// Gets or sets the associated column Name.
         /// </summary>
         public string Name { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the associated column size.
+        /// </summary>
+        /// <value>The size.</value>
+        public uint Size { get; private set; }
 
         /// <summary>
         /// Creates DbFieldInfo instance
         /// </summary>
         /// <param name="fieldInfo">Field Info</param>
         /// <param name="name">Name of the associated column</param>
-        public DbFieldInfo(FieldInfo fieldInfo, string name)
+        /// <param name="size">Size of the associated column</param>
+        public DbFieldInfo(FieldInfo fieldInfo, string name, uint size)
         {
             FieldInfo = fieldInfo;
             Name = (string.IsNullOrEmpty(name)) ? fieldInfo.Name : name;
+            Size = size;
         }
 
         /// <summary>

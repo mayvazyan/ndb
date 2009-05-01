@@ -76,8 +76,12 @@ namespace ITCreatings.Ndb.Core
                         List<Type> foreignTypes = new List<Type>(attributes.Length);
                         bool isPrimary = false;
                         string Name = null;
+                        uint Size = 0;
                         foreach (DbFieldAttribute attribute in attributes)
                         {
+                            if (attribute.Size > 0)
+                                Size = attribute.Size;
+
                             if (string.IsNullOrEmpty(Name))
                                 Name = attribute.Name;
 
@@ -93,7 +97,7 @@ namespace ITCreatings.Ndb.Core
 //                                    foreignKeys.Add(dbForeignKeyFieldAttribute.Type, dbFieldInfo);
                             }
                         }
-                        DbFieldInfo dbFieldInfo = new DbFieldInfo(field, Name);
+                        DbFieldInfo dbFieldInfo = new DbFieldInfo(field, Name, Size);
 
                         if (isPrimary)
                         {

@@ -38,7 +38,7 @@ WHERE Pager BETWEEN 2 AND 7*/
             return "LAST_INSERT_ID()";
         }
 
-        internal override string GetSqlType(Type type)
+        internal override string GetSqlType(Type type, uint size)
         {
             throw new System.NotImplementedException();
         }

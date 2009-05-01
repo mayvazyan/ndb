@@ -577,7 +577,12 @@ namespace ITCreatings.Ndb
 
         #region SDL
 
-        internal abstract string GetSqlType(Type type);
+        internal string GetSqlType(Type type)
+        {
+            return GetSqlType(type, 0);
+        }
+
+        internal abstract string GetSqlType(Type type, uint size);
         internal abstract Dictionary<string, string> LoadFields(Type type);
 
         internal virtual Type GetType(string desc)
@@ -614,7 +619,7 @@ namespace ITCreatings.Ndb
                 type = Enum.GetUnderlyingType(type);
             }
             
-            sb.Append(GetSqlType(type));
+            sb.Append(GetSqlType(type, field.Size));
             return sb.ToString();
         }
 

@@ -1,7 +1,6 @@
 #if DEBUG
 using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization.Formatters.Binary;
 using ITCreatings.Ndb;
 using ITCreatings.Ndb.Exceptions;
 using ITCreatings.Ndb.Query;
@@ -29,7 +28,7 @@ namespace ITCreatings.Ndb.Tests
         [Test]
         public void BinaryTest()
         {
-            Int32 value = 777;
+            const int value = 777;
 
             BinaryDataRecord record = new BinaryDataRecord {Data = BitConverter.GetBytes(value) };
             Assert.IsTrue(DbTestUtils.SaveTest(record));

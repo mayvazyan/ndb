@@ -123,6 +123,7 @@
     <Compile Include="ActiveRecord\DbIdentityRecord.cs" />
     <Compile Include="DbAccessor.cs" />
     <Compile Include="DbProvider.cs" />
+    <Compile Include="Exceptions\NdbInvalidColumnSizeException.cs" />
     <Compile Include="Exceptions\NdbInvalidFilterException.cs" />
     <Compile Include="Exceptions\NdbConnectionFailedException.cs" />
     <Compile Include="Exceptions\NdbException.cs">
@@ -147,10 +148,13 @@
     <Compile Include="Tests\Core\DbMapperTests.cs" />
     <Compile Include="Tests\Core\DbDependenciesResolverTests.cs" />
     <Compile Include="Tests\Data\BinaryDataRecord.cs" />
+    <Compile Include="Tests\Data\TestStringLength.cs" />
     <Compile Include="Tests\Execution\DbExecutionErrorTests.cs" />
     <Compile Include="Tests\Execution\DbExecutionTests.cs" />
-    <Compile Include="Tests\MySqlTests.cs" />
-    <Compile Include="Tests\PostgreTests.cs" />
+    <Compile Include="Tests\MySql\MySqlDbGatewayTests.cs" />
+    <Compile Include="Tests\MySql\MySqlDbStructureGatewayTests.cs" />
+    <Compile Include="Tests\Postgre\PostgreDbStructureGatewayTests.cs" />
+    <Compile Include="Tests\Postgre\PostgreDbGatewayTests.cs" />
     <Compile Include="Tests\Data\NewsItem.cs" />
     <Compile Include="Tests\Data\TestData.cs" />
     <Compile Include="Tests\Data\Event.cs" />
@@ -169,7 +173,8 @@
     <Compile Include="Tests\DbStructureGatewayTests.cs" />
     <Compile Include="Tests\DbTestFixture.cs" />
     <Compile Include="Tests\DbTestUtils.cs" />
-    <Compile Include="Tests\SqLiteTests.cs" />
+    <Compile Include="Tests\SqLite\SqLiteDbGatewayTests.cs" />
+    <Compile Include="Tests\SqLite\SqLiteDbStructureGatewayTests.cs" />
     <Compile Include="Tests\Utils\DbColumnNameValidatorTests.cs" />
     <Compile Include="Utils\DbValidator.cs" />
   </ItemGroup>
