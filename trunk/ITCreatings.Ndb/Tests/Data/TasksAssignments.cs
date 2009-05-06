@@ -12,11 +12,11 @@ namespace ITCreatings.Ndb.Tests.Data
 
         [DbForeignKeyField(typeof(Task))]
         [DbUniqueField(IndexName = IndexName)]
-        public ulong TaskId;
+        public long TaskId;
 
         [DbUniqueField(IndexName = IndexName)]
         [DbForeignKeyField(typeof(User))]
-        public ulong UserId;
+        public long UserId;
 
         [DbParentRecord] public readonly Task Task;
         [DbParentRecord] public readonly User User;

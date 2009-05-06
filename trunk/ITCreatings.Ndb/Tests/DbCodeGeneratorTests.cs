@@ -23,7 +23,7 @@ namespace ITCreatings.Ndb.Tests
             sgateway.CreateTables(typeof(User).Assembly);
 
             TestData data = new TestData(sgateway.Accessor);
-            ulong user = data.CreateUser();
+            long user = data.CreateUser();
             generator = new DbCodeGenerator(sgateway) {Namespace = "ITCreatings.Ndb.GeneratedObjects"};
         }
 

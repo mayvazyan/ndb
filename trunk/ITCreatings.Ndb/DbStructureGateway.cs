@@ -237,7 +237,7 @@ namespace ITCreatings.Ndb
                 bool allSuccess = true;
                 foreach (Type type in types)
                 {
-                    if (IsTableExists(type) && !DropTable(type))
+                    if (!DropTable(type))
                         allSuccess = false;
                 }
 

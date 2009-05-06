@@ -6,22 +6,22 @@ namespace ITCreatings.Ndb.Tests.Data
     [DbRecord("News")]
     public class NewsItem
     {
-        [DbPrimaryKeyField] public uint Id;
+        [DbPrimaryKeyField] public int Id;
         [DbField] public string Title;
-        [DbField] public uint Age;
+        [DbField] public int Age;
     }
 
     [DbRecord("News")]
     public class NewsItem2
     {
         [DbPrimaryKeyField]
-        public ulong Id;
+        public long Id;
         [DbField]
         public string Title;
         [DbField]
         public byte Age;
         [DbField]
-        public uint CategoryId;
+        public int CategoryId;
         [DbField]
         public string Content;
     }
@@ -30,18 +30,18 @@ namespace ITCreatings.Ndb.Tests.Data
     [DbRecord("NewsCat")]
     public class NewsItemCat
     {
-        [DbPrimaryKeyField] public uint Id;
+        [DbPrimaryKeyField] public int Id;
         [DbField] public string Title;
-        [DbField] public uint Age;
+        [DbField] public int Age;
 
-        [DbField] public uint CategoryId;
+        [DbField] public int CategoryId;
         [DbField] public string Content;
     }
     
     [DbRecord("NewsCat")]
     public class NewsItemCatChild : NewsItem
     {
-        [DbField] public uint CategoryId;
+        [DbField] public int CategoryId;
         [DbField] public string Content;
     }
 }

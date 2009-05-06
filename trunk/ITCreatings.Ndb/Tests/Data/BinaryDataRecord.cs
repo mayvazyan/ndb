@@ -5,10 +5,10 @@ using ITCreatings.Ndb.Attributes;
 
 namespace ITCreatings.Ndb.Tests.Data
 {
-    [DbRecord]
+    [DbRecord("BinaryDataRecords")]
     public class BinaryDataRecord
     {
-        [DbPrimaryKeyField] public uint Id;
+        [DbPrimaryKeyField] public int Id;
 
         [DbField] public byte[] Data;
 

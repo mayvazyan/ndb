@@ -29,16 +29,32 @@ namespace ITCreatings.Ndb.Core
         public uint Size { get; private set; }
 
         /// <summary>
+        /// Gets or sets the type of the db field.
+        /// </summary>
+        /// <value>The type of the db field.</value>
+        internal Type DbType { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether [differs from database type].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [differs from database type]; otherwise, <c>false</c>.
+        /// </value>
+        internal bool IsDiffersFromDatabaseType { get { return DbType != null; } }
+
+        /// <summary>
         /// Creates DbFieldInfo instance
         /// </summary>
         /// <param name="fieldInfo">Field Info</param>
         /// <param name="name">Name of the associated column</param>
         /// <param name="size">Size of the associated column</param>
-        public DbFieldInfo(FieldInfo fieldInfo, string name, uint size)
+        /// <param name="dbType">Type of the db field.</param>
+        public DbFieldInfo(FieldInfo fieldInfo, string name, uint size, Type dbType)
         {
             FieldInfo = fieldInfo;
             Name = (string.IsNullOrEmpty(name)) ? fieldInfo.Name : name;
             Size = size;
+            DbType = dbType;
         }
 
         /// <summary>

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Reflection;
 using System.Text;
 using ITCreatings.Ndb.Core;
 using ITCreatings.Ndb.Exceptions;
@@ -52,16 +51,13 @@ namespace ITCreatings.Ndb.Accessors
 
         #region SDL
 
-        public override string[] LoadTables()
+        internal override string[] LoadTables(DbGateway gateway)
         {
-            DbGateway gateway = new DbGateway(this);
-            return gateway.LoadArray<string>("show table status where engine is not NULL", "Name");
+            return gateway.LoadArray<string>("SHOW TABLE STATUS", "Name");
         }
 
-        internal override Dictionary<string, string> LoadFields(string tableName)
+        internal override Dictionary<string, string> LoadFields(DbGateway gateway, string tableName)
         {
-            DbGateway gateway = new DbGateway(this);
-
             return gateway.LoadKeyValue<string, string>(
                 "describe " + tableName, "Field", "Type");
         }
@@ -105,12 +101,12 @@ namespace ITCreatings.Ndb.Accessors
             if (type == typeof(Guid))
                 return "char(36)";
 
-            if (type == typeof(DateTime))   return "datetime";
+            if (type == typeof(DateTime) || type == typeof(DateTime?))   return "datetime";
             if (type == typeof(Double))     return "float";
             if (type == typeof(Decimal))    return "float";
             if (type == typeof(Boolean))    return "BOOLEAN";
 
-            throw new NdbException("can't find MySql type for the .NET Type - " + type);
+            throw new NdbUnsupportedColumnTypeException(Provider, type);
         }
 
         public const uint NORMAL_MINSIZE = 256;
@@ -142,7 +138,7 @@ namespace ITCreatings.Ndb.Accessors
         {
             try
             {
-                ExecuteNonQuery("DROP TABLE " + TableName);
+                ExecuteNonQuery(string.Concat("DROP TABLE IF EXISTS ", TableName, " CASCADE"));
                 return true;
             }
             catch (NdbConnectionFailedException)
@@ -161,22 +157,6 @@ namespace ITCreatings.Ndb.Accessors
             }
 #endif
             return false;
-        }
-
-        private static string[] getPrimaryKeys(DbRecordInfo info)
-        {
-            if (info is DbIdentityRecordInfo)
-            {
-                return new[] { (info as DbIdentityRecordInfo).PrimaryKey.Name };
-            }
-
-            List<string> list = new List<string>(info.Fields.Length);
-            foreach (DbFieldInfo field in info.Fields)
-            {
-                list.Add(field.Name);
-            }
-
-            return list.ToArray();
         }
 
         internal override void AlterTable(DbTableCheckResult checkResult)
@@ -248,17 +228,7 @@ namespace ITCreatings.Ndb.Accessors
             sb.Append(") ENGINE=InnoDB DEFAULT CHARSET=utf8");
 
             string query = sb.ToString();
-//            try
-//            {
-                ExecuteNonQuery(query);
-//            }
-//            catch (Exception ex)
-//            {
-//                Console.WriteLine(string.Format(
-//                                      "query {0} failed this error {1}", query, ex.Message));
-//                throw;
-//            }
-
+            ExecuteNonQuery(query);
         }
 
         private static void ProcessIndexes(StringBuilder sb, 
@@ -270,8 +240,22 @@ namespace ITCreatings.Ndb.Accessors
                     string.Join(",", index.Value.ToArray()), index.Key
                     );
             }
-                
+        }
 
+        private static string[] getPrimaryKeys(DbRecordInfo info)
+        {
+            if (info is DbIdentityRecordInfo)
+            {
+                return new[] { (info as DbIdentityRecordInfo).PrimaryKey.Name };
+            }
+
+            List<string> list = new List<string>(info.Fields.Length);
+            foreach (DbFieldInfo field in info.Fields)
+            {
+                list.Add(field.Name);
+            }
+
+            return list.ToArray();
         }
 
         #endregion

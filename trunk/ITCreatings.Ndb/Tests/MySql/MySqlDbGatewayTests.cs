@@ -22,7 +22,7 @@ namespace ITCreatings.Ndb.Tests.MySql
         [Test]
         public void EmptyDateTimeTest()
         {
-            var id = Convert.ToUInt64(
+            var id = Convert.ToInt64(
                 gateway.Accessor.InsertIdentity("Users", "Id",
                                                 "Email", "empty@example.com", "Dob", "0000-00-00 00:00:00"));
 

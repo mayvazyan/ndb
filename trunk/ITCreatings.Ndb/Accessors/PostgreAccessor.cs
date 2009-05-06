@@ -43,13 +43,10 @@ namespace ITCreatings.Ndb.Accessors
 
         #region SDL
 
-        
-        internal override Dictionary<string, string> LoadFields(string tableName)
+
+        internal override Dictionary<string, string> LoadFields(DbGateway gateway, string tableName)
         {
             //TODO: load field length also
-
-            DbGateway gateway = new DbGateway(this);
-
             return gateway.LoadKeyValue<string, string>(
                 string.Format(@"SELECT a.attname AS field, t.typname AS type
                       FROM pg_class c, pg_attribute a, pg_type t
@@ -103,7 +100,7 @@ namespace ITCreatings.Ndb.Accessors
             if (type == typeof(Boolean)) return "BOOLEAN";
             if (type == typeof(Byte[])) return "bytea";
 
-            throw new NdbException("can't find Postgre type for the .NET Type - " + type);
+            throw new NdbUnsupportedColumnTypeException(Provider, type);
         }
 
         public override bool DropTable(string TableName)
@@ -242,7 +239,7 @@ ALTER SEQUENCE tablename_colname_seq OWNED BY tablename.colname;*/
 
         }
 
-        public override string[] LoadTables()
+        internal override string[] LoadTables(DbGateway gateway)
         {
             throw new System.NotImplementedException();
         }

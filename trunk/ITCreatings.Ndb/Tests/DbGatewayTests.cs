@@ -37,12 +37,39 @@ namespace ITCreatings.Ndb.Tests
             Assert.AreEqual(record.Data, record2.Data);
             Assert.AreEqual(value, BitConverter.ToInt32(record2.Data, 0));
         }
-        
+
+        [Test]
+        public void ConvertBinaryToIntTest()
+        {
+            var record = new BinaryDataRecord2 { Data = 77 };
+
+            Assert.IsTrue(DbTestUtils.SaveTest(record));
+
+            var record2 = gateway.Load<BinaryDataRecord2>(record.Id);
+            Assert.AreEqual(record.Data, record2.Data);
+        }
+
+        [Test]
+        public void ConvertBinaryToStringTest()
+        {
+            var record = new BinaryDataRecord3 { Data = "77" };
+
+            Assert.IsTrue(DbTestUtils.SaveTest(record));
+
+            var record2 = gateway.Load<BinaryDataRecord3>(record.Id);
+            Assert.AreEqual(record.Data, record2.Data);
+        }
+
+        private void CheckIsGuidSupports()
+        {
+            if (!IsGuidSupported)
+                Assert.Ignore("GUID Not Supported by {0} currently", gateway.Accessor);
+        }
+
         [Test]
         public void GuidTest()
         {
-            if (!gateway.Accessor.IsMySql)
-                Assert.Ignore("Supported only by MySQL currently");
+            CheckIsGuidSupports();
 
             TestGuidRecord record = TestData.CreateTestGuidRecord("test");
             Assert.IsTrue(DbTestUtils.SaveTest(record));
@@ -71,8 +98,7 @@ namespace ITCreatings.Ndb.Tests
         [Test]
         public void InsertGuidTest()
         {
-            if (!gateway.Accessor.IsMySql)
-                Assert.Ignore("Supported only by MySQL currently");
+            CheckIsGuidSupports();
 
             TestGuidRecord record = TestData.CreateTestGuidRecord("test");
             ulong count = gateway.LoadCount(typeof(TestGuidRecord));
@@ -90,8 +116,7 @@ namespace ITCreatings.Ndb.Tests
         [Test]
         public void EmptyGuidTest()
         {
-            if (!gateway.Accessor.IsMySql)
-                Assert.Ignore("Supported only by MySQL currently");
+            CheckIsGuidSupports();
 
             TestGuidRecord record2 = TestData.CreateTestGuidRecord("test");
             record2.TestGuidField = Guid.Empty;
@@ -258,7 +283,7 @@ namespace ITCreatings.Ndb.Tests
             var expression = new DbColumnFilterExpression(DbExpressionType.Equal, "Em?ail", "some email");
             var expressions = new List<DbFilterExpression> {expression};
 
-            User[] users = gateway.Select<User>(expressions).Load();
+            User[] users = gateway.Select(expressions).Load<User>();
         }
 
         [Test]
@@ -269,14 +294,39 @@ namespace ITCreatings.Ndb.Tests
             var expressions = new List<DbFilterExpression>();
             expressions.Add(expression);
 
-            User[] list = gateway.Select<User>(expressions).Load();
+            User[] list = gateway.Select(expressions).Load<User>();
             Assert.AreEqual(1, list.Length);
 
             expression.Value = "other@example.com";
-            list = gateway.Select<User>(expressions).Load();
+            list = gateway.Select(expressions).Load<User>();
             Assert.AreEqual(0, list.Length);
         }
 
+        [Test]
+        public void LoadResultFilterExpressionTest()
+        {
+            if (!gateway.Accessor.IsMySql)
+                Assert.Ignore("LoadResult currently supported only by mysql");
+
+            var expression = new DbColumnFilterExpression(
+                DbExpressionType.Equal, "Email", TestData.TestUser.Email);
+            var expressions = new List<DbFilterExpression>();
+            expressions.Add(expression);
+
+            DbQueryResult<User> result = gateway.Select(expressions).LoadResult<User>(true);
+            Assert.AreEqual(1, result.Records.Length);
+            Assert.AreEqual(1, result.TotalRecordsCount);
+
+            result = gateway.Select(expressions).LoadResult<User>(false);
+            Assert.AreEqual(1, result.Records.Length);
+            Assert.AreEqual(0, result.TotalRecordsCount);
+
+            expression.Value = "other@example.com";
+            result = gateway.Select(expressions).LoadResult<User>(true);
+            Assert.AreEqual(0, result.Records.Length);
+            Assert.AreEqual(0, result.TotalRecordsCount);
+        }
+        
         #region DbQuery
 
         [Test]
@@ -293,21 +343,19 @@ namespace ITCreatings.Ndb.Tests
             user.LastName = null;
             gateway.Insert(user);
 
-            User[] usersList = DbQuery<User>
+            User[] usersList = DbQuery
                 .Create(gateway)
-                .Load();
+                .Load<User>();
 
             Assert.AreEqual(4, usersList.Length);
 
-            var list = DbQuery<User>
-                .Create(gateway)
+            var list = DbQuery.Create(gateway)
                 .Contains("Email", "ser'3")
-                .Load();
+                .Load<User>();
 
             Assert.AreEqual(1, list.Length);
 
-            list = DbQuery<User>
-                .Create(gateway)
+            list = DbQuery.Create(gateway)
                 .Contains("Email", "4@e")
                 .StartsWith("Email", "duser4@")
                 .EndsWith("Email", "4@example.com")
@@ -315,7 +363,7 @@ namespace ITCreatings.Ndb.Tests
                 .IsNull("LastName")
                 .Greater("Id", 0)
                 .Less("Id", 100)
-                .Load();
+                .Load<User>();
 
             Assert.AreEqual(1, list.Length);
         }
@@ -328,16 +376,16 @@ namespace ITCreatings.Ndb.Tests
             gateway.Insert(user);
 
 
-            var list = DbQuery<User>.Create(gateway)
+            var list = DbQuery.Create(gateway)
                 .OrderBy("Email")
-                .Load();
+                .Load<User>();
 
             Assert.AreEqual(2, list.Length);
             Assert.AreEqual(user.Email, list[0].Email);
 
-            list = DbQuery<User>.Create(gateway)
+            list = DbQuery.Create(gateway)
                 .OrderBy("Email", DbSortingDirection.Desc)
-                .Load();
+                .Load<User>();
 
             Assert.AreEqual(2, list.Length);
             Assert.AreEqual(user.Email, list[1].Email);
@@ -351,20 +399,20 @@ namespace ITCreatings.Ndb.Tests
             
             gateway.Insert(user2);
 
-            var list = DbQuery<User>
+            var list = DbQuery
                 .Create(gateway)
                 .OrderBy("Email")
                 .Limit(1)
-                .Load();
+                .Load<User>();
 
             Assert.AreEqual(1, list.Length);
             Assert.AreEqual(user.Email, list[0].Email);
 
-            list = gateway.Select<User>()
+            list = gateway.Select()
                 .OrderBy("Email")
                 .Limit(1)
                 .Offset(1)
-                .Load();
+                .Load<User>();
 
             Assert.AreEqual(1, list.Length);
             Assert.AreEqual(user2.Email, list[0].Email);

@@ -8,13 +8,13 @@ namespace ITCreatings.Ndb.Tests.Data
     [DbRecord("WorkLogs")]
     public class WorkLog : DbActiveRecord
     {
-        [DbPrimaryKeyField] public ulong Id;
-        [DbField] public uint TaskId;
-        [DbForeignKeyField(typeof(User))] public ulong UserId;
-        [DbField] public uint SpentMinutes;
-        [DbField] public DateTime Date;
+        [DbPrimaryKeyField] public long Id;
+        [DbField] public int TaskId;
+        [DbForeignKeyField(typeof(User))] public long UserId;
+        [DbField] public int SpentMinutes;
+        [DbField] public DateTime? Date;
         [DbField] public string Description;
-        [DbField] public DateTime Timestamp;
+        [DbField] public DateTime? Timestamp;
     }
 }
 #endif

@@ -62,8 +62,19 @@ namespace ITCreatings.Ndb.Tests
         {
             TimeSpan diff = dateTime1.Date.Subtract(dateTime2.Date);
             return Convert.ToUInt32(diff.TotalSeconds);
-        }        
-        
+        }
+
+        /// <summary>
+        /// Returns whole seconds difference between passed Dates
+        /// </summary>
+        /// <param name="dateTime1">The date time1.</param>
+        /// <param name="dateTime2">The date time2.</param>
+        /// <returns></returns>
+        public UInt32 DiffInSeconds(DateTime? dateTime1, DateTime? dateTime2)
+        {
+            return DiffInSeconds(dateTime1.Value, dateTime2.Value);
+        }
+
         #region Helpers
 
         /// <summary>

@@ -4,7 +4,7 @@ using ITCreatings.Ndb.Attributes;
 
 namespace ITCreatings.Ndb.Tests.Data
 {
-    public enum EventType : ushort
+    public enum EventType : short
     {
         // (means that the entry added to the Logs table)
         ActivityLog = 1,
@@ -18,13 +18,13 @@ namespace ITCreatings.Ndb.Tests.Data
     public class TestWorkLogItem
     {
         [DbPrimaryKeyField]
-        public UInt32 Id;
+        public Int32 Id;
 
         [DbField]
-        public UInt32 TaskId;
+        public Int32 TaskId;
 
         [DbForeignKeyField(typeof(User))]
-        public UInt64 UserId;
+        public Int64 UserId;
 
         [DbField]
         public uint SpentMinutes;
@@ -41,7 +41,7 @@ namespace ITCreatings.Ndb.Tests.Data
     public class TestWorkLogItem3
     {
         [DbPrimaryKeyField]
-        public UInt32 Id;
+        public Int32 Id;
 
         [DbField]
         public string Description2;
@@ -51,10 +51,10 @@ namespace ITCreatings.Ndb.Tests.Data
     public class TestWorkLogItem2
     {
         [DbPrimaryKeyField]
-        public UInt32 Id;
+        public Int32 Id;
 
         [DbField]
-        public UInt32 TaskId;
+        public Int32 TaskId;
 
         [DbForeignKeyField(typeof(User))]
         public Int16 UserId;

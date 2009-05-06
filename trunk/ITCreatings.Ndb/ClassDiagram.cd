@@ -1,0 +1,383 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ITCreatings.Ndb.Accessors.MsSqlAccessor" Collapsed="true">
+    <Position X="7" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAgAAAAABAAARAQAAAAEAAABAAUAAAAAAgA=</HashCode>
+      <FileName>Accessors\MsSqlAccessor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Accessors.MsSqlCeAccessor" Collapsed="true">
+    <Position X="7" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAABAAAAAAEAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>Accessors\MsSqlCeAccessor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Accessors.MySqlAccessor" Collapsed="true">
+    <Position X="9.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAQCgAAAAABAAARAQAAAgEAAABACUBAAAAAgA=</HashCode>
+      <FileName>Accessors\MySqlAccessor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Accessors.PostgreAccessor" Collapsed="true">
+    <Position X="13.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAgAAAAABAAARAQAAAAEAAABAAUAAAAAAgA=</HashCode>
+      <FileName>Accessors\PostgreAccessor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Accessors.SqLiteAccessor" Collapsed="true">
+    <Position X="11.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIQAgAAAAABAAARAYAAAAEAAABAAEAAAAAAgA=</HashCode>
+      <FileName>Accessors\SqLiteAccessor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.ActiveRecord.DbActiveRecord" Collapsed="true">
+    <Position X="6.75" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAAAQAAAIAQAAAEAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>ActiveRecord\DbActiveRecord.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.ActiveRecord.DbIdentityRecord" Collapsed="true">
+    <Position X="6.75" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ActiveRecord\DbIdentityRecord.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Attributes.DbFieldAttribute" Collapsed="true">
+    <Position X="13.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAIAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Attributes\DbFieldAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Attributes.DbRecordAttribute" Collapsed="true">
+    <Position X="25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>Attributes\DbRecordAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Attributes.DbFullTextIndexedFieldAttribute" Collapsed="true">
+    <Position X="12.25" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Attributes\Indexes\DbFullTextIndexedFieldAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Attributes.DbIndexedFieldAttribute" Collapsed="true">
+    <Position X="11" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Attributes\Indexes\DbIndexedFieldAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Attributes.DbUniqueFieldAttribute" Collapsed="true">
+    <Position X="10" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Attributes\Indexes\DbUniqueFieldAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Attributes.DbForeignKeyFieldAttribute" Collapsed="true">
+    <Position X="16.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Attributes\Keys\DbForeignKeyFieldAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Attributes.DbPrimaryKeyFieldAttribute" Collapsed="true">
+    <Position X="14.5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Attributes\Keys\DbPrimaryKeyFieldAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Attributes.DbChildRecordsAttribute" Collapsed="true">
+    <Position X="26.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Attributes\Relations\DbChildRecords.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Attributes.DbParentRecordAttribute" Collapsed="true">
+    <Position X="28.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Attributes\Relations\DbParentRecordAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Core.DbAttributesManager" Collapsed="true">
+    <Position X="23.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEEAAAAAAAAAAAAIAAAAAAAAAAAAAkAACAAAAA=</HashCode>
+      <FileName>Core\DbAttributesManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Core.DbDependenciesResolver&lt;T&gt;" Collapsed="true">
+    <Position X="23.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAQAACAAACAAAAEAAAAAAAAAAAAAEAAgAAAAAAA=</HashCode>
+      <FileName>Core\DbDependenciesResolver.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Core.DbFieldCheckResult" Collapsed="true">
+    <Position X="28.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAgAAEAAAAAAAgAAAAEAAAAAAAAE=</HashCode>
+      <FileName>Core\DbFieldCheckResult.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Core.DbFieldInfo" Collapsed="true">
+    <Position X="30.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIBAIAAAggAEgAAAAAQAAAACAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\DbFieldInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Core.DbIdentityRecordInfo" Collapsed="true">
+    <Position X="6.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAgAA=</HashCode>
+      <FileName>Core\DbIdentityRecordInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Core.DbIndexesInfo" Collapsed="true">
+    <Position X="25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAgAAAAQAAAACBAAAAAAAgAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Core\DbIndexesInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Core.DbRecordInfo" Collapsed="true">
+    <Position X="6.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAIAAAAIAAAAAAAAAAAAAAAAAIAAAAAQEIgAA=</HashCode>
+      <FileName>Core\DbRecordInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Core.DbRecords" Collapsed="true">
+    <Position X="26.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Core\DbRecords.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Core.DbRecordsMapper" Collapsed="true">
+    <Position X="28.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\DbRecordsMapper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Core.DbTableCheckResult" Collapsed="true">
+    <Position X="23.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAACAAAAAAAAIAAAAAAAgAAAAQAAAQAAAAA=</HashCode>
+      <FileName>Core\DbTableCheckResult.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Exceptions.NdbConnectionFailedException" Collapsed="true">
+    <Position X="7.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Exceptions\NdbConnectionFailedException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Exceptions.NdbException" Collapsed="true">
+    <Position X="14" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Exceptions\NdbException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Exceptions.NdbInvalidColumnNameException" Collapsed="true">
+    <Position X="18.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Exceptions\NdbInvalidColumnNameException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Exceptions.NdbInvalidColumnSizeException" Collapsed="true">
+    <Position X="9.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Exceptions\NdbInvalidColumnSizeException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Exceptions.NdbInvalidFilterException" Collapsed="true">
+    <Position X="14" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Exceptions\NdbInvalidFilterException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Exceptions.NdbNotIdentityException" Collapsed="true">
+    <Position X="20.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>Exceptions\NdbNotIdentityException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Exceptions.NdbRelationException" Collapsed="true">
+    <Position X="11.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Exceptions\NdbRelationException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Exceptions.NdbUnsupportedColumnTypeException" Collapsed="true">
+    <Position X="16.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Exceptions\NdbUnsupportedColumnTypeException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Execution.DbExecution&lt;T&gt;" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQIAKIAUQCAAEAAAQAAAAJAEAAAAAAAAAIAAA=</HashCode>
+      <FileName>Execution\DbExecution.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ITCreatings.Ndb.Execution.DbExecutionError" Collapsed="true">
+    <Position X="26.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>RiABIAAAAAAAQAAAAAIAAAAAAAgAAQAAAABAIAEAACA=</HashCode>
+      <FileName>Execution\DbExecutionError.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Query.DbColumnFilterExpression" Collapsed="true">
+    <Position X="14.75" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAIAAAAAgBAAAAAA=</HashCode>
+      <FileName>Query\DbColumnFilterExpression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Query.DbColumnToColumnFilterExpression" Collapsed="true">
+    <Position X="17" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Query\DbColumnToColumnFilterExpression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Query.DbFilterExpression" Collapsed="true">
+    <Position X="16" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAABAAAAAAAAAAAAAAAAABAAAAIA=</HashCode>
+      <FileName>Query\DbFilterExpression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Query.DbOrder" Collapsed="true">
+    <Position X="26.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Query\DbOrder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Query.DbQuery" Collapsed="true">
+    <Position X="30.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIOAgAgAAAAAAAAAgAAAIQAAAAEAAEAIQQAAGAAYgAA=</HashCode>
+      <FileName>Query\DbQuery.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Query.DbQueryBuilder" Collapsed="true">
+    <Position X="23.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Query\DbQueryBuilder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Utils.DbCompilerUtils" Collapsed="true">
+    <Position X="30.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Utils\DbCompilerUtils.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.Utils.DbValidator" Collapsed="true">
+    <Position X="25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAACAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>Utils\DbValidator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.DbAccessor" Collapsed="true">
+    <Position X="10.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAQAkEQAQAgEEChABAAARFSGBAtEAEQhYCkACAAAAgA=</HashCode>
+      <FileName>DbAccessor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.DbCachedGateway" Collapsed="true">
+    <Position X="25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAgAAAAAAAAAAAAIAABAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DbCachedGateway.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.DbCodeGenerator" Collapsed="true">
+    <Position X="28.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEgAAAABAAAAQACIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DbCodeGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.DbGateway" Collapsed="true">
+    <Position X="23.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAgMQCIIDkAIAAQAIBAACBAAFgAABAYIAAQIAEAAA=</HashCode>
+      <FileName>DbGateway.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ITCreatings.Ndb.DbStructureGateway" Collapsed="true">
+    <Position X="30.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACIAAAAAAABIhAQASAgABAiIAAQAAAABAAAAA=</HashCode>
+      <FileName>DbStructureGateway.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="ITCreatings.Ndb.Execution.IDbExecution&lt;T&gt;" Collapsed="true">
+    <Position X="23.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAQAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Execution\IDbExecution.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="ITCreatings.Ndb.Execution.DbExecutionErrorCode" Collapsed="true">
+    <Position X="23.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>Execution\DbExecutionErrorCode.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ITCreatings.Ndb.Query.DbExpressionType" Collapsed="true">
+    <Position X="25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAgAAAAAAAAAAAAAAIQQAAEAAYAAA=</HashCode>
+      <FileName>Query\DbExpressionType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ITCreatings.Ndb.Query.DbSortingDirection" Collapsed="true">
+    <Position X="28.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAQAAAAAA=</HashCode>
+      <FileName>Query\DbSortingDirection.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ITCreatings.Ndb.DbProvider" Collapsed="true">
+    <Position X="26.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAAAAQAICAAgAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>DbProvider.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

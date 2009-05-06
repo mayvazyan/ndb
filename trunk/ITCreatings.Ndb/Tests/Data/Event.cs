@@ -8,10 +8,10 @@ namespace ITCreatings.Ndb.Tests.Data
     public class Event
     {
         [DbPrimaryKeyField]
-        public ulong Id;
+        public long Id;
 
         [DbForeignKeyField(typeof(User))]
-        public ulong UserId;
+        public long UserId;
 
         [DbField]
         public EventType EventTypeId;

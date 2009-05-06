@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
+﻿using System.Data.Common;
 using System.Data.SqlServerCe;
-using ITCreatings.Ndb.Core;
 
 namespace ITCreatings.Ndb.Accessors
 {
-    internal class MsSqlCeAccessor : DbAccessor
+    internal class MsSqlCeAccessor : MsSqlAccessor
     {
-        public override string BuildLimits(string query, int limit, int offset)
-        {
-            throw new System.NotImplementedException();
-        }
-
         protected override DbCommand Command(string query)
         {
             return new SqlCeCommand(query, new SqlCeConnection(ConnectionString));
@@ -27,13 +19,18 @@ namespace ITCreatings.Ndb.Accessors
         {
             return ";SELECT LAST_INSERT_ID()";
         }
+/*
+        public override string BuildLimits(string query, int limit, int offset)
+        {
+            throw new System.NotImplementedException();
+        }
 
         internal override string GetSqlType(Type type, uint size)
         {
-            throw new NotImplementedException();
+            throw new NdbUnsupportedColumnTypeException(Provider, type);
         }
 
-        internal override Dictionary<string, string> LoadFields(string tableName)
+        internal override Dictionary<string, string> LoadFields(DbGateway gateway, string tableName)
         {
             throw new NotImplementedException();
         }
@@ -53,9 +50,10 @@ namespace ITCreatings.Ndb.Accessors
             throw new System.NotImplementedException();
         }
 
-        public override string[] LoadTables()
+        internal override string[] LoadTables(DbGateway gateway)
         {
             throw new System.NotImplementedException();
         }
+ */
     }
 }

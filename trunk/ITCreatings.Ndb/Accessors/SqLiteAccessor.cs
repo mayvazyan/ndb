@@ -30,7 +30,7 @@ namespace ITCreatings.Ndb.Accessors
             return ";SELECT LAST_INSERT_ROWID()";
         }
 
-        internal override Dictionary<string, string> LoadFields(string tableName)
+        internal override Dictionary<string, string> LoadFields(DbGateway gateway, string tableName)
         {
             try
             {
@@ -83,15 +83,14 @@ namespace ITCreatings.Ndb.Accessors
             if (type == typeof(string))
                 return "VARCHAR";
 
-            if (type == typeof(DateTime))
-                return "TIMESTAMP";
+            if (type == typeof(DateTime) || type == typeof(DateTime?)) return "TIMESTAMP";
 
             if (type == typeof(Double)) return "FLOAT";
             if (type == typeof(Decimal)) return "FLOAT";
             if (type == typeof(Boolean)) return "BOOLEAN";
             if (type == typeof(Byte[])) return "BLOB";
 
-            throw new NdbException("can't find SqLite type for the .NET Type" + type);
+            throw new NdbUnsupportedColumnTypeException(Provider, type);
         }
 
         public override bool DropTable(string TableName)
@@ -148,7 +147,7 @@ namespace ITCreatings.Ndb.Accessors
             }
         }
 
-        public override string[] LoadTables()
+        internal override string[] LoadTables(DbGateway gateway)
         {
             throw new System.NotImplementedException();
         }

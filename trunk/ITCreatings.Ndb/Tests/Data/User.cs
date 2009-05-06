@@ -9,7 +9,7 @@ namespace ITCreatings.Ndb.Tests.Data
     [DbRecord]
     public class User : DbActiveRecord
     {
-        [DbPrimaryKeyField] public UInt64 Id;
+        [DbPrimaryKeyField] public Int64 Id;
 
         [DbField]
         public RolesManager.Ids RoleId;
@@ -30,7 +30,7 @@ namespace ITCreatings.Ndb.Tests.Data
         /// Date of Birthday
         /// </summary>
         [DbField]
-        public DateTime Dob;
+        public DateTime? Dob;
 
         public string FullName { get { return FirstName + " " + LastName; } }
 

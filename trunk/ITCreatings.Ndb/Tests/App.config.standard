@@ -23,7 +23,8 @@
     
     <add connectionString="Data Source=test.sdf" name="MsSqlCe" providerName="MsSqlCe" />
     <add connectionString="Data Source=test.db" name="SqLite" providerName="SqLite" />
+    <add connectionString="Data Source=SOLOGUT\SQLEXPRESS;Initial Catalog=ndb;Integrated Security=True;Pooling=True" name="MsSql" providerName="MsSql" />
     <add connectionString="User ID=postgres;Password=1;Host=localhost;Port=5432;Database=ndb_test;" name="Postgre" providerName="Postgre" />
-    <add connectionString="ConvertZeroDateTime=true;User=root;Database=wta_test" name="NdbConnection" providerName="MySql" />
+    <add connectionString="User=root;Database=wta_test;ConvertZeroDateTime=true;" name="NdbConnection" providerName="MySql" />
   </connectionStrings>
 </configuration>

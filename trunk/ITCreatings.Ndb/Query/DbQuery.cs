@@ -8,8 +8,7 @@ namespace ITCreatings.Ndb.Query
     /// <summary>
     /// SQL Query builder
     /// </summary>
-    /// <typeparam name="T">Type to Load</typeparam>
-    public class DbQuery<T>
+    public class DbQuery
     {
         #region Data
 
@@ -66,9 +65,9 @@ namespace ITCreatings.Ndb.Query
         /// Creates this instance.
         /// </summary>
         /// <returns></returns>
-        public static DbQuery<T> Create(DbGateway gateway)
+        public static DbQuery Create(DbGateway gateway)
         {
-            return new DbQuery<T>(gateway);
+            return new DbQuery(gateway);
         }
 
         /// <summary>
@@ -77,9 +76,9 @@ namespace ITCreatings.Ndb.Query
         /// <param name="gateway">The gateway</param>
         /// <param name="filterExpressions">The filter expressions.</param>
         /// <returns></returns>
-        public static DbQuery<T> Create(DbGateway gateway, List<DbFilterExpression> filterExpressions)
+        public static DbQuery Create(DbGateway gateway, List<DbFilterExpression> filterExpressions)
         {
-            return new DbQuery<T>(gateway, filterExpressions);
+            return new DbQuery(gateway, filterExpressions);
         }
 
         #endregion
@@ -93,7 +92,7 @@ namespace ITCreatings.Ndb.Query
         /// </summary>
         /// <param name="Limit"></param>
         /// <returns></returns>
-        public DbQuery<T> Limit(int Limit)
+        public DbQuery Limit(int Limit)
         {
             limit = Limit;
             return this;
@@ -104,7 +103,7 @@ namespace ITCreatings.Ndb.Query
         /// </summary>
         /// <param name="Offset"></param>
         /// <returns></returns>
-        public DbQuery<T> Offset(int Offset)
+        public DbQuery Offset(int Offset)
         {
             offset = Offset;
             return this;
@@ -116,7 +115,7 @@ namespace ITCreatings.Ndb.Query
         /// <param name="limit">The limit.</param>
         /// <param name="offset">The offset.</param>
         /// <returns></returns>
-        public DbQuery<T> Limit(int limit, int offset)
+        public DbQuery Limit(int limit, int offset)
         {
             return Limit(limit)
                 .Offset(offset);
@@ -131,7 +130,7 @@ namespace ITCreatings.Ndb.Query
         /// </summary>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        public DbQuery<T> OrderBy(string columnName)
+        public DbQuery OrderBy(string columnName)
         {
             return OrderBy(columnName, DbSortingDirection.Asc);
         }
@@ -142,7 +141,7 @@ namespace ITCreatings.Ndb.Query
         /// <param name="columnName"></param>
         /// <param name="sortingDirection"></param>
         /// <returns></returns>
-        public DbQuery<T> OrderBy(string columnName, DbSortingDirection sortingDirection)
+        public DbQuery OrderBy(string columnName, DbSortingDirection sortingDirection)
         {
             Order = new DbOrder(columnName, sortingDirection);
             return this;
@@ -157,7 +156,7 @@ namespace ITCreatings.Ndb.Query
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public DbQuery<T> Add(DbFilterExpression expression)
+        public DbQuery Add(DbFilterExpression expression)
         {
             FilterExpressions.Add(expression);
             return this;
@@ -168,7 +167,7 @@ namespace ITCreatings.Ndb.Query
         /// </summary>
         /// <param name="Name"></param>
         /// <returns></returns>
-        public DbQuery<T> IsNull(string Name)
+        public DbQuery IsNull(string Name)
         {
             return Add(new DbFilterExpression(DbExpressionType.IsNull, Name));
         }
@@ -178,7 +177,7 @@ namespace ITCreatings.Ndb.Query
         /// </summary>
         /// <param name="Name"></param>
         /// <returns></returns>
-        public DbQuery<T> IsNotNull(string Name)
+        public DbQuery IsNotNull(string Name)
         {
             return Add(new DbFilterExpression(DbExpressionType.IsNotNull, Name));
         }
@@ -193,7 +192,7 @@ namespace ITCreatings.Ndb.Query
         /// <param name="Name"></param>
         /// <param name="Value"></param>
         /// <returns></returns>
-        public DbQuery<T> Contains(string Name, string Value)
+        public DbQuery Contains(string Name, string Value)
         {
             return Add(DbExpressionType.Contains, Name, Value);
             
@@ -205,7 +204,7 @@ namespace ITCreatings.Ndb.Query
         /// <param name="Name"></param>
         /// <param name="Value"></param>
         /// <returns></returns>
-        public DbQuery<T> StartsWith(string Name, string Value)
+        public DbQuery StartsWith(string Name, string Value)
         {
             return Add(DbExpressionType.StartsWith, Name, Value);
         }
@@ -216,7 +215,7 @@ namespace ITCreatings.Ndb.Query
         /// <param name="Name"></param>
         /// <param name="Value"></param>
         /// <returns></returns>
-        public DbQuery<T> EndsWith(string Name, string Value)
+        public DbQuery EndsWith(string Name, string Value)
         {
             return Add(DbExpressionType.EndsWith, Name, Value);
         }
@@ -227,7 +226,7 @@ namespace ITCreatings.Ndb.Query
         /// <param name="Name"></param>
         /// <param name="Value"></param>
         /// <returns></returns>
-        public DbQuery<T> Equals(string Name, object Value)
+        public DbQuery Equals(string Name, object Value)
         {
             return Add(DbExpressionType.Equal, Name, Value);
         }
@@ -238,7 +237,7 @@ namespace ITCreatings.Ndb.Query
         /// <param name="Name"></param>
         /// <param name="Value"></param>
         /// <returns></returns>
-        public DbQuery<T> Greater(string Name, object Value)
+        public DbQuery Greater(string Name, object Value)
         {
             return Add(DbExpressionType.Greater, Name, Value);
         }
@@ -249,36 +248,72 @@ namespace ITCreatings.Ndb.Query
         /// <param name="Name"></param>
         /// <param name="Value"></param>
         /// <returns></returns>
-        public DbQuery<T> Less(string Name, object Value)
+        public DbQuery Less(string Name, object Value)
         {
             return Add(DbExpressionType.Less, Name, Value);
         }
 
-        private DbQuery<T> Add(DbExpressionType expressionType, string name, object value)
+        private DbQuery Add(DbExpressionType expressionType, string name, object value)
         {
             return Add(new DbColumnFilterExpression(expressionType, name, value));
         }
 
         #endregion
 
-        #region Load & query build
+        #region Load
 
         /// <summary>
         /// Loads Array of objects
         /// </summary>
         /// <returns></returns>
-        public T[] Load()
+        public T[] Load<T>()
         {
-            string tableName = DbAttributesManager.GetTableName(typeof(T));
+            DbRecordInfo recordInfo = DbAttributesManager.GetRecordInfo(typeof(T));
             
-            StringBuilder sb = new StringBuilder("SELECT * FROM ");
-            sb.Append(tableName);
+            var sb = new StringBuilder();
+            DbQueryBuilder.BuildSelect(sb, recordInfo);
 
             object [] args = buildWhere(sb, Gateway);
             buildOrderBy(sb);
 
             return Gateway.LoadRecords<T>(sb.ToString(), limit, offset, args);
         }
+
+        /// <summary>
+        /// Loads the result.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="LoadTotalCount">if set to <c>true</c> [load total count].</param>
+        /// <returns></returns>
+        public DbQueryResult<T> LoadResult<T>(bool LoadTotalCount)
+        {
+            var result = new DbQueryResult<T>();
+            if (!LoadTotalCount)
+            {
+                result.Records = Load<T>();
+            }
+            else
+            {
+                //TODO: (high priority) refactor
+                DbRecordInfo recordInfo = DbAttributesManager.GetRecordInfo(typeof (T));
+
+                var sb = new StringBuilder();
+                DbQueryBuilder.BuildSelect(sb, recordInfo);
+
+                object[] args = buildWhere(sb, Gateway);
+                buildOrderBy(sb);
+
+                sb.Insert(7, "SQL_CALC_FOUND_ROWS ");
+
+                result.Records = Gateway.LoadRecords<T>(sb.ToString(), limit, offset, args);
+                result.TotalRecordsCount = Gateway.LoadResult<long>("SELECT FOUND_ROWS()");
+            }
+            return result;
+        }
+
+        #endregion
+
+        #region Query Building
 
         private void buildOrderBy(StringBuilder sb)
         {

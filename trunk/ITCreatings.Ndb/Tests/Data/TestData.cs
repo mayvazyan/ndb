@@ -77,19 +77,19 @@ namespace ITCreatings.Ndb.Tests.Data
         public const string VisualStudioName = "Microsoft Visual Studio";
         public const string VisualStudioTitle = "WTA - " + VisualStudioName;
 
-        public ulong CreateUser()
+        public long CreateUser()
         {
             return AddUser(TestUser);
         }
 
-        public ulong AddUser(string email)
+        public long AddUser(string email)
         {
             User user = TestUser;
             user.Email = email;
             return AddUser(user);
         }
 
-        private ulong AddUser(User user)
+        private long AddUser(User user)
         {
             gateway.Insert(user);
 
@@ -112,7 +112,7 @@ namespace ITCreatings.Ndb.Tests.Data
             gateway.Save(foo);
         }
 
-        public void AddWorkLog(uint minutes, DateTime day)
+        public void AddWorkLog(int minutes, DateTime day)
         {
             WorkLog workLog = new WorkLog
                                   {
@@ -139,7 +139,7 @@ namespace ITCreatings.Ndb.Tests.Data
             Assign(task, TestUser.Id);
         }
 
-        public void Assign(Task task, ulong userId)
+        public void Assign(Task task, long userId)
         {
             var assignment = new TasksAssignment {UserId = userId, TaskId = task.Id};
             gateway.Save(assignment);

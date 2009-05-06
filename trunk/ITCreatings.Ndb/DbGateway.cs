@@ -2,9 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Text;
 using ITCreatings.Ndb.Core;
 using ITCreatings.Ndb.Exceptions;
 using ITCreatings.Ndb.Query;
+using ITCreatings.Ndb.Utils;
 
 namespace ITCreatings.Ndb
 {
@@ -57,27 +59,23 @@ namespace ITCreatings.Ndb
 
         #region DbQuery
 
-        //TODO: add Delete method
-
         /// <summary>
         /// Creates select query object
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public DbQuery<T> Select<T>()
+        public DbQuery Select()
         {
-            return DbQuery<T>.Create(this);
+            return DbQuery.Create(this);
         }
 
         /// <summary>
         /// Creates select query object using specified expressions.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="expressions">The expressions.</param>
         /// <returns></returns>
-        public DbQuery<T> Select<T>(List<DbFilterExpression> expressions)
+        public DbQuery Select(List<DbFilterExpression> expressions)
         {
-            return DbQuery<T>.Create(this, expressions);
+            return DbQuery.Create(this, expressions);
         }
 
         #endregion
@@ -220,14 +218,17 @@ namespace ITCreatings.Ndb
 
             object primaryKey = sourceRecordInfo.PrimaryKey.GetValue(data);
 
+            string select = DbQueryBuilder.BuildSelect(targetRecordInfo);
             // below is a self documented query? :)
             string sql = string.Format(
-                @"SELECT * FROM {0} INNER JOIN {1} ON {0}.{3}={1}.{2} AND {1}.{4}=@PrimaryKey"
+                @"{5} INNER JOIN {1} ON {0}.{3}={1}.{2} AND {1}.{4}=@PrimaryKey"
+//                @"SELECT * FROM {0} INNER JOIN {1} ON {0}.{3}={1}.{2} AND {1}.{4}=@PrimaryKey"
                 , targetRecordInfo.TableName
                 , associationRecordInfo.TableName
                 , associationRecordInfo.ForeignKeys[typeof(TargetType)].Name
                 , targetRecordInfo.PrimaryKey.Name
                 , associationRecordInfo.ForeignKeys[primaryType].Name
+                , select
                 );
 
             return loadRecords<TargetType>(targetRecordInfo, sql, "PrimaryKey", primaryKey);
@@ -391,9 +392,10 @@ namespace ITCreatings.Ndb
         /// </example>
         public bool Load(object data, params object[] args)
         {
+            
             DbRecordInfo info = DbAttributesManager.GetRecordInfo(data.GetType());
-
-            using (IDataReader reader = Accessor.ExecuteReaderEx("SELECT * FROM " + info.TableName, args))
+            
+            using (IDataReader reader = Accessor.ExecuteReaderEx(DbQueryBuilder.BuildSelect(info), args))
             {
                 try
                 {
@@ -505,11 +507,9 @@ namespace ITCreatings.Ndb
         /// </example>
         public T[] LoadList<T>(params object[] args)
         {
-            DbRecordInfo info = DbAttributesManager.GetRecordInfo(typeof(T));
-
-            string query = DbAccessor.BuildWhere("SELECT * FROM " + info.TableName, args);
-
-            return loadRecords<T>(info, query, args);
+            DbRecordInfo recordInfo = DbAttributesManager.GetRecordInfo(typeof(T));
+            string query = DbAccessor.BuildWhere(DbQueryBuilder.BuildSelect(recordInfo), args);
+            return LoadRecords<T>(query, args);
         }
 
         /// <summary>
@@ -584,11 +584,9 @@ namespace ITCreatings.Ndb
         /// </example>
         public T[] LoadListLimited<T>(int limit, int offset, params object[] args)
         {
-            DbRecordInfo info = DbAttributesManager.GetRecordInfo(typeof(T));
-
-            string query = DbAccessor.BuildWhere("SELECT * FROM " + info.TableName, args);
-
-            return loadRecords<T>(info, query, limit, offset, args);
+            DbRecordInfo recordInfo = DbAttributesManager.GetRecordInfo(typeof(T));
+            string query = DbAccessor.BuildWhere(DbQueryBuilder.BuildSelect(recordInfo), args);
+            return LoadRecords<T>(query, limit, offset, args);
         }
 
         /// <summary>
@@ -694,6 +692,19 @@ namespace ITCreatings.Ndb
                 reader.Close();
             }
             return list.ToArray();
+        }
+
+        /// <summary>
+        /// Loads the result.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query">The query.</param>
+        /// <returns></returns>
+        public T LoadResult<T>(string query)
+        {
+            object value = Accessor.ExecuteScalar(query);
+
+            return (T)Convert.ChangeType(value, typeof(T));
         }
 
         #endregion
@@ -863,35 +874,30 @@ namespace ITCreatings.Ndb
             return _args;
         }
 
-        private static object fixData(Type fieldType, object value)
-        {
-//            if (fieldType == typeof(DateTime) && value is string)
-//            {
-//                DateTime dateTime;
-//                return DateTime.TryParse((string) value, out dateTime) ? dateTime : DateTime.MinValue;
-//            }
-
-            if (fieldType == typeof(Guid) && value is string)
-                return new Guid((string)value);
-
-            return value;
-        }
+        
 
         private static void Bind(object data, IDataRecord row, DbRecordInfo info)
         {
-            var identityRecordInfo = info as DbIdentityRecordInfo;
+            int i = 0;
 
+            var identityRecordInfo = info as DbIdentityRecordInfo;
             if (identityRecordInfo != null)
             {
                 DbFieldInfo pkey = identityRecordInfo.PrimaryKey;
-                object value = fixData(pkey.FieldType, row[pkey.Name]);
+                object value = DbConvertor.GetValue(pkey, row[i]);
                 setValue(pkey, data, value);
+
+                i++;
             }
 
-            foreach (DbFieldInfo field in info.Fields)
+            int count = info.Fields.Length;
+            for (int j = 0; j < count; j++)
             {
-                object value = fixData(field.FieldType, row[field.Name]);
+                DbFieldInfo field = info.Fields[j];
+                object value = DbConvertor.GetValue(field, row[i]);
                 setValue(field, data, value);
+
+                i++;
             }
         }
 
@@ -903,17 +909,14 @@ namespace ITCreatings.Ndb
                     field.SetValue(data, null);
                 else
                 {
-                    if (field.FieldType.BaseType == typeof (Enum))
-                    {
-                        var type = Enum.GetUnderlyingType(field.FieldType);
-                        var convertedValue = Convert.ChangeType(value, type);
-                        field.SetValue(data, convertedValue);
-                    }
-                    else
-                    {
-                        var convertedValue = Convert.ChangeType(value, field.FieldType);
-                        field.SetValue(data, convertedValue);
-                    }
+                    Type fieldType = field.FieldType;
+
+                    Type type = (fieldType.BaseType != null && fieldType.BaseType == typeof (Enum))
+                        ? Enum.GetUnderlyingType(fieldType)
+                        : Nullable.GetUnderlyingType(fieldType) ?? fieldType;
+                    
+                    object convertedValue = Convert.ChangeType(value, type);
+                    field.SetValue(data, convertedValue);
                 }
             }
             catch (Exception ex)
@@ -1008,7 +1011,8 @@ namespace ITCreatings.Ndb
             }
             else
             {
-                object newId = Accessor.InsertIdentity(info.TableName, primaryKey.Name, info.GetValues(data));
+                object[] values = info.GetValues(data);
+                object newId = Accessor.InsertIdentity(info.TableName, primaryKey.Name, values);
                 primaryKey.SetValue(data, Convert.ChangeType(newId, primaryKey.FieldType));
             }
         }
@@ -1024,5 +1028,7 @@ namespace ITCreatings.Ndb
         }
 
         #endregion
+
+        
     }
 }

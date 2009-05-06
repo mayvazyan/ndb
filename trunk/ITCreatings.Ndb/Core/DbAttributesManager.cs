@@ -73,12 +73,16 @@ namespace ITCreatings.Ndb.Core
                     object[] attributes = field.GetCustomAttributes(typeof(DbFieldAttribute), true);
                     if (attributes != null && attributes.Length > 0)
                     {
-                        List<Type> foreignTypes = new List<Type>(attributes.Length);
+                        var foreignTypes = new List<Type>(attributes.Length);
                         bool isPrimary = false;
                         string Name = null;
                         uint Size = 0;
+                        Type DbType = null;
                         foreach (DbFieldAttribute attribute in attributes)
                         {
+                            if (attribute.DiffersFromDatabaseType)
+                                DbType = attribute.DbType;
+
                             if (attribute.Size > 0)
                                 Size = attribute.Size;
 
@@ -97,7 +101,7 @@ namespace ITCreatings.Ndb.Core
 //                                    foreignKeys.Add(dbForeignKeyFieldAttribute.Type, dbFieldInfo);
                             }
                         }
-                        DbFieldInfo dbFieldInfo = new DbFieldInfo(field, Name, Size);
+                        DbFieldInfo dbFieldInfo = new DbFieldInfo(field, Name, Size, DbType);
 
                         if (isPrimary)
                         {

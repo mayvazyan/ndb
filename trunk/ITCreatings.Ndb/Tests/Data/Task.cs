@@ -9,28 +9,28 @@ namespace ITCreatings.Ndb.Tests.Data
     public class Task : DbIdentityRecord
     {
         [DbPrimaryKeyField]
-        public uint ProjectId;
+        public int ProjectId;
 
         [DbField]
-        public ushort TypeId;
+        public short TypeId;
 
         [DbField]
         public string Title;
 
         [DbField]
-        public uint EstimatedMinutes;
+        public int EstimatedMinutes;
 
         [DbField]
         public string Description;
 
         [DbField]
-        public ushort PriorityId;
+        public short PriorityId;
 
         [DbField]
-        public DateTime DueDate;
+        public DateTime? DueDate;
 
         [DbField]
-        public DateTime Timestamp;
+        public DateTime? Timestamp;
 
         [DbField] public bool IsDone;
         [DbField] public double SpentMinutes;

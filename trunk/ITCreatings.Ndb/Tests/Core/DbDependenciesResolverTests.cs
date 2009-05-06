@@ -12,7 +12,7 @@ namespace ITCreatings.Ndb.Tests.Core
         public void LoadWithDependencies1LevelTest()
         {
             TestData.AddEvent(EventType.Logon, DateTime.Now);
-            ulong userId2 = TestData.AddUser("user2@example.com");
+            long userId2 = TestData.AddUser("user2@example.com");
 
             string query = @"
 SELECT * FROM Users;
@@ -41,7 +41,7 @@ SELECT * FROM Events;
             var oTask3 = TestData.CreateTask("title #1-2");
             TestData.Assign(oTask3);
 
-            ulong userId2 = TestData.AddUser("user22@example.com");
+            long userId2 = TestData.AddUser("user22@example.com");
             var oTask2 = TestData.CreateTask("title #2-1");
             TestData.Assign(oTask2, userId2);
 

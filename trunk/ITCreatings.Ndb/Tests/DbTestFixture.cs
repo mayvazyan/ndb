@@ -22,7 +22,15 @@ namespace ITCreatings.Ndb.Tests
         {
             sgateway = new DbStructureGateway(accessor);
             gateway = new DbGateway(accessor);
+        }
 
+        public bool IsGuidSupported
+        {
+            get
+            {
+                DbAccessor accessor = gateway.Accessor;
+                return accessor.IsMySql || accessor.IsMsSql;
+            }
         }
 
         [SetUp]
@@ -41,7 +49,7 @@ namespace ITCreatings.Ndb.Tests
         public void CreateTables()
         {
             //TODO: Add GUID support to Postgree and SQLite and remove below fix
-            var types = (gateway.Accessor.IsMySql)
+            var types = (IsGuidSupported)
                             ? new[]
                                   {
                                       typeof (TestGuidRecord),

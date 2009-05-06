@@ -5,7 +5,7 @@ namespace ITCreatings.Ndb.Tests.Data
 {
     public class RolesManager
     {
-        public enum Ids : ushort
+        public enum Ids : short
         {
             Admin = 1,
 

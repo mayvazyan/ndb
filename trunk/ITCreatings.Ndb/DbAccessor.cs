@@ -21,17 +21,24 @@ namespace ITCreatings.Ndb
         /// <summary>
         /// Is Instance is SqLite database
         /// </summary>
-        public bool IsSqLite { get { return dbProvider == DbProvider.SqLite; } }
+        public bool IsSqLite { get { return provider == DbProvider.SqLite; } }
 
         /// <summary>
         /// Is Instance is Postgre database
         /// </summary>
-        public bool IsPostgre { get { return dbProvider == DbProvider.Postgre; } }
+        public bool IsPostgre { get { return provider == DbProvider.Postgre; } }
 
         /// <summary>
         /// Is Instance is MySQL database
         /// </summary>
-        public bool IsMySql { get { return dbProvider == DbProvider.MySql; } }
+        public bool IsMySql { get { return provider == DbProvider.MySql; } }
+
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is for MS SQL.
+        /// </summary>
+        /// <value><c>true</c> if this instance is MS SQL; otherwise, <c>false</c>.</value>
+        public bool IsMsSql { get { return provider == DbProvider.MsSql; } }
 
         #endregion
 
@@ -127,7 +134,7 @@ namespace ITCreatings.Ndb
                     throw new NdbConnectionFailedException(string.Format("Provider {0} doesn't supported", dbProvider));
             }
 
-            accessor.dbProvider = dbProvider;
+            accessor.provider = dbProvider;
             
             return accessor;
         }
@@ -150,20 +157,20 @@ namespace ITCreatings.Ndb
 
         #region Base Logic
 
-        private DbProvider dbProvider;
+        private DbProvider provider;
 
         /// <summary>
         /// Returns current database provider
         /// </summary>
-        public DbProvider DbProvider
+        public DbProvider Provider
         {
             get
             {
-                return dbProvider;
+                return provider;
             }
             set
             {
-                dbProvider = value;
+                provider = value;
             }
         }
 
@@ -252,7 +259,8 @@ namespace ITCreatings.Ndb
                 {
                     DbParameter parameter = command.CreateParameter();
                     parameter.ParameterName = Format(par[i].ToString());
-                    parameter.Value = par[i + 1];
+                    object value = par[i + 1];
+                    parameter.Value = value ?? DBNull.Value;
                     command.Parameters.Add(parameter);
                 }
             }
@@ -354,11 +362,13 @@ namespace ITCreatings.Ndb
                 query = BuildLimits(query, limit, offset);
             }
 
-            DataSet set = new DataSet();
+            
             DbDataAdapter adapter = null;
             try
-            {   
+            {
                 adapter = DataAdapter(query, args);
+
+                DataSet set = new DataSet();
                 adapter.Fill(set);
                 return set;
             }
@@ -538,16 +548,20 @@ namespace ITCreatings.Ndb
 
         internal static string BuildWhere(string baseQuery, object[] args)
         {
-            StringBuilder sb = new StringBuilder(baseQuery + " WHERE ");
-            for (int i = 0; i < args.Length; i += 2)
+            if (args.Length > 0)
             {
-                sb.Append(args[i]);
-                sb.Append('=');
-                sb.Append('@');
-                sb.Append(args[i]);
-                sb.Append(" AND ");
+                StringBuilder sb = new StringBuilder(baseQuery + " WHERE ");
+                for (int i = 0; i < args.Length; i += 2)
+                {
+                    sb.Append(args[i]);
+                    sb.Append('=');
+                    sb.Append('@');
+                    sb.Append(args[i]);
+                    sb.Append(" AND ");
+                }
+                return sb.ToString(0, sb.Length - 5);
             }
-            return sb.ToString(0, sb.Length - 5);
+            return baseQuery;
         }
 
         private static string BuildInsertQuery(string tableName, object[] args)
@@ -578,7 +592,32 @@ namespace ITCreatings.Ndb
         #region SDL
 
         internal abstract string GetSqlType(Type type, uint size);
-        internal abstract Dictionary<string, string> LoadFields(string tableName);
+        internal abstract Dictionary<string, string> LoadFields(DbGateway gateway, string tableName);
+        internal Dictionary<string, string> LoadFields(string tableName)
+        {
+            DbGateway gateway = new DbGateway(this);
+            return LoadFields(gateway, tableName);
+        }
+
+        /// <summary>
+        /// Loads the tables.
+        /// 
+        /// Used in code generation purposes
+        /// </summary>
+        /// <returns></returns>
+        internal abstract string[] LoadTables(DbGateway gateway);
+
+        /// <summary>
+        /// Loads the tables.
+        /// 
+        /// Used in code generation purposes
+        /// </summary>
+        /// <returns></returns>
+        public string[] LoadTables()
+        {
+            DbGateway gateway = new DbGateway(this);
+            return LoadTables(gateway);
+        }
 
         /// <summary>
         /// Drops Table from Database
@@ -776,13 +815,5 @@ namespace ITCreatings.Ndb
         }
 
         #endregion
-
-        /// <summary>
-        /// Loads the tables.
-        /// 
-        /// Used in code generation purposes
-        /// </summary>
-        /// <returns></returns>
-        public abstract string[] LoadTables();
     }
 }

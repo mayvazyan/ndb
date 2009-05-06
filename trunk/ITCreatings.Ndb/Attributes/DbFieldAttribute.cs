@@ -45,14 +45,21 @@ namespace ITCreatings.Ndb.Attributes
         /// </example>
         /// </summary>
         /// <value>The size.</value>
-        internal uint Size
-        {
-            get { return size; }
-            private set { size = value;}
-        }
+        internal uint Size { get; private set; }
 
-        private uint size = 255;
-        
+        /// <summary>
+        /// Gets or sets the type of the db field.
+        /// </summary>
+        /// <value>The type of the db field.</value>
+        internal Type DbType { get; private set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [differs from database type].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [differs from database type]; otherwise, <c>false</c>.
+        /// </value>
+        internal bool DiffersFromDatabaseType { get { return DbType != null; } }
 
         /// <summary>
         /// Constructor
@@ -61,6 +68,7 @@ namespace ITCreatings.Ndb.Attributes
         public DbFieldAttribute(string name)
         {
             Name = name;
+            Size = 255;
         }
 
         /// <summary>
@@ -70,6 +78,16 @@ namespace ITCreatings.Ndb.Attributes
         public DbFieldAttribute(uint size)
         {
             Size = size;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbFieldAttribute"/> class.
+        /// </summary>
+        /// <param name="type">Database field type.</param>
+        public DbFieldAttribute(Type type)
+        {
+            DbType = type;
+            Size = 255;
         }
 
         /// <summary>
@@ -87,6 +105,7 @@ namespace ITCreatings.Ndb.Attributes
         /// </summary>
         public DbFieldAttribute()
         {
+            Size = 255;
         }
     }
 }

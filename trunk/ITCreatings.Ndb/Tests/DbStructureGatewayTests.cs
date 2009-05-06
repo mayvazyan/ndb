@@ -95,7 +95,8 @@ namespace ITCreatings.Ndb.Tests
             if (gateway.Accessor.IsMySql)
                 Assert.AreEqual(
 //                "UserId in ITCreatings.Ndb.Tests.Data.TestWorkLogItem2 is System.UInt32 but column is System.UInt64",
-                    "UserId in ITCreatings.Ndb.Tests.Data.TestWorkLogItem2 is System.Int16 but column is bigint(20) unsigned",
+//                    "UserId in ITCreatings.Ndb.Tests.Data.TestWorkLogItem2 is System.Int16 but column is bigint(20) unsigned",
+                    "UserId in ITCreatings.Ndb.Tests.Data.TestWorkLogItem2 is System.Int16 but column is bigint(20)",
                     gateway.LastError);
             
             Assert.IsFalse(gateway.IsValid(typeof(TestWorkLogItem3)));

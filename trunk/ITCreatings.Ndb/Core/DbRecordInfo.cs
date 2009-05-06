@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
+using ITCreatings.Ndb.Utils;
 
 namespace ITCreatings.Ndb.Core
 {
@@ -32,7 +33,9 @@ namespace ITCreatings.Ndb.Core
             for (int i = 0; i < Fields.Length; i++)
             {
                 args[j++] = Fields[i].Name;
-                args[j++] = Fields[i].GetValue(data);
+                object value = Fields[i].GetValue(data);
+
+                args[j++] = DbConvertor.SetValue(Fields[i], value);
             }
             argsToAppend.CopyTo(args, j);
 
