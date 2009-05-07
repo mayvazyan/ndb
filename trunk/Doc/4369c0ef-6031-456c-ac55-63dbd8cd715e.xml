@@ -16,8 +16,8 @@
     <content>
       <code language="cs">
          var executor = DbExecution{User}.Create()
-             .Validate(user.Id == 0, "Invalid Id")
-             .Validate(string.IsNullOrEmpty(user.Password), "Password is empty")
+             .IsTrue(user.Id != 0, "Invalid Id")
+             .IsNotNullOrEmpty(user.Password, "Password is empty")
              .Execute(delegate (IDbExecution{User} execution) { execution.Error = "Test"; });
      
 	     bool isError = executor.IsError;
@@ -38,7 +38,7 @@
       Example:
       <code language="cs">
       	var executor = DbExecution{User}.Create()
-             .Validate(user.Id == 0, "Invalid Id")
+             .IsTrue(user.Id != 0, "Invalid Id")
              .Execute(user, LoginUser);
      
 	    bool isError = executor.IsError;

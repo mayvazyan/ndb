@@ -27,8 +27,8 @@ namespace ITCreatings.Ndb.Tests.Execution
             Assert.AreEqual(7, executor.Result.Id);
 
             executor = DbExecution<User>.Create()
-                .Validate(user.Id == 0, message1)
-                .Validate(string.IsNullOrEmpty(user.Password), message2)
+                .IsFalse(user.Id == 0, message1)
+                .IsFalse(string.IsNullOrEmpty(user.Password), message2)
                 .Execute(user, LoginUser);
 
             Assert.IsTrue(executor.IsError);
