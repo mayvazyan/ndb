@@ -27,7 +27,7 @@ namespace ITCreatings.Ndb.Accessors
 
         protected override DbCommand Command(string query)
         {
-            MySqlConnection connection = new MySqlConnection(ConnectionString);
+            var connection = new MySqlConnection(ConnectionString);
             return new MySqlCommand(query, connection);
         }
 

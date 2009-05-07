@@ -92,8 +92,7 @@ namespace ITCreatings.Ndb.Accessors
             if (type == typeof(Guid))
                 return "uuid";
 
-            if (type == typeof(DateTime))
-                return "timestamp";
+            if (type == typeof(DateTime) || type == typeof(DateTime?)) return "timestamp";
 
             if (type == typeof(Double)) return "float";
             if (type == typeof(Decimal)) return "float";
@@ -107,7 +106,10 @@ namespace ITCreatings.Ndb.Accessors
         {
             try
             {
-                ExecuteNonQuery("DROP TABLE " + TableName);
+//                object scalar = ExecuteScalar("select count(*) from pg_class where relname = '" + TableName + "'");
+//                int count = Convert.ToInt32(scalar);
+//                if (count == 1)
+                    ExecuteNonQuery("DROP TABLE " + TableName);
                 return true;
             }
             catch (NdbConnectionFailedException)
@@ -125,7 +127,7 @@ namespace ITCreatings.Ndb.Accessors
             {
             }
 #endif
-            return false;
+            return true;//TODO:Droptable method for postgree
         }
 
         private static string[] getPrimaryKeys(DbRecordInfo info)
@@ -241,7 +243,7 @@ ALTER SEQUENCE tablename_colname_seq OWNED BY tablename.colname;*/
 
         internal override string[] LoadTables(DbGateway gateway)
         {
-            throw new System.NotImplementedException();
+            return gateway.LoadArray<string>("select relname from pg_class", "relname");
         }
 
         private static void ProcessIndexes(StringBuilder sb, 

@@ -97,7 +97,7 @@ namespace ITCreatings.Ndb.Accessors
         {
             try
             {
-                ExecuteNonQuery("DROP TABLE " + TableName);
+                ExecuteNonQuery("DROP TABLE IF EXISTS " + TableName);
                 return true;
             }
             catch (Exception ex)

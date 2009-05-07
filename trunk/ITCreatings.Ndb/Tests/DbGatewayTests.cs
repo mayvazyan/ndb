@@ -317,6 +317,8 @@ namespace ITCreatings.Ndb.Tests
             Assert.AreEqual(1, result.Records.Length);
             Assert.AreEqual(1, result.TotalRecordsCount);
 
+            Assert.AreEqual(1, gateway.Select(expressions).LoadCount<User>());
+
             result = gateway.Select(expressions).LoadResult<User>(false);
             Assert.AreEqual(1, result.Records.Length);
             Assert.AreEqual(0, result.TotalRecordsCount);
@@ -325,6 +327,7 @@ namespace ITCreatings.Ndb.Tests
             result = gateway.Select(expressions).LoadResult<User>(true);
             Assert.AreEqual(0, result.Records.Length);
             Assert.AreEqual(0, result.TotalRecordsCount);
+            Assert.AreEqual(0, gateway.Select(expressions).LoadCount<User>());
         }
         
         #region DbQuery

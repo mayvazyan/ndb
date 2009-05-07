@@ -232,6 +232,17 @@ namespace ITCreatings.Ndb.Query
         }
 
         /// <summary>
+        /// Adds Not Equal Expression
+        /// </summary>
+        /// <param name="Name"></param>
+        /// <param name="Value"></param>
+        /// <returns></returns>
+        public DbQuery NotEqual(string Name, object Value)
+        {
+            return Add(DbExpressionType.NotEqual, Name, Value);
+        }
+
+        /// <summary>
         /// Adds Greater Expression
         /// </summary>
         /// <param name="Name"></param>
@@ -277,6 +288,23 @@ namespace ITCreatings.Ndb.Query
             buildOrderBy(sb);
 
             return Gateway.LoadRecords<T>(sb.ToString(), limit, offset, args);
+        }
+
+        /// <summary>
+        /// Records count.
+        /// </summary>
+        /// <returns></returns>
+        public ulong LoadCount<T>()
+        {
+            DbRecordInfo recordInfo = DbAttributesManager.GetRecordInfo(typeof(T));
+            
+            var sb = new StringBuilder();
+            DbQueryBuilder.BuildSelectCount(sb, recordInfo);
+
+            object [] args = buildWhere(sb, Gateway);
+            buildOrderBy(sb);
+
+            return Gateway.LoadResult<ulong>(sb.ToString(), args);
         }
 
         /// <summary>

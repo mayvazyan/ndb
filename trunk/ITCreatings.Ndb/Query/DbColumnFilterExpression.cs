@@ -43,6 +43,9 @@ namespace ITCreatings.Ndb.Query
                 case DbExpressionType.Equal:
                     return string.Concat(ColumnName, "=@", ParamName);
 
+                case DbExpressionType.NotEqual:
+                    return string.Concat(ColumnName, "<>@", ParamName);
+
                 case DbExpressionType.StartsWith:
                     return string.Concat(ColumnName, " LIKE @", ParamName);
 

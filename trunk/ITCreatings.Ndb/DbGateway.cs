@@ -699,10 +699,11 @@ namespace ITCreatings.Ndb
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="query">The query.</param>
+        /// <param name="args">The args.</param>
         /// <returns></returns>
-        public T LoadResult<T>(string query)
+        public T LoadResult<T>(string query, params object [] args)
         {
-            object value = Accessor.ExecuteScalar(query);
+            object value = Accessor.ExecuteScalar(query, args);
 
             return (T)Convert.ChangeType(value, typeof(T));
         }

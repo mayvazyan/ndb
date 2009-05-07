@@ -93,11 +93,46 @@ namespace ITCreatings.Ndb.Attributes
         /// <summary>
         /// Full Constructor
         /// </summary>
-        /// <param name="name">The Name of the associated column</param>
+        /// <param name="columnName">The Name of the associated column</param>
         /// <param name="size">The Size of the associated column</param>
-        public DbFieldAttribute(string name, uint size) : this(name)
+        public DbFieldAttribute(string columnName, uint size)
+            : this(columnName)
         {
             Size = size;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbFieldAttribute"/> class.
+        /// </summary>
+        /// <param name="columnName">The column name.</param>
+        /// <param name="dbType">Type of the db.</param>
+        public DbFieldAttribute(string columnName, Type dbType)
+            : this(columnName)
+        {
+            DbType = dbType;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbFieldAttribute"/> class.
+        /// </summary>
+        /// <param name="size">The size.</param>
+        /// <param name="dbType">Type of the db.</param>
+        public DbFieldAttribute(uint size, Type dbType)
+            : this(size)
+        {
+            DbType = dbType;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbFieldAttribute"/> class.
+        /// </summary>
+        /// <param name="columnName">Name of the column.</param>
+        /// <param name="size">The size.</param>
+        /// <param name="dbType">Type of the db.</param>
+        public DbFieldAttribute(string columnName, uint size, Type dbType)
+            : this(columnName, size)
+        {
+            DbType = dbType;
         }
 
         /// <summary>

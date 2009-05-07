@@ -8,6 +8,7 @@ using System.Text;
 using ITCreatings.Ndb.Accessors;
 using ITCreatings.Ndb.Core;
 using ITCreatings.Ndb.Exceptions;
+using ITCreatings.Ndb.Query;
 
 namespace ITCreatings.Ndb
 {
@@ -89,14 +90,14 @@ namespace ITCreatings.Ndb
         /// <returns>DbAccessor</returns>
         public static DbAccessor Create(string connectionStringName)
         {
-            ConnectionStringSettings s = ConfigurationManager.ConnectionStrings[connectionStringName];
+            ConnectionStringSettings connectionStringSettings = ConfigurationManager.ConnectionStrings[connectionStringName];
 
-            if (s == null)
+            if (connectionStringSettings == null)
                 throw new NdbConnectionFailedException(string.Format(
                     "ConnectionString `{0}` wasn't set", connectionStringName));
 
-            DbProvider provider = getProviderFromConfig(s);
-            return Create(provider, s.ConnectionString);
+            DbProvider provider = getProviderFromConfig(connectionStringSettings);
+            return Create(provider, connectionStringSettings.ConnectionString);
         }
 
         /// <summary>
@@ -110,23 +111,23 @@ namespace ITCreatings.Ndb
 
             switch (dbProvider)
             {
-                case Ndb.DbProvider.MySql:
+                case DbProvider.MySql:
                     accessor = new MySqlAccessor();
                     break;
 
-                case Ndb.DbProvider.SqLite:
+                case DbProvider.SqLite:
                     accessor = new SqLiteAccessor();
                     break;
 
-                case Ndb.DbProvider.Postgre:
+                case DbProvider.Postgre:
                     accessor = new PostgreAccessor();
                     break;
 
-                case Ndb.DbProvider.MsSql:
+                case DbProvider.MsSql:
                     accessor = new MsSqlAccessor();
                     break;
 
-                case Ndb.DbProvider.MsSqlCe:
+                case DbProvider.MsSqlCe:
                     accessor = new MsSqlCeAccessor();
                     break;
 
@@ -148,6 +149,7 @@ namespace ITCreatings.Ndb
         public static DbAccessor Create(DbProvider dbProvider, string connectionString)
         {
             DbAccessor accessor = Create(dbProvider);
+
             accessor.ConnectionString = connectionString;
 
             return accessor;
@@ -205,7 +207,13 @@ namespace ITCreatings.Ndb
             }
             set
             {
-                connectionString = value;
+                //by default we wan't ConvertZeroDateTime=true, if you don't so, please specify your value in the connection string
+                if (IsMySql && value.IndexOf("ConvertZeroDateTime") == -1)
+                {
+                    connectionString = "ConvertZeroDateTime=true;" + value;
+                }
+                else
+                    connectionString = value;
             }
         }
 
@@ -785,7 +793,8 @@ namespace ITCreatings.Ndb
         /// <returns>Count</returns>
         public ulong LoadCount(string tableName)
         {
-            object scalar = ExecuteScalar("SELECT COUNT(*) FROM " + tableName);
+            string query = DbQueryBuilder.BuildSelectCount(tableName);
+            object scalar = ExecuteScalar(query);
 
             return Convert.ToUInt64(scalar);
         }

@@ -5,6 +5,16 @@ namespace ITCreatings.Ndb.Query
 {
     internal class DbQueryBuilder
     {
+        internal static string BuildSelectCount(string tableName)
+        {
+            return string.Concat("SELECT COUNT(*) FROM ", tableName);
+        }
+
+        internal static void BuildSelectCount(StringBuilder sb, DbRecordInfo recordInfo)
+        {
+            sb.Append(BuildSelectCount(recordInfo.TableName));
+        }
+
         internal static string BuildSelect(DbRecordInfo recordInfo)
         {
             var builder = new StringBuilder();

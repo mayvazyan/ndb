@@ -38,6 +38,9 @@ namespace ITCreatings.Ndb.Query
                 case DbExpressionType.Equal:
                     return string.Concat(ColumnName, "=", ColumnName2);
 
+                case DbExpressionType.NotEqual:
+                    return string.Concat(ColumnName, "<>", ColumnName2);
+
                 case DbExpressionType.Greater:
                     return string.Concat(ColumnName, ">", ColumnName2);
 

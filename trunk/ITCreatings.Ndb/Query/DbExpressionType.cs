@@ -11,6 +11,11 @@ namespace ITCreatings.Ndb.Query
         Equal = 10,
 
         /// <summary>
+        /// Not Equal
+        /// </summary>
+        NotEqual = 11,
+
+        /// <summary>
         /// Contains
         /// </summary>
         Contains = 20,
