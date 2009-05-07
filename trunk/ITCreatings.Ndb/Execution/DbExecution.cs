@@ -484,7 +484,7 @@ namespace ITCreatings.Ndb.Execution
         public DbExecution<T> IsNotNullOrEmpty(object value, object message)
         {
             bool isNullOrEmpty = string.IsNullOrEmpty(value as string);
-            return IsTrue(isNullOrEmpty, message);
+            return IsFalse(isNullOrEmpty, message);
         }
 
         #endregion
