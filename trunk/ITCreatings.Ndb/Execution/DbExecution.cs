@@ -17,7 +17,7 @@ namespace ITCreatings.Ndb.Execution
     ///         .Execute(delegate (IDbExecution&lt;User, ExecutionResultCode&gt; execution) 
     ///             {                  
     ///                 execution.PossibleResultCode = ExecutionResultCode.UnableLoadData; 
-    ///                 execution.Result = dbGateway.Load&lt;User&rt;(...);
+    ///                 execution.Result = dbGateway.Load&lt;User&gt;(...);
     ///             });
     /// 
     /// bool isError = executor.IsError;
