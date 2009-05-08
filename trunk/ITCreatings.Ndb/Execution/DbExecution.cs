@@ -47,6 +47,17 @@ namespace ITCreatings.Ndb.Execution
         public TResult Result { get; set; }
 
         /// <summary>
+        /// Gets the result.
+        /// </summary>
+        /// <param name="resultCode">The result code.</param>
+        /// <returns></returns>
+        public TResult GetResult(out TResultCode resultCode)
+        {
+            resultCode = Error.ResultCode;
+            return Result;
+        }
+
+        /// <summary>
         /// Gets or sets the possible result code.
         /// If an exception occurs during execution this value will be returned as Error.CustomResultCode
         /// </summary>
