@@ -24,7 +24,9 @@
     <content>
       <autoOutline />
 		<list class="bullet">
+		  <listItem>Fully supported</listItem>
 		  <listItem>Ndb works with InnoDB tables engine (since it has foreign keys constraints)</listItem>
+		  <listItem>By default Ndb sets ConvertZeroDateTime=true, if you don't want so, please specify your own value in the connection string</listItem>
 		</list>
     </content>
   </section>
@@ -32,8 +34,9 @@
     <title>Postgre</title>
     <content>
 		<list class="bullet">
+		  <listItem>Partially supported</listItem>
 		  <listItem>Database and column names in database are lowercased</listItem>
-		  <listItem>There are no unsigned types in PostgreSQL therefore system use bigger type. For example Ndb uses int8 for UInt32 values storing</listItem>
+		  <listItem>There are no unsigned types in PostgreSQL so you will have an exception if you use one of them.</listItem>
 		</list>
     </content>
   </section>
@@ -41,6 +44,7 @@
     <title>SqLite</title>
     <content>
 		<list class="bullet">
+		  <listItem>Fully supported</listItem>
 		  <listItem>SqLite doesn't have foreign keys functionality therefore Ndb emulate them by generating triggers</listItem>
 		  <listItem>Besides poor ALTER TABLE support by SqLite, Ndb can't update it's tables now</listItem>
 		</list>
@@ -50,7 +54,8 @@
     <title>MS SQL</title>
     <content>
 		<list class="bullet">
-		  <listItem>MS SQL and MS SQL CE will be added soon</listItem>
+		  <listItem>Partially supported</listItem>
+		  <listItem>There are no unsigned types in PostgreSQL so you will have an exception if you use one of them.</listItem>
 		</list>
     </content>
   </section>
@@ -58,7 +63,7 @@
     <title>Oracle</title>
     <content>
 		<list class="bullet">
-		  <listItem>Sorry, but only in plans...</listItem>
+		  <listItem>Sorry, but only in plans... do you need it?</listItem>
 		</list>
     </content>
   </section>

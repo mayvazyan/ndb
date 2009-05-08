@@ -60,17 +60,9 @@ namespace ITCreatings.Ndb.Tests
             Assert.AreEqual(record.Data, record2.Data);
         }
 
-        private void CheckIsGuidSupports()
-        {
-            if (!IsGuidSupported)
-                Assert.Ignore("GUID Not Supported by {0} currently", gateway.Accessor);
-        }
-
         [Test]
         public void GuidTest()
         {
-            CheckIsGuidSupports();
-
             TestGuidRecord record = TestData.CreateTestGuidRecord("test");
             Assert.IsTrue(DbTestUtils.SaveTest(record));
 
@@ -98,8 +90,6 @@ namespace ITCreatings.Ndb.Tests
         [Test]
         public void InsertGuidTest()
         {
-            CheckIsGuidSupports();
-
             TestGuidRecord record = TestData.CreateTestGuidRecord("test");
             ulong count = gateway.LoadCount(typeof(TestGuidRecord));
             gateway.Insert(record);
@@ -116,8 +106,6 @@ namespace ITCreatings.Ndb.Tests
         [Test]
         public void EmptyGuidTest()
         {
-            CheckIsGuidSupports();
-
             TestGuidRecord record2 = TestData.CreateTestGuidRecord("test");
             record2.TestGuidField = Guid.Empty;
             Assert.IsTrue(DbTestUtils.SaveTest(record2));

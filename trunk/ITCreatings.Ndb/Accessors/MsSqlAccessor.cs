@@ -83,7 +83,7 @@ namespace ITCreatings.Ndb.Accessors
         internal override Dictionary<string, string> LoadFields(DbGateway gateway, string tableName)
         {
             return gateway.LoadKeyValue<string, string>(
-                string.Format(@"SELECT [Name] FROM syscolumns WHERE id=OBJECT_ID(N'{0}') ORDER BY colid", tableName),
+                string.Format(@"SELECT [Name], Type FROM syscolumns WHERE id=OBJECT_ID(N'{0}') ORDER BY colid", tableName),
                 "Name", "Type");
 
         }

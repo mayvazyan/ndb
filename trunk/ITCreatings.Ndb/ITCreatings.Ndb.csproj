@@ -12,6 +12,7 @@
     <AssemblyName>ITCreatings.Ndb</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -24,7 +25,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -88,6 +88,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\libs\System.Data.SqlServerCe.dll</HintPath>
     </Reference>
+    <Reference Include="System.Transactions" />
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +137,7 @@
     <Compile Include="Execution\DbExecutionError.cs" />
     <Compile Include="Execution\DbExecutionErrorCode.cs" />
     <Compile Include="Exceptions\NdbInvalidColumnNameException.cs" />
+    <Compile Include="Execution\DbExecutionErrorMessage.cs" />
     <Compile Include="Execution\IDbExecution.cs" />
     <Compile Include="Query\DbColumnFilterExpression.cs" />
     <Compile Include="Query\DbColumnToColumnFilterExpression.cs" />
@@ -151,6 +153,10 @@
     <Compile Include="Execution\DbExecution.cs" />
     <Compile Include="Tests\Data\BinaryDataRecord2.cs" />
     <Compile Include="Tests\Data\BinaryDataRecord3.cs" />
+    <Compile Include="Tests\Data\ExecutionResultCode.cs" />
+    <Compile Include="Tests\Execution\ExecutionFlow.cs" />
+    <Compile Include="Tests\MsSqlCe\MsSqlCeDbGatewayTests.cs" />
+    <Compile Include="Tests\MsSqlCe\MsSqlCeDbStructureGatewayTests.cs" />
     <Compile Include="Tests\MsSql\MsSqlDbGatewayTests.cs" />
     <Compile Include="Tests\MsSql\MsSqlDbStructureGatewayTests.cs" />
     <Compile Include="Utils\DbCompilerUtils.cs" />
@@ -193,6 +199,11 @@
     <Content Include="Tests\App.config" />
   </ItemGroup>
   <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
       <Visible>False</Visible>
       <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
@@ -206,6 +217,11 @@
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.SQL.Server.Compact.3.5">

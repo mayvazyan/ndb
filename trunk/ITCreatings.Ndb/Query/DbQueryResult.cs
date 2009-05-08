@@ -21,14 +21,14 @@ namespace ITCreatings.Ndb.Query
         public T[] Records { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DbQueryResult&lt;T&gt;"/> class.
+        /// Initializes a new instance of the <see cref="DbQueryResult&lt;TResult&gt;"/> class.
         /// </summary>
         public DbQueryResult()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DbQueryResult&lt;T&gt;"/> class.
+        /// Initializes a new instance of the <see cref="DbQueryResult&lt;TResult&gt;"/> class.
         /// </summary>
         /// <param name="records">The records.</param>
         /// <param name="totalRecordsCount">The total records count.</param>

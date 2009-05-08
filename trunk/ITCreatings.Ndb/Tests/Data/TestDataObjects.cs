@@ -27,7 +27,7 @@ namespace ITCreatings.Ndb.Tests.Data
         public Int64 UserId;
 
         [DbField]
-        public uint SpentMinutes;
+        public int SpentMinutes;
 
         [DbField("CreationDate")]
         public DateTime Date;

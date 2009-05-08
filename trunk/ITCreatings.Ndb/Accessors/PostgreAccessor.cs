@@ -89,11 +89,8 @@ namespace ITCreatings.Ndb.Accessors
                 return string.Concat("varchar(", size, ")");
             }
 
-            if (type == typeof(Guid))
-                return "uuid";
-
+            if (type == typeof(Guid)) return "uuid";
             if (type == typeof(DateTime) || type == typeof(DateTime?)) return "timestamp";
-
             if (type == typeof(Double)) return "float";
             if (type == typeof(Decimal)) return "float";
             if (type == typeof(Boolean)) return "BOOLEAN";
@@ -179,15 +176,23 @@ ALTER SEQUENCE tablename_colname_seq OWNED BY tablename.colname;*/
             StringBuilder sb = new StringBuilder("CREATE TABLE " + info.TableName + " (");
             if (info is DbIdentityRecordInfo)
             {
-                DbFieldInfo pk = (info as DbIdentityRecordInfo).PrimaryKey;
+                DbFieldInfo key = (info as DbIdentityRecordInfo).PrimaryKey;
 
-                string sequenceName = string.Format("{0}_{1}_seq", info.TableName, pk.Name);
-                sb.Insert(0, "CREATE SEQUENCE " + sequenceName + ";");
+                if (key.FieldType == typeof(Guid))
+                {
+                    sb.Append(getDefinition(key) + " NOT NULL");
+                    sb.Append(',');
+                }
+                else
+                {
+                    string sequenceName = string.Format("{0}_{1}_seq", info.TableName, key.Name);
+                    sb.Insert(0, "CREATE SEQUENCE " + sequenceName + ";");
 
-                postQueries = string.Format("ALTER SEQUENCE {0}_{1}_seq OWNED BY {0}.{1};",
-                                            info.TableName, pk.Name);
-                sb.Append(getDefinition(pk) + " NOT NULL DEFAULT nextval('" + sequenceName + "'::regclass)");
-                sb.Append(',');
+                    postQueries = string.Format("ALTER SEQUENCE {0}_{1}_seq OWNED BY {0}.{1};",
+                                                info.TableName, key.Name);
+                    sb.Append(getDefinition(key) + " NOT NULL DEFAULT nextval('" + sequenceName + "'::regclass)");
+                    sb.Append(',');
+                }
             }
 
             foreach (DbFieldInfo field in info.Fields)

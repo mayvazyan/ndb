@@ -48,7 +48,7 @@ namespace ITCreatings.Ndb.Tests
             Assert.AreEqual(pk.FieldType, info2.Fields[0].FieldType);
             Assert.AreEqual(pk.Name, info2.Fields[0].Name);
             
-            Assert.AreEqual(typeof(ushort), info2.Fields[1].FieldType);
+            Assert.AreEqual(typeof(short), info2.Fields[1].FieldType);
             for (int i = 1; i < info2.Fields.Length-1; i++)
             {
                 Assert.AreEqual(info1.Fields[i], info2.Fields[i+1], "Fields");    

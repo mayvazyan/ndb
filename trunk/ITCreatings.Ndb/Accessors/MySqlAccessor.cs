@@ -98,8 +98,7 @@ namespace ITCreatings.Ndb.Accessors
                 return getSqlType("BLOB", size);
             }
 
-            if (type == typeof(Guid))
-                return "char(36)";
+            if (type == typeof(Guid)) return "char(36)";
 
             if (type == typeof(DateTime) || type == typeof(DateTime?))   return "datetime";
             if (type == typeof(Double))     return "float";

@@ -59,30 +59,19 @@ namespace ITCreatings.Ndb.Accessors
 
         internal override string GetSqlType(Type type, uint size)
         {
-            if (type == typeof(Byte))
-                return "INTEGER";
+            if (type == typeof(Byte)) return "INTEGER";
 
-            if (type == typeof(Int32))
-                return "INTEGER";
+            if (type == typeof(Int16)) return "INTEGER"; 
+            if (type == typeof(Int32)) return "INTEGER";
+            if (type == typeof(Int64)) return "INTEGER";
 
-            if (type == typeof(Int64))
-                return "INTEGER";
+            if (type == typeof(UInt16)) return "INTEGER";
+            if (type == typeof(UInt32)) return "INTEGER";
+            if (type == typeof(UInt64)) return "INTEGER";
 
-            if (type == typeof(Int16))
-                return "INTEGER";
+            if (type == typeof(string)) return "VARCHAR";
 
-            if (type == typeof(UInt32))
-                return "INTEGER";
-
-            if (type == typeof(UInt64))
-                return "INTEGER";
-
-            if (type == typeof(UInt16))
-                return "INTEGER";
-
-            if (type == typeof(string))
-                return "VARCHAR";
-
+            if (type == typeof(Guid)) return "BLOB";
             if (type == typeof(DateTime) || type == typeof(DateTime?)) return "TIMESTAMP";
 
             if (type == typeof(Double)) return "FLOAT";
@@ -118,7 +107,13 @@ namespace ITCreatings.Ndb.Accessors
             StringBuilder sb = new StringBuilder("CREATE TABLE " + info.TableName + "(");
             if (info is DbIdentityRecordInfo)
             {
-                sb.Append(getDefinition((info as DbIdentityRecordInfo).PrimaryKey) + " NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE");
+                DbFieldInfo key = (info as DbIdentityRecordInfo).PrimaryKey;
+
+                if (key.FieldType == typeof(Guid))
+                    sb.Append(getDefinition(key) + " NOT NULL PRIMARY KEY UNIQUE");
+                else
+                    sb.Append(getDefinition(key) + " NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE");
+
                 sb.Append(',');
             }
 
@@ -149,7 +144,8 @@ namespace ITCreatings.Ndb.Accessors
 
         internal override string[] LoadTables(DbGateway gateway)
         {
-            throw new System.NotImplementedException();
+            return gateway.LoadArray<string>(
+                @"SELECT name FROM sqlite_master WHERE type='table' ORDER BY name", "name");
         }
 
         private void createTriggers(DbRecordInfo info)

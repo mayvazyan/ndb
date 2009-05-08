@@ -8,14 +8,14 @@ namespace ITCreatings.Ndb.Utils
     {
         public static object SetValue(DbFieldInfo field, object value)
         {
-            return (field.IsDiffersFromDatabaseType)
+            return field.IsDiffersFromDatabaseType
                        ? convertData(field.DbType, value)
                        : value;
         }
 
         public static object GetValue(DbFieldInfo field, object value)
         {
-            return (field.IsDiffersFromDatabaseType)
+            return field.IsDiffersFromDatabaseType
                                ? convertData(field.FieldType, value)
                                : fixData(field.FieldType, value);
 
@@ -23,8 +23,14 @@ namespace ITCreatings.Ndb.Utils
 
         private static object fixData(Type fieldType, object value)
         {
-            if (fieldType == typeof(Guid) && value is string) //mysql doesn't support GUID so this is just a "patch" for it:)
-                return new Guid((string)value);
+            if (fieldType == typeof(Guid))//if db engine doesn't support GUID we just apply this "patch" for it:)
+            {
+                if (value is string)
+                    return new Guid((string) value);
+
+                if (value is byte[])
+                    return new Guid((byte[])value);
+            }
 
             return value;
         }

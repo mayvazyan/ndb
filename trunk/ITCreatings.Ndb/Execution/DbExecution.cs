@@ -11,40 +11,53 @@ namespace ITCreatings.Ndb.Execution
     /// Execution flow helper
     /// <example>
     /// <code>
-    /// var executor = DbExecution{User}.Create()
+    /// var executor = DbExecution&lt;User, ResultCode&gt;.Create()
     ///         .IsTrue(user.Id != 0, message1)
     ///         .IsNullOrEmpty(user.Password, message2)
-    ///         .Execute(delegate (IDbExecution{User} execution) { execution.Error = "Test"; });
+    ///         .Execute(delegate (IDbExecution&lt;User, ResultCode&gt; execution) 
+    ///             {                  
+    ///                 execution.PossibleResultCode = ResultCode.UnableLoadData; 
+    ///                 execution.Result = dbGateway.Load&lt;User&rt;(...);
+    ///             });
     /// 
     /// bool isError = executor.IsError;
     /// User user = executor.Result;
-    /// DbExecutionError executionError = executor.Error;
+    /// ResultCode executionError = executor.Error;
+    /// 
+    /// ...
+    /// private enum ExecutionResultCodes
+    /// {
+    ///     Success,
+    /// 
+    ///     UnableLoadData,
+    ///     InvalidPasswordLength,
+    /// 
+    ///     ...
+    /// }
     /// </code>
     /// </example>
     /// </summary>
-    public class DbExecution<T> : IDbExecution<T>
+    public class DbExecution<TResult, TResultCode> : IDbExecution<TResult, TResultCode>
     {
-        #region Messages
-
-        /// <summary>
-        /// Default message
-        /// </summary>
-        public string InvalidArgumentsMessage = @"Invalid arguments";
-
-        #endregion
-
-        #region data
+        #region Data
 
         /// <summary>
         /// Result
         /// </summary>
-        public T Result { get; set; }
+        public TResult Result { get; set; }
+
+        /// <summary>
+        /// Gets or sets the possible result code.
+        /// If an exception occurs during execution this value will be returned as Error.CustomResultCode
+        /// </summary>
+        /// <value>The result code.</value>
+        public TResultCode PossibleResultCode { get; set; }
 
         /// <summary>
         /// Error
         /// </summary>
-        public DbExecutionError Error 
-        { 
+        public DbExecutionError<TResultCode> Error
+        {
             get { return error; }
             set
             {
@@ -54,20 +67,20 @@ namespace ITCreatings.Ndb.Execution
             }
         }
 
-        private DbExecutionError error;
-        
+        private DbExecutionError<TResultCode> error;
+
         /// <summary>
         /// Is an Error occured during validate
         /// </summary>
-        public bool IsError { get { return Error != DbExecutionError.Empty; } }
+        public bool IsError { get { return Error.IsError; } }
 
         private readonly ILog logger;
-        
+
         /// <summary>
         /// Logger
         /// </summary>
-        public ILog Logger 
-        { 
+        public ILog Logger
+        {
             get
             {
                 if (logger == null)
@@ -79,6 +92,77 @@ namespace ITCreatings.Ndb.Execution
 
         #endregion
 
+        #region Factory
+
+        /// <summary>
+        /// Factory Method
+        /// </summary>
+        /// <returns></returns>
+        public static DbExecution<TResult, TResultCode> Create()
+        {
+            return new DbExecution<TResult, TResultCode>();
+        }
+
+        /// <summary>
+        /// Factory Method
+        /// </summary>
+        /// <param name="logger">logger can be accessed later as IDbExecution.Logger</param>
+        /// <returns></returns>
+        public static DbExecution<TResult, TResultCode> Create(ILog logger)
+        {
+            return new DbExecution<TResult, TResultCode>(logger);
+        }
+
+        /// <summary>
+        /// Factory Method
+        /// </summary>
+        /// <param name="logger">The logger can be accessed later as IDbExecution.Logger</param>
+        /// <param name="successResultCode">The no error.</param>
+        /// <returns></returns>
+        public static DbExecution<TResult, TResultCode> Create(ILog logger, TResultCode successResultCode)
+        {
+            return new DbExecution<TResult, TResultCode>(logger, successResultCode);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbExecution&lt;TResult, TResultCode&gt;"/> class.
+        /// </summary>
+        protected DbExecution()
+        {
+            Error = default(TResultCode);    
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbExecution&lt;TResult, TResultCode&gt;"/> class.
+        /// </summary>
+        /// <param name="log">The log.</param>
+        protected DbExecution(ILog log) : this()
+        {
+            logger = log;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbExecution&lt;TResult, TResultCode&gt;"/> class.
+        /// </summary>
+        /// <param name="log">The log.</param>
+        /// <param name="successResultCode">The no error.</param>
+        protected DbExecution(ILog log, TResultCode successResultCode) : this()
+        {
+            logger = log;
+            Error = successResultCode;
+        }
+
+        #endregion
+        
+        #region Messages
+
+        /// <summary>
+        /// Default message
+        /// </summary>
+        public string InvalidArgumentsMessage = @"Invalid arguments";
+
+        #endregion
+
         #region Delegates
 
         /// <summary>
@@ -87,41 +171,7 @@ namespace ITCreatings.Ndb.Execution
         /// <param name="data"></param>
         /// <param name="execution"></param>
         /// <returns></returns>
-        public delegate T ExecuteDelegate(object data, IDbExecution<T> execution);
-
-        #endregion
-
-        #region Factory
-
-        /// <summary>
-        /// Factory Method
-        /// </summary>
-        /// <returns></returns>
-        public static DbExecution<T> Create()
-        {
-            return new DbExecution<T>();
-        }
-
-        /// <summary>
-        /// Factory Method
-        /// </summary>
-        /// <param name="logger">logger can be accessed later as IDbExecution.Logger</param>
-        /// <returns></returns>
-        public static DbExecution<T> Create(ILog logger)
-        {
-            return new DbExecution<T>(logger);
-        }
-
-        private DbExecution()
-        {
-            Error = DbExecutionError.Empty;    
-        }
-
-        private DbExecution(ILog log) : this()
-        {
-            logger = log;
-        }
-        
+        public delegate void ExecuteDelegate(object data, IDbExecution<TResult, TResultCode> execution);
 
         #endregion
 
@@ -135,15 +185,15 @@ namespace ITCreatings.Ndb.Execution
         /// <param name="expression"></param>
         /// <param name="description"></param>
         /// <returns></returns>
-        public DbExecution<T> IsTrue(bool expression, object description)
+        public DbExecution<TResult, TResultCode> IsTrue(bool expression, object description)
         {
             if (!IsError && !expression)
             {
                 if (description == null)
                     Error = InvalidArgumentsMessage;
                 else
-                if (description is int)
-                    Error = (int)description;    
+                if (description is TResultCode)
+                    Error = (TResultCode)description;
                 else
                     Error = description.ToString();
             }
@@ -156,7 +206,7 @@ namespace ITCreatings.Ndb.Execution
         /// </summary>
         /// <param name="expression">if set to <c>true</c> [expression].</param>
         /// <returns></returns>
-        public DbExecution<T> IsTrue(bool expression)
+        public DbExecution<TResult, TResultCode> IsTrue(bool expression)
         {
             return IsTrue(expression, null);
         }
@@ -166,7 +216,7 @@ namespace ITCreatings.Ndb.Execution
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public DbExecution<T> IsFalse(bool expression)
+        public DbExecution<TResult, TResultCode> IsFalse(bool expression)
         {
             return IsTrue(!expression);
         }
@@ -177,7 +227,7 @@ namespace ITCreatings.Ndb.Execution
         /// <param name="expression"></param>
         /// <param name="description"></param>
         /// <returns></returns>
-        public DbExecution<T> IsFalse(bool expression, object description)
+        public DbExecution<TResult, TResultCode> IsFalse(bool expression, object description)
         {
             return IsTrue(!expression, description);
         }
@@ -193,7 +243,7 @@ namespace ITCreatings.Ndb.Execution
         /// <param name="pattern">The pattern.</param>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public DbExecution<T> IsMatchRegex(object value, string pattern, object message)
+        public DbExecution<TResult, TResultCode> IsMatchRegex(object value, string pattern, object message)
         {
             return IsMatchRegex(value, pattern, message, RegexOptions.IgnoreCase);
         }
@@ -206,7 +256,7 @@ namespace ITCreatings.Ndb.Execution
         /// <param name="message">The message.</param>
         /// <param name="options">The options.</param>
         /// <returns></returns>
-        public DbExecution<T> IsMatchRegex(object value, string pattern, object message, RegexOptions options)
+        public DbExecution<TResult, TResultCode> IsMatchRegex(object value, string pattern, object message, RegexOptions options)
         {
             if (value == null)
                 return IsTrue(false, message);
@@ -221,7 +271,7 @@ namespace ITCreatings.Ndb.Execution
         /// <param name="value">The value.</param>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public DbExecution<T> IsNull(object value, object message)
+        public DbExecution<TResult, TResultCode> IsNull(object value, object message)
         {
             bool isNull = DbRecordInfo.IsNull(value);
             return IsTrue(isNull, message);
@@ -232,7 +282,7 @@ namespace ITCreatings.Ndb.Execution
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns></returns>
-        public DbExecution<T> IsNull(object value)
+        public DbExecution<TResult, TResultCode> IsNull(object value)
         {
             return IsNull(value, null);
         }
@@ -243,7 +293,7 @@ namespace ITCreatings.Ndb.Execution
         /// <param name="value">The value.</param>
         /// <param name="description">The message.</param>
         /// <returns></returns>
-        public DbExecution<T> IsNotNull(object value, object description)
+        public DbExecution<TResult, TResultCode> IsNotNull(object value, object description)
         {
             bool isNull = DbRecordInfo.IsNull(value);
             return IsFalse(isNull, description);
@@ -259,7 +309,7 @@ namespace ITCreatings.Ndb.Execution
         /// <param name="value">The value.</param>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public DbExecution<T> IsEmail(object value, object message)
+        public DbExecution<TResult, TResultCode> IsEmail(object value, object message)
         {
             const string pattern = @"^[a-z][a-z|0-9|]*([_][a-z|0-9]+)*([.][a-z|" +
                                    @"0-9]+([_][a-z|0-9]+)*)?@[a-z][a-z|0-9|]*\.([a-z]" +
@@ -274,7 +324,7 @@ namespace ITCreatings.Ndb.Execution
         /// <param name="value">The value.</param>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public DbExecution<T> IsUrl(object value, object message)
+        public DbExecution<TResult, TResultCode> IsUrl(object value, object message)
         {
             const string pattern = @"^\w+://(?:[\w-]+(?:\:[\w-]+)?\@)?(?:[\w-]+\.)+[\w-]+(?:\:\d+)?[\w- ./?%&=\+]*$";
             return IsMatchRegex(value, pattern, message);
@@ -286,7 +336,7 @@ namespace ITCreatings.Ndb.Execution
         /// <param name="value">The value.</param>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public DbExecution<T> IsIp(object value, object message)
+        public DbExecution<TResult, TResultCode> IsIp(object value, object message)
         {
             const string pattern = @"\d\d?\d?\.\d\d?\d?\.\d\d?\d?\.\d\d?\d?";
             return IsMatchRegex(value, pattern, message);
@@ -302,7 +352,7 @@ namespace ITCreatings.Ndb.Execution
         /// <param name="value">The value.</param>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public DbExecution<T> IsPhone(object value, object message)
+        public DbExecution<TResult, TResultCode> IsPhone(object value, object message)
         {
             const string pattern = @"\(\d\d\d\) \d\d\d\-\d\d\d\d";
             return IsMatchRegex(value, pattern, message);
@@ -314,7 +364,7 @@ namespace ITCreatings.Ndb.Execution
         /// <param name="value">The value.</param>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public DbExecution<T> IsSin(object value, object message)
+        public DbExecution<TResult, TResultCode> IsSin(object value, object message)
         {
             const string pattern = @"[0-9]{3}-[0-9]{2}-[0-9]{4}";
             return IsMatchRegex(value, pattern, message);
@@ -330,7 +380,7 @@ namespace ITCreatings.Ndb.Execution
         /// <param name="value">The value.</param>
         /// <param name="description">The description.</param>
         /// <returns></returns>
-        public DbExecution<T> IsZero(object value, object description)
+        public DbExecution<TResult, TResultCode> IsZero(object value, object description)
         {
             return IsFalse(0.Equals(value), description);
         }
@@ -341,7 +391,7 @@ namespace ITCreatings.Ndb.Execution
         /// <param name="value">The value.</param>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public DbExecution<T> IsDecimal(object value, object message)
+        public DbExecution<TResult, TResultCode> IsDecimal(object value, object message)
         {
             if (value == null)
                 return IsTrue(false, message);
@@ -356,7 +406,7 @@ namespace ITCreatings.Ndb.Execution
         /// <param name="value">The value.</param>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public DbExecution<T> IsInt(object value, object message)
+        public DbExecution<TResult, TResultCode> IsInt(object value, object message)
         {
             if (value == null)
                 return IsTrue(false, message);
@@ -371,7 +421,7 @@ namespace ITCreatings.Ndb.Execution
         /// <param name="value">The value.</param>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public DbExecution<T> IsLong(object value, object message)
+        public DbExecution<TResult, TResultCode> IsLong(object value, object message)
         {
             if (value == null)
                 return IsTrue(false, message);
@@ -386,7 +436,7 @@ namespace ITCreatings.Ndb.Execution
         /// <param name="value">The value.</param>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public DbExecution<T> IsMoney(object value, object message)
+        public DbExecution<TResult, TResultCode> IsMoney(object value, object message)
         {
             const string pattern = @"\$(((\d{1,3},)+\d{3})|\d+)\.\d{2}";
             return IsMatchRegex(value, pattern, message);
@@ -403,7 +453,7 @@ namespace ITCreatings.Ndb.Execution
         /// <param name="length">The length.</param>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public DbExecution<T> IsLength(object value, int length, object message)
+        public DbExecution<TResult, TResultCode> IsLength(object value, int length, object message)
         {
             if (value == null)
                 return IsTrue(false, message);
@@ -419,7 +469,7 @@ namespace ITCreatings.Ndb.Execution
         /// <param name="startChunk">The start chunk.</param>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public DbExecution<T> IsStartWith(object value, string startChunk, object message)
+        public DbExecution<TResult, TResultCode> IsStartWith(object value, string startChunk, object message)
         {
             if (value == null)
                 return IsTrue(false, message);
@@ -435,7 +485,7 @@ namespace ITCreatings.Ndb.Execution
         /// <param name="endChunk">The end chunk.</param>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public DbExecution<T> IsEndsWith(object value, string endChunk, object message)
+        public DbExecution<TResult, TResultCode> IsEndsWith(object value, string endChunk, object message)
         {
             if (value == null)
                 return IsTrue(false, message);
@@ -451,7 +501,7 @@ namespace ITCreatings.Ndb.Execution
         /// <param name="length">The length.</param>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public DbExecution<T> IsLongerThan(object value, int length, object message)
+        public DbExecution<TResult, TResultCode> IsLongerThan(object value, int length, object message)
         {
             if (value == null)
                 return IsTrue(false, message);
@@ -467,7 +517,7 @@ namespace ITCreatings.Ndb.Execution
         /// <param name="length">The length.</param>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public DbExecution<T> IsShorterThan(object value, int length, object message)
+        public DbExecution<TResult, TResultCode> IsShorterThan(object value, int length, object message)
         {
             if (value == null)
                 return IsTrue(false, message);
@@ -481,7 +531,7 @@ namespace ITCreatings.Ndb.Execution
         /// <param name="value">The value.</param>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public DbExecution<T> IsNotNullOrEmpty(object value, object message)
+        public DbExecution<TResult, TResultCode> IsNotNullOrEmpty(object value, object message)
         {
             bool isNullOrEmpty = string.IsNullOrEmpty(value as string);
             return IsFalse(isNullOrEmpty, message);
@@ -498,7 +548,7 @@ namespace ITCreatings.Ndb.Execution
         /// <param name="value">The value.</param>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public DbExecution<T> IsDateTime(object value, object message)
+        public DbExecution<TResult, TResultCode> IsDateTime(object value, object message)
         {
             if (value == null)
                 return IsTrue(false, message);
@@ -515,7 +565,7 @@ namespace ITCreatings.Ndb.Execution
         /// <param name="dateTime">The date time.</param>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public DbExecution<T> IsEarlierThan(object value, DateTime dateTime, object message)
+        public DbExecution<TResult, TResultCode> IsEarlierThan(object value, DateTime dateTime, object message)
         {
             if (value == null)
                 return IsTrue(false, message);
@@ -532,7 +582,7 @@ namespace ITCreatings.Ndb.Execution
         /// <param name="dateTime">The date time.</param>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public DbExecution<T> IsLaterThan(object value, DateTime dateTime, object message)
+        public DbExecution<TResult, TResultCode> IsLaterThan(object value, DateTime dateTime, object message)
         {
             if (value == null)
                 return IsTrue(false, message);
@@ -554,19 +604,19 @@ namespace ITCreatings.Ndb.Execution
         /// <param name="data"></param>
         /// <param name="worker"></param>
         /// <returns></returns>
-        public DbExecution<T> Execute(object data, ExecuteDelegate worker)
+        public DbExecution<TResult, TResultCode> Execute(object data, ExecuteDelegate worker)
         {
             if (!IsError)
             {
                 logInfo("Delegate executing...");
                 try
                 {
-                    Result = worker.Invoke(data, this);
+                    worker.Invoke(data, this);
                     logOk();
                 }
                 catch(Exception ex)
                 {
-                    Error = ex;
+                    Error = new DbExecutionError<TResultCode>(ex, PossibleResultCode);
                 }
             }
 
@@ -578,7 +628,7 @@ namespace ITCreatings.Ndb.Execution
         /// </summary>
         /// <param name="action"></param>
         /// <returns></returns>
-        public DbExecution<T> Execute(Action<IDbExecution<T>> action)
+        public DbExecution<TResult, TResultCode> Execute(Action<IDbExecution<TResult, TResultCode>> action)
         {
             if (!IsError)
             {
@@ -590,7 +640,7 @@ namespace ITCreatings.Ndb.Execution
                 }
                 catch (Exception ex)
                 {
-                    Error = ex;
+                    Error = new DbExecutionError<TResultCode>(ex, PossibleResultCode);
                 }
             }
             
@@ -606,7 +656,7 @@ namespace ITCreatings.Ndb.Execution
         /// </summary>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public DbExecution<T> LogInfo(string message)
+        public DbExecution<TResult, TResultCode> LogInfo(string message)
         {
             if (!IsError && logger != null)
                 logger.Info(message);
@@ -619,7 +669,7 @@ namespace ITCreatings.Ndb.Execution
         /// </summary>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public DbExecution<T> LogDebug(string message)
+        public DbExecution<TResult, TResultCode> LogDebug(string message)
         {
             if (!IsError && logger != null)
                 logger.Debug(message);
@@ -652,8 +702,7 @@ namespace ITCreatings.Ndb.Execution
                 }
                 else
                 {
-                    StackTrace stackTrace = new StackTrace();
-                    logger.Error(string.Format("{0}. Stack Trace:\r\n{1}", error.Message, stackTrace));
+                    logger.Error(string.Format("{0}. Stack Trace:\r\n{1}", error.Message, new StackTrace()));
                 }
             }
         }

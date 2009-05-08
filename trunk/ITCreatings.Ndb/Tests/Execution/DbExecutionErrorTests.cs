@@ -1,6 +1,7 @@
 ﻿#if DEBUG
 using ITCreatings.Ndb.Exceptions;
 using ITCreatings.Ndb.Execution;
+using ITCreatings.Ndb.Tests.Data;
 using NUnit.Framework;
 
 namespace ITCreatings.Ndb.Tests.Execution
@@ -8,43 +9,31 @@ namespace ITCreatings.Ndb.Tests.Execution
     [TestFixture]
     public class DbExecutionErrorTests
     {
-        private enum TestEnum
-        {
-            CustomEntry1,
-            CustomEntry2,
-        }
-
         [Test]
-        public void EmptyTest()
+        public void ConvertorFromCustomExecutionResultCodeTest()
         {
-            var error = DbExecutionError.Empty;
-            Assert.IsFalse(error.IsCustomError);
-            Assert.IsFalse(error.IsException);
-            Assert.IsFalse(error.IsNdbException);
-            Assert.AreEqual(DbExecutionError.NO_ERRORS_MESSAGE, error.Message);
-        }
-
-        [Test]
-        public void ConvertorFromCustomErrorTest()
-        {
-            DbExecutionError error = TestEnum.CustomEntry1;
-            Assert.IsTrue(error.IsCustomError);
-            Assert.AreEqual(error.CustomErrorCode, (int) TestEnum.CustomEntry1);
-            Assert.AreEqual(DbExecutionError.CUSTOM_ERROR_CODE_MESSAGE + (int) TestEnum.CustomEntry1, error.Message);
+            DbExecutionError<ExecutionResultCode> error = ExecutionResultCode.CustomEntry1;
+            Assert.IsTrue(error.IsCustomResultCode);
+            Assert.AreEqual(error.ResultCode, ExecutionResultCode.CustomEntry1);
+            Assert.AreEqual(DbExecutionErrorMessage.CUSTOM_ERROR_CODE_MESSAGE + ExecutionResultCode.CustomEntry1, error.Message);
             Assert.AreEqual(DbExecutionErrorCode.Custom, error.ErrorCode);
 
-            error = (int) TestEnum.CustomEntry2;
-            Assert.AreEqual(error.CustomErrorCode, (int) TestEnum.CustomEntry2);
-            Assert.AreEqual(DbExecutionError.CUSTOM_ERROR_CODE_MESSAGE + (int)TestEnum.CustomEntry2, error.Message);
+            error = ExecutionResultCode.CustomEntry2;
+            Assert.AreEqual(error.ResultCode, ExecutionResultCode.CustomEntry2);
+            Assert.AreEqual(DbExecutionErrorMessage.CUSTOM_ERROR_CODE_MESSAGE + ExecutionResultCode.CustomEntry2, error.Message);
+
+            error = ExecutionResultCode.Success;
+            Assert.AreEqual(error.ResultCode, ExecutionResultCode.Success);
+            Assert.AreEqual(DbExecutionErrorMessage.NO_ERRORS_MESSAGE, error.Message);
         }
 
 
         [Test]
         public void ConvertorFromStringTest()
         {
-            DbExecutionError error = "test message";
+            DbExecutionError<int> error = "test message";
             Assert.AreEqual("test message", error.Message);
-            Assert.IsFalse(error.IsCustomError);
+            Assert.IsFalse(error.IsCustomResultCode);
             Assert.IsTrue(error.IsTextMessageError);
         }
 
@@ -52,9 +41,9 @@ namespace ITCreatings.Ndb.Tests.Execution
         public void ConvertorFromExceptionTest()
         {
             NdbConnectionFailedException exception = new NdbConnectionFailedException("just a test");
-            DbExecutionError error = exception;
+            DbExecutionError<int> error = exception;
             Assert.AreEqual(DbExecutionErrorCode.ConnectionFailed, error.ErrorCode);
-            Assert.IsFalse(error.IsCustomError);
+            Assert.IsFalse(error.IsCustomResultCode);
             Assert.IsTrue(error.IsNdbException);
         }
     }

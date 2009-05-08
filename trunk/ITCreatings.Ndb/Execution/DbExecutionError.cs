@@ -5,18 +5,19 @@ namespace ITCreatings.Ndb.Execution
     ///<summary>
     /// Execution Error holder
     ///</summary>
-    public class DbExecutionError
+    public class DbExecutionError<TExecutionResultCode>
     {
         #region Messages
 
-        internal const string NO_ERRORS_MESSAGE = @"No errors";
-        internal const string NDB_ERROR_CODE_MESSAGE = @"Ndb Error Code: ";
-        internal const string CUSTOM_ERROR_CODE_MESSAGE = @"Custom Error Code: ";
-
         #endregion
 
-
         #region Conditions Helpers
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is error.
+        /// </summary>
+        /// <value><c>true</c> if this instance is error; otherwise, <c>false</c>.</value>
+        public bool IsError { get { return IsException || IsCustomResultCode || IsTextMessageError; } }
 
         /// <summary>
         /// Exception occured
@@ -31,7 +32,7 @@ namespace ITCreatings.Ndb.Execution
         /// <summary>
         /// Custom Error Code was set
         /// </summary>
-        public bool IsCustomError { get { return CustomErrorCode >= 0; } }
+        public bool IsCustomResultCode { get { return !default(TExecutionResultCode).Equals(ResultCode); } }
 
         /// <summary>
         /// string message  was set
@@ -55,7 +56,7 @@ namespace ITCreatings.Ndb.Execution
         /// <summary>
         /// Custom Error Code
         /// </summary>
-        public int CustomErrorCode { get; private set; }
+        public TExecutionResultCode ResultCode { get; set; }
 
         private string message;
         /// <summary>
@@ -65,36 +66,58 @@ namespace ITCreatings.Ndb.Execution
         {
             get
             {
-                if (ErrorCode != DbExecutionErrorCode.Custom)
-                    return NDB_ERROR_CODE_MESSAGE + ErrorCode;
+                if (IsCustomResultCode)
+                    return DbExecutionErrorMessage.CUSTOM_ERROR_CODE_MESSAGE + ResultCode;
 
                 if (message != null)
                     return message;
 
+                if (ErrorCode != DbExecutionErrorCode.Custom)
+                    return DbExecutionErrorMessage.NDB_ERROR_CODE_MESSAGE + ErrorCode;
+
                 if (Exception != null)
                     return Exception.Message;
 
-                if (IsCustomError)
-                    return CUSTOM_ERROR_CODE_MESSAGE + CustomErrorCode;
-
-                return NO_ERRORS_MESSAGE;
+                return DbExecutionErrorMessage.NO_ERRORS_MESSAGE;
             }
             private set { message = value; }
         }
 
         #endregion
 
-        /// <summary>
-        /// Empty error
-        /// </summary>
-        public static readonly DbExecutionError Empty = new DbExecutionError();
+//        /// <summary>
+//        /// Empty error
+//        /// </summary>
+//        public static readonly DbExecutionError<int> Empty = new DbExecutionError<int>();
 
         /// <summary>
         /// Default constructor
         /// </summary>
-        private DbExecutionError()
+        public DbExecutionError()
         {
-            CustomErrorCode = -1;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbExecutionError&lt;TExecutionResultCode&gt;"/> class.
+        /// </summary>
+        /// <param name="exception">The exception.</param>
+        public DbExecutionError(Exception exception)
+        {
+            Exception = exception;
+
+            if (exception is Exceptions.NdbConnectionFailedException)
+                ErrorCode = DbExecutionErrorCode.ConnectionFailed;
+            //TODO: add other types of exception
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbExecutionError&lt;TExecutionResultCode&gt;"/> class.
+        /// </summary>
+        /// <param name="exception">The exception.</param>
+        /// <param name="resultCode">The result code.</param>
+        public DbExecutionError(Exception exception, TExecutionResultCode resultCode) : this(exception)
+        {
+            ResultCode = resultCode;
         }
 
         #region Convertors
@@ -104,9 +127,19 @@ namespace ITCreatings.Ndb.Execution
         /// </summary>
         /// <param name="d"></param>
         /// <returns></returns>
-        public static implicit operator int(DbExecutionError d)
+        public static implicit operator int(DbExecutionError<TExecutionResultCode> d)
         {
-            return (int) d.ErrorCode;
+            return (int)d.ErrorCode;
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="ITCreatings.Ndb.Execution.DbExecutionError&lt;TResultCode&gt;"/> to <see cref="TError"/>.
+        /// </summary>
+        /// <param name="d">The d.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static implicit operator TExecutionResultCode(DbExecutionError<TExecutionResultCode> d)
+        {
+            return d.ResultCode;
         }
 
         /// <summary>
@@ -114,7 +147,7 @@ namespace ITCreatings.Ndb.Execution
         /// </summary>
         /// <param name="d"></param>
         /// <returns></returns>
-        public static implicit operator string(DbExecutionError d)
+        public static implicit operator string(DbExecutionError<TExecutionResultCode> d)
         {
             return d.Message;
         }
@@ -124,37 +157,24 @@ namespace ITCreatings.Ndb.Execution
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public static implicit operator DbExecutionError(string message)
+        public static implicit operator DbExecutionError<TExecutionResultCode>(string message)
         {
-            return new DbExecutionError
+            return new DbExecutionError<TExecutionResultCode>
                        {
                            Message = message
                        };
         }
 
         /// <summary>
-        /// Creates DbExecutionError instance from CustomErrorCode
+        /// Creates DbExecutionError instance from ResultCode
         /// </summary>
-        /// <param name="customErrorCode"></param>
+        /// <param name="executionResultCode"></param>
         /// <returns></returns>
-        public static implicit operator DbExecutionError(int customErrorCode)
+        public static implicit operator DbExecutionError<TExecutionResultCode>(TExecutionResultCode executionResultCode)
         {
-            return new DbExecutionError
+            return new DbExecutionError<TExecutionResultCode>
                        {
-                           CustomErrorCode = customErrorCode
-                       };
-        }
-
-        /// <summary>
-        /// Creates DbExecutionError instance from Custom Error Codes enum
-        /// </summary>
-        /// <param name="customErrorCode"></param>
-        /// <returns></returns>
-        public static implicit operator DbExecutionError(Enum customErrorCode)
-        {
-            return new DbExecutionError
-                       {
-                           CustomErrorCode = (int) (object) customErrorCode
+                           ResultCode = executionResultCode
                        };
         }
 
@@ -163,14 +183,9 @@ namespace ITCreatings.Ndb.Execution
         /// </summary>
         /// <param name="exception"></param>
         /// <returns></returns>
-        public static implicit operator DbExecutionError(Exception exception)
+        public static implicit operator DbExecutionError<TExecutionResultCode>(Exception exception)
         {
-            DbExecutionError error = new DbExecutionError { Exception = exception };
-
-            if (exception is Exceptions.NdbConnectionFailedException)
-                error.ErrorCode = DbExecutionErrorCode.ConnectionFailed;
-
-            return error;
+            return new DbExecutionError<TExecutionResultCode>(exception);
         }
 
         #endregion
