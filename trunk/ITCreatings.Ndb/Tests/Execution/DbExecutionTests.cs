@@ -112,11 +112,8 @@ namespace ITCreatings.Ndb.Tests.Execution
         public void PossibleExecutionResultCodeTest()
         {
             var execution = DbExecution<User, ExecutionResultCode>.Create()
-                .Execute(delegate(IDbExecution<User, ExecutionResultCode> exec)
-                             {
-                                 exec.PossibleResultCode = ExecutionResultCode.UnableLoadData;
-                                 throw new Exception(EXCEPTION);//emulate exception during data load
-                             });
+                .SetPossibleResultCode(ExecutionResultCode.UnableLoadData)
+                .Execute(exec => { throw new Exception(EXCEPTION); });//emulate exception during data load 
 
             Assert.IsTrue(execution.IsError);
             Assert.IsTrue(execution.Error.IsException);

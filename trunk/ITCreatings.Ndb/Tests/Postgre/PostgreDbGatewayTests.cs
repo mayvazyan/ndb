@@ -6,6 +6,7 @@ using NUnit.Framework;
 namespace ITCreatings.Ndb.Tests.Postgre
 {
     [TestFixture]
+    [Ignore("Just a partially supported now")]
     public class PostgreDbGatewayTests : DbGatewayTests
     {
         public PostgreDbGatewayTests() : base(DbAccessor.Create("Postgre")) { }

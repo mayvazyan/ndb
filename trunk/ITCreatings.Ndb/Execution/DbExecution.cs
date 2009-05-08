@@ -610,6 +610,18 @@ namespace ITCreatings.Ndb.Execution
         #region Execute
 
         /// <summary>
+        /// Sets the possible result code.
+        /// </summary>
+        /// <param name="resultCode">The result code.</param>
+        /// <returns></returns>
+        public DbExecution<TResult, TResultCode> SetPossibleResultCode(TResultCode resultCode)
+        {
+            PossibleResultCode = resultCode;
+            return this;
+        }
+
+
+        /// <summary>
         /// Executes ExecuteDelegate delegate
         /// </summary>
         /// <param name="data"></param>
