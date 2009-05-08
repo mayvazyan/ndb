@@ -11,12 +11,12 @@ namespace ITCreatings.Ndb.Execution
     /// Execution flow helper
     /// <example>
     /// <code>
-    /// var executor = DbExecution&lt;User, ResultCode&gt;.Create()
+    /// var executor = DbExecution&lt;User, ExecutionResultCode&gt;.Create()
     ///         .IsTrue(user.Id != 0, message1)
     ///         .IsNullOrEmpty(user.Password, message2)
-    ///         .Execute(delegate (IDbExecution&lt;User, ResultCode&gt; execution) 
+    ///         .Execute(delegate (IDbExecution&lt;User, ExecutionResultCode&gt; execution) 
     ///             {                  
-    ///                 execution.PossibleResultCode = ResultCode.UnableLoadData; 
+    ///                 execution.PossibleResultCode = ExecutionResultCode.UnableLoadData; 
     ///                 execution.Result = dbGateway.Load&lt;User&rt;(...);
     ///             });
     /// 
@@ -25,7 +25,7 @@ namespace ITCreatings.Ndb.Execution
     /// ResultCode executionError = executor.Error;
     /// 
     /// ...
-    /// private enum ExecutionResultCodes
+    /// private enum ExecutionResultCode
     /// {
     ///     Success,
     /// 

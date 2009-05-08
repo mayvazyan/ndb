@@ -15,14 +15,17 @@
     <title>Execute through Anonymous Delegate.</title>
     <content>
       <code language="cs">
-         var executor = DbExecution{User}.Create()
-             .IsTrue(user.Id != 0, "Invalid Id")
-             .IsNotNullOrEmpty(user.Password, "Password is empty")
-             .Execute(delegate (IDbExecution{User} execution) { execution.Error = "Test"; });
-     
-	     bool isError = executor.IsError;
-	     User user = executor.Result;
-	     DbExecutionError executionError = executor.Error;
+        var executor = DbExecution{User, ExecutionResultCode}.Create()
+          .IsTrue(user.Id != 0, "Invalid Id")
+          .IsNotNullOrEmpty(user.Password, "Password is empty")
+          .Execute(delegate (IDbExecution{User, ExecutionResultCode} execution) 
+            { 
+              execution.Error = ExecutionResultCode; 
+            });
+
+        bool isError = executor.IsError;
+        User user = executor.Result;
+        DbExecutionError executionError = executor.Error;
       </code>
     </content>
   </section>
@@ -32,26 +35,30 @@
     <content>
       Delegate:
       <code language="cs">
-        public delegate T ExecuteDelegate(object data, IDbExecution{T} execution);
+        public delegate T ExecuteDelegate(object data, IDbExecution{TResult, TResultCode} execution);
       </code>
       
       Example:
       <code language="cs">
-      	var executor = DbExecution{User}.Create()
-             .IsTrue(user.Id != 0, "Invalid Id")
-             .Execute(user, LoginUser);
-     
-	    bool isError = executor.IsError;
-	    User user = executor.Result;
-	    DbExecutionError executionError = executor.Error;
-	     
-	    ...
-	    
-	    private User LoginUser(object data, IDbExecution{User} execution)
+        var executor = DbExecution{User, ExecutionResultCode}.Create()
+        .IsTrue(user.Id != 0, "Invalid Id")
+        .Execute(user, LoginUser);
+
+        bool isError = executor.IsError;
+        User user = executor.Result;
+        DbExecutionError executionError = executor.Error;
+
+        ...
+
+        private void LoginUser(object data, IDbExecution{User, ExecutionResultCode} execution)
         {
-            User user = (User)data;
-            user.Id = 7;
-            return user;
+          execution.PossibleResultCode = ExecutionResultCode.UnknownUser;
+          
+          User user = (User)data;
+          if (IsExists(user))
+          {
+            execution.Result = user;
+          }
         }
 
       </code>
