@@ -75,16 +75,16 @@ namespace ITCreatings.Ndb.Tests.Execution
             Assert.AreEqual(0, user.Id);
 
             var executor = DbExecution<User, ExecutionResultCode>.Create()
-                .Execute(delegate(IDbExecution<User, ExecutionResultCode> execution) { execution.Error = "Test"; });
+                .Execute(exec => exec.Error = "Test");
 
             Assert.IsTrue(executor.IsError);
             Assert.AreEqual("Test", executor.Error.Message);
 
             executor = DbExecution<User, ExecutionResultCode>.Create()
-               .Execute(delegate(IDbExecution<User, ExecutionResultCode> execution)
+               .Execute(exec =>
                             {
                                 user.Id = 5;
-                                execution.Result = user;
+                                exec.Result = user;
                             });
 
             Assert.IsFalse(executor.IsError);

@@ -11,20 +11,17 @@ namespace ITCreatings.Ndb.Execution
     /// Execution flow helper
     /// <example>
     /// <code>
-    /// var executor = DbExecution&lt;User, ExecutionResultCode&gt;.Create()
+    /// var execution = DbExecution&lt;User, ExecutionResultCode&gt;.Create()
     ///         .IsTrue(user.Id != 0, message1)
     ///         .IsNullOrEmpty(user.Password, message2)
-    ///         .Execute(delegate (IDbExecution&lt;User, ExecutionResultCode&gt; execution) 
-    ///             {                  
-    ///                 execution.PossibleResultCode = ExecutionResultCode.UnableLoadData; 
-    ///                 execution.Result = dbGateway.Load&lt;User&gt;(...);
-    ///             });
+    ///         .SetPossibleResultCode(ExecutionResultCode.UnableLoadData)
+    ///         .Execute(exec => exec.Result = dbGateway.Load&lt;User&gt;(...));
     /// 
-    /// bool isError = executor.IsError;
-    /// User user = executor.Result;
-    /// ResultCode executionError = executor.Error;
+    /// ExecutionResultCode resultCode;
+    /// User user = execution.GetResult(out resultCode); // resultCode will be set to ExecutionResultCode.UnableLoadData if an exception occured
     /// 
     /// ...
+    /// 
     /// private enum ExecutionResultCode
     /// {
     ///     Success,
@@ -45,6 +42,12 @@ namespace ITCreatings.Ndb.Execution
         /// Result
         /// </summary>
         public TResult Result { get; set; }
+
+        /// <summary>
+        /// Gets the result code.
+        /// </summary>
+        /// <value>The result code.</value>
+        public TResultCode ResultCode { get { return Error.ResultCode; } }
 
         /// <summary>
         /// Gets the result.
