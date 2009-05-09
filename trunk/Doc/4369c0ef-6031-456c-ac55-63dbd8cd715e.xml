@@ -15,17 +15,27 @@
     <title>Execute through Anonymous Delegate.</title>
     <content>
       <code language="cs">
-        var executor = DbExecution{User, ExecutionResultCode}.Create()
-          .IsTrue(user.Id != 0, "Invalid Id")
-          .IsNotNullOrEmpty(user.Password, "Password is empty")
-          .Execute(delegate (IDbExecution{User, ExecutionResultCode} execution) 
-            { 
-              execution.Error = ExecutionResultCode; 
-            });
-
-        bool isError = executor.IsError;
-        User user = executor.Result;
-        DbExecutionError executionError = executor.Error;
+	  
+	    var execution = DbExecution&lt;User, ExecutionResultCode&gt;.Create()
+            .IsTrue(user.Id != 0, message1)
+             .IsNullOrEmpty(user.Password, message2)
+             .SetPossibleResultCode(ExecutionResultCode.UnableLoadData)
+             .Execute(exec => exec.Result = dbGateway.Load&lt;User&gt;(...));
+     
+		ExecutionResultCode resultCode;
+		User user = execution.GetResult(out resultCode); // resultCode will be set to ExecutionResultCode.UnableLoadData if an exception occured
+     
+		...
+     
+		private enum ExecutionResultCode
+		{
+			Success,
+     
+			UnableLoadData,
+			InvalidPasswordLength,
+     
+			...
+		}
       </code>
     </content>
   </section>
