@@ -62,6 +62,12 @@ namespace ITCreatings.Ndb.Query
                 case DbExpressionType.Less:
                     return string.Concat(ColumnName, "<@", ParamName);
 
+                case DbExpressionType.GreaterOrEqual:
+                    return string.Concat(ColumnName, ">=@", ParamName);
+
+                case DbExpressionType.LessOrEqual:
+                    return string.Concat(ColumnName, "<=@", ParamName);
+
                 default:
                     throw new NdbInvalidFilterException(ExpressionType, GetType());
             }

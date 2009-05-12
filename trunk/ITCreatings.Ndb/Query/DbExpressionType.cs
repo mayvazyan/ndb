@@ -36,9 +36,19 @@ namespace ITCreatings.Ndb.Query
         Greater = 50,
 
         /// <summary>
+        /// Greater
+        /// </summary>
+        GreaterOrEqual = 55,
+
+        /// <summary>
         /// Less
         /// </summary>
         Less = 60,
+
+        /// <summary>
+        /// Less
+        /// </summary>
+        LessOrEqual = 65,
 
         /// <summary>
         /// Is Not Null
