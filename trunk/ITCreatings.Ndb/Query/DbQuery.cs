@@ -147,6 +147,17 @@ namespace ITCreatings.Ndb.Query
             return this;
         }
 
+        /// <summary>
+        /// Sets column name sort by and sorting direction
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        public DbQuery OrderBy(DbOrder order)
+        {
+            Order = order;
+            return this;
+        }
+
         #endregion
 
         #region DbFilterExpression helpers
