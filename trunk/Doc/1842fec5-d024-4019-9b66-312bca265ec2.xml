@@ -28,18 +28,20 @@
   </introduction>
   
   <section address="Section1">
-    <title>Pass List&lt;DbFilterExpression&gt; to DbGateway.Select method</title>
+    <title>Pass List&lt;DbFilterNode&gt; to DbGateway.Select method</title>
     <content>
       <!-- Uncomment this to create a sub-section outline
       <autoOutline /> -->
-      <para>Please review below example. It will load user with the following email duser4@example.com</para>
+      <para>Please review below example. It will load users with the following emails duser1@example.com, duser2@example.com</para>
       <content>
                 
         <code language="cs">			
-            var expression = new DbColumnFilterExpression(DbExpressionType.Equal, "Email", "duser4@example.com");
-            var expressions = new List{DbFilterExpression} {expression};
+			var expression = new DbColumnFilterExpression(DbExpressionType.Equal, "Email", "duser1@example.com");
+			var expression2 = new DbColumnFilterExpression(DbExpressionType.Equal, "Email", "duser2@example.com");
 
-            User[] users = gateway.Select{User}(expressions).Load();
+			DbFilterGroup filterGroup = new DbOrFilterGroup(expression, expression2);
+			User[] users = gateway.Select(filterGroup)
+				.Load&lt;User&gt;();
 		</code>
 	  </content>
     </content>
@@ -54,7 +56,7 @@
       <content>
                 
         <code language="cs">			
-	            User [] list = DbGateway.Instance.Select{User}()
+	            User [] list = DbGateway.Instance.Select()
 	                .Contains("Email", "4@e")
 	                .StartsWith("Email", "duser4@")
 	                .EndsWith("Email", "4@example.com")
@@ -62,7 +64,7 @@
 	                .IsNull("LastName")
 	                .Greater("Id", 0)
 	                .Less("Id", 100)
-	                .Load();
+	                .Load&lt;User&gt;();
 		</code>
 	  </content>
     </content>

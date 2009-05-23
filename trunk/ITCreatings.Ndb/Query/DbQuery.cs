@@ -15,7 +15,7 @@ namespace ITCreatings.Ndb.Query
         /// <summary>
         /// List of Filter Expressions
         /// </summary>
-        public List<DbFilterExpression> FilterExpressions { get; private set; }
+        public DbFilterGroup FilterGroup { get; private set; }
 
         /// <summary>
         /// Underlayed gateway.
@@ -33,19 +33,11 @@ namespace ITCreatings.Ndb.Query
         #region Constructors
 
         /// <summary>
-        /// Default constructor
+        /// Initializes a new instance of the <see cref="DbQuery"/> class.
         /// </summary>
-        private DbQuery(DbGateway gateway)
-            : this(gateway, new List<DbFilterExpression>())
-        {
-        }
-
-        /// <summary>
-        /// Allows to specify Filter Expression
-        /// </summary>
-        /// <param name="gateway"></param>
-        /// <param name="filterExpressions"></param>
-        private DbQuery(DbGateway gateway, List<DbFilterExpression> filterExpressions)
+        /// <param name="gateway">The gateway.</param>
+        /// <param name="filterExpressions">The filter expressions.</param>
+        private DbQuery(DbGateway gateway, List<DbFilterNode> filterExpressions)
         {
             foreach (DbFilterExpression expression in filterExpressions)
             {
@@ -54,8 +46,27 @@ namespace ITCreatings.Ndb.Query
             }
 
             Gateway = gateway;
-            FilterExpressions = filterExpressions;
+            FilterGroup = new DbAndFilterGroup(filterExpressions);
         }
+
+        private DbQuery(DbGateway gateway) :
+            this(gateway, new DbAndFilterGroup(new List<DbFilterNode>()))
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbQuery"/> class.
+        /// </summary>
+        /// <param name="gateway">The gateway.</param>
+        /// <param name="filterGroup">The filter group.</param>
+        private DbQuery(DbGateway gateway, DbFilterGroup filterGroup)
+        {
+            //TODO: add filters validation?
+
+            Gateway = gateway;
+            FilterGroup = filterGroup;
+        }
+
 
         #endregion 
 
@@ -76,9 +87,14 @@ namespace ITCreatings.Ndb.Query
         /// <param name="gateway">The gateway</param>
         /// <param name="filterExpressions">The filter expressions.</param>
         /// <returns></returns>
-        public static DbQuery Create(DbGateway gateway, List<DbFilterExpression> filterExpressions)
+        public static DbQuery Create(DbGateway gateway, List<DbFilterNode> filterExpressions)
         {
             return new DbQuery(gateway, filterExpressions);
+        }
+
+        public static DbQuery Create(DbGateway gateway, DbFilterGroup filterGroup)
+        {
+            return new DbQuery(gateway, filterGroup);
         }
 
         #endregion
@@ -167,9 +183,9 @@ namespace ITCreatings.Ndb.Query
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public DbQuery Add(DbFilterExpression expression)
+        public DbQuery Add(DbFilterNode expression)
         {
-            FilterExpressions.Add(expression);
+            FilterGroup.Add(expression);
             return this;
         }
 
@@ -364,25 +380,11 @@ namespace ITCreatings.Ndb.Query
 
         private object[] buildWhere(StringBuilder sb, DbGateway gateway)
         {
-            int count = FilterExpressions.Count;
-
-            var args = new List<object>(count*2);
-            if (count > 0)
-            {
-                sb.Append(" WHERE ");
-
-                sb.Append(FilterExpressions[0].ToString(gateway.Accessor, 0));
-                FilterExpressions[0].AddParameters(args);
-
-                for (int i = 1; i < count; i++)
-                {
-                    sb.Append(" AND ");
-                    sb.Append(FilterExpressions[i].ToString(gateway.Accessor, i));
-                    FilterExpressions[i].AddParameters(args);
-                }
-            }
-
+            var args = new List<object>();
+            var builder = new DbFilterBuilder(sb, gateway, args);
+            builder.Build(FilterGroup);
             return args.ToArray();
+            
         }
 
         #endregion

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.Mime;
 using System.Reflection;
 using ITCreatings.Ndb.Exceptions;
 
@@ -89,7 +88,7 @@ namespace ITCreatings.Ndb.NdbConsole
 
         public void GenerateClasses(string path, string @namespace)
         {
-            DbCodeGenerator generator = new DbCodeGenerator(gateway);
+            var generator = new DbCodeGenerator(gateway);
             if (!string.IsNullOrEmpty(@namespace))
                 generator.Namespace = @namespace;
 

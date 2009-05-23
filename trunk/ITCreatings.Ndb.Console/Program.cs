@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Text;
 
 namespace ITCreatings.Ndb.NdbConsole
@@ -19,7 +18,7 @@ namespace ITCreatings.Ndb.NdbConsole
             string provider = args[1];
             string connectionString = args[2];
 
-            Processor processor = new Processor();
+            var processor = new Processor();
 
             try
             {
@@ -49,7 +48,7 @@ namespace ITCreatings.Ndb.NdbConsole
 
                     default:
 
-                        string[] assemblies = new string[args.Length - 3];
+                        var assemblies = new string[args.Length - 3];
                         for (int i = 3; i < args.Length; i++)
                         {
                             string path = args[i];
@@ -69,7 +68,7 @@ namespace ITCreatings.Ndb.NdbConsole
        
         private static void printUsage()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             sb.AppendLine("Usage: NdbConsole [action] [inputfiles]");
             sb.AppendLine();
@@ -78,6 +77,9 @@ namespace ITCreatings.Ndb.NdbConsole
             sb.AppendFormat("\\{0} \t\tRemoves tables related to the objects in specifyed  assemblies\r\n", Action.Drop);
             sb.AppendFormat("\\{0} \t\tUpdates database structure to match specifyed assemblies\r\n", Action.Alter);
 
+//            sb.AppendLine("Params:");
+//            sb.AppendLine("- Alter");
+//            sb.AppendFormat("\t\d\r\n");
             Console.WriteLine(sb.ToString());
         }
     }

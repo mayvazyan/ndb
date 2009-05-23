@@ -6,7 +6,7 @@ namespace ITCreatings.Ndb.Query
     /// <summary>
     /// Once column expressions holder (for example IsNull, NotNull)
     /// </summary>
-    public class DbFilterExpression
+    public class DbFilterExpression : DbFilterNode
     {
         /// <summary>
         /// Expression Type
@@ -36,7 +36,7 @@ namespace ITCreatings.Ndb.Query
             ColumnName = columnName;
         }
 
-        internal virtual string ToString(DbAccessor accessor, int paramIndex)
+        internal virtual string ToString(DbAccessor accessor, int index)
         {
             switch(ExpressionType)
             {

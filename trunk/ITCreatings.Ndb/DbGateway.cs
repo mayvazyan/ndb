@@ -73,9 +73,19 @@ namespace ITCreatings.Ndb
         /// </summary>
         /// <param name="expressions">The expressions.</param>
         /// <returns></returns>
-        public DbQuery Select(List<DbFilterExpression> expressions)
+        public DbQuery Select(List<DbFilterNode> expressions)
         {
             return DbQuery.Create(this, expressions);
+        }
+
+        /// <summary>
+        /// Selects using the specified filter group.
+        /// </summary>
+        /// <param name="filterGroup">The filter group.</param>
+        /// <returns></returns>
+        public DbQuery Select(DbFilterGroup filterGroup)
+        {
+            return DbQuery.Create(this, filterGroup);
         }
 
         #endregion

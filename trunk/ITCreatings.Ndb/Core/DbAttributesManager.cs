@@ -9,7 +9,7 @@ namespace ITCreatings.Ndb.Core
     /// <summary>
     /// Provide access to DbAttributes
     /// </summary>
-    internal class DbAttributesManager
+    public class DbAttributesManager
     {
         private static readonly Dictionary<Type, DbRecordInfo> records = new Dictionary<Type, DbRecordInfo>();
 
@@ -119,7 +119,9 @@ namespace ITCreatings.Ndb.Core
                     }
                 }
 
-                DbRecordInfo info = (primaryKey != null) ? new DbIdentityRecordInfo(primaryKey) : new DbRecordInfo();
+                DbRecordInfo info = (primaryKey != null) 
+                    ? new DbIdentityRecordInfo(primaryKey) 
+                    : new DbRecordInfo();
 
                 info.RecordType = type;
                 info.ForeignKeys = foreignKeys;
@@ -132,6 +134,22 @@ namespace ITCreatings.Ndb.Core
 
             return records[type];
         }
+
+        /// <summary>
+        /// Gets the records info.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns></returns>
+        public static DbRecordInfo[] GetRecordInfo(Type[] type)
+        {
+            var list = new DbRecordInfo[type.Length];
+            for (int i = 0; i < type.Length; i++)
+            {
+                list[i] = GetRecordInfo(type[i]);
+            }
+            return list;
+        }
+
         /*
         public static DbViewInfo GetViewInfo(Type type)
         {
@@ -187,6 +205,11 @@ namespace ITCreatings.Ndb.Core
             return list.ToArray();
         }
 
+        /// <summary>
+        /// Gets the indexes.
+        /// </summary>
+        /// <param name="fields">The fields.</param>
+        /// <returns></returns>
         public static DbIndexesInfo GetIndexes(DbFieldInfo[] fields)
         {
             var indexesInfo = new DbIndexesInfo();
@@ -206,7 +229,7 @@ namespace ITCreatings.Ndb.Core
                     else if (attribute is DbFullTextIndexedFieldAttribute)
                         indexesInfo.AddFullText(attribute.IndexName, field.Name);
                     else
-                        indexesInfo.AddIndexes(attribute.IndexName, field.Name);
+                        indexesInfo.AddIndex(attribute.IndexName, field.Name);
                 }
             }
 

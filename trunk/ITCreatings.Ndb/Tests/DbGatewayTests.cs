@@ -269,7 +269,7 @@ namespace ITCreatings.Ndb.Tests
         public void LoadListFilterExpressionExceptionTest()
         {
             var expression = new DbColumnFilterExpression(DbExpressionType.Equal, "Em?ail", "some email");
-            var expressions = new List<DbFilterExpression> {expression};
+            var expressions = new List<DbFilterNode> {expression};
 
             User[] users = gateway.Select(expressions).Load<User>();
         }
@@ -279,7 +279,7 @@ namespace ITCreatings.Ndb.Tests
         {
             var expression = new DbColumnFilterExpression(
                 DbExpressionType.Equal, "Email", TestData.TestUser.Email);
-            var expressions = new List<DbFilterExpression>();
+            var expressions = new List<DbFilterNode>();
             expressions.Add(expression);
 
             User[] list = gateway.Select(expressions).Load<User>();
@@ -291,6 +291,45 @@ namespace ITCreatings.Ndb.Tests
         }
 
         [Test]
+        public void LoadListFilterExpressionTreeTest()
+        {
+            User user = TestData.TestUser;
+            user.Email = "user2@example.com";
+            gateway.Insert(user);
+
+            user.Email = "user3@example.com";
+            gateway.Insert(user);
+
+            var expression = new DbColumnFilterExpression(
+                DbExpressionType.Equal, "Email", TestData.TestUser.Email);
+
+            var expression2 = new DbColumnFilterExpression(
+                DbExpressionType.Equal, "Email", "user2@example.com");
+
+            DbFilterGroup or = new DbOrFilterGroup(expression, expression2);
+
+            User[] list = gateway.Select(or).Load<User>();
+            Assert.AreEqual(2, list.Length);
+            
+            expression.Value = "other@example.com";
+            list = gateway.Select(or).Load<User>();
+            Assert.AreEqual(1, list.Length);
+
+
+            //and
+            expression = new DbColumnFilterExpression(
+                DbExpressionType.Equal, "Email", TestData.TestUser.Email);
+
+            expression2 = new DbColumnFilterExpression(
+                DbExpressionType.Equal, "Email", "user2@example.com");
+
+            or = new DbAndFilterGroup(expression, expression2);
+
+            list = gateway.Select(or).Load<User>();
+            Assert.AreEqual(0, list.Length);
+        }
+
+        [Test]
         public void LoadResultFilterExpressionTest()
         {
             if (!gateway.Accessor.IsMySql)
@@ -298,7 +337,7 @@ namespace ITCreatings.Ndb.Tests
 
             var expression = new DbColumnFilterExpression(
                 DbExpressionType.Equal, "Email", TestData.TestUser.Email);
-            var expressions = new List<DbFilterExpression>();
+            var expressions = new List<DbFilterNode>();
             expressions.Add(expression);
 
             DbQueryResult<User> result = gateway.Select(expressions).LoadResult<User>(true);
@@ -358,6 +397,7 @@ namespace ITCreatings.Ndb.Tests
 
             Assert.AreEqual(1, list.Length);
         }
+
 
         [Test]
         public void DbQueryOrderByTest()

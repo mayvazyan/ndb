@@ -11,6 +11,39 @@ namespace ITCreatings.Ndb.Execution
     /// Execution flow helper
     /// <example>
     /// <code>
+    /// var execution = DbExecution&lt;ExecutionResultCode&gt;.Create()
+    ///         .IsTrue(user.Id != 0, message1)
+    ///         .IsNullOrEmpty(user.Password, message2)
+    ///         .SetPossibleResultCode(ExecutionResultCode.UnableUpdateData)
+    ///         .Execute(exec => dbGateway.Update(user));
+    /// 
+    /// 
+    /// ExecutionResultCode resultCode = execution.ResultCode;
+    /// 
+    /// ...
+    /// 
+    /// private enum ExecutionResultCode
+    /// {
+    ///     Success,
+    /// 
+    ///     UnableLoadData,
+    ///     UnableUpdateData,
+    ///     InvalidPasswordLength,
+    /// 
+    ///     ...
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public class DbExecution<TResultCode> : DbExecution<TResultCode, TResultCode>
+    {
+        
+    }
+
+    /// <summary>
+    /// Execution flow helper
+    /// <example>
+    /// <code>
     /// var execution = DbExecution&lt;User, ExecutionResultCode&gt;.Create()
     ///         .IsTrue(user.Id != 0, message1)
     ///         .IsNullOrEmpty(user.Password, message2)
