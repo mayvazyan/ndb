@@ -35,6 +35,12 @@ namespace ITCreatings.Ndb.Core
         internal Type DbType { get; private set; }
 
         /// <summary>
+        /// Gets or sets the default value.
+        /// </summary>
+        /// <value>The default value.</value>
+        public object DefaultValue { get; private set; }
+
+        /// <summary>
         /// Gets a value indicating whether [differs from database type].
         /// </summary>
         /// <value>
@@ -49,12 +55,14 @@ namespace ITCreatings.Ndb.Core
         /// <param name="name">Name of the associated column</param>
         /// <param name="size">Size of the associated column</param>
         /// <param name="dbType">Type of the db field.</param>
-        public DbFieldInfo(FieldInfo fieldInfo, string name, uint size, Type dbType)
+        /// <param name="defaultValue">The default value.</param>
+        public DbFieldInfo(FieldInfo fieldInfo, string name, uint size, Type dbType, object defaultValue)
         {
             FieldInfo = fieldInfo;
             Name = (string.IsNullOrEmpty(name)) ? fieldInfo.Name : name;
             Size = size;
             DbType = dbType;
+            DefaultValue = defaultValue;
         }
 
         /// <summary>

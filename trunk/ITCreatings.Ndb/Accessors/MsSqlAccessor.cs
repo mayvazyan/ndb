@@ -10,22 +10,6 @@ namespace ITCreatings.Ndb.Accessors
 {
     internal class MsSqlAccessor : DbAccessor
     {
-        public override string BuildLimits(string query, int limit, int offset)
-        {
-            //TODO: move to dbquery?
-            int index = query.IndexOf("ORDER BY", StringComparison.OrdinalIgnoreCase);
-
-            string select = (index >= 0) ? query.Substring(0, index) : query;
-            string fields = select.Substring(7, select.IndexOf("FROM") - 7);
-            string orderby = (index >= 0) ? query.Substring(index) : "ORDER BY Id";
-
-            select = select.Insert(6, " ROW_NUMBER() OVER(" + orderby + ") AS RowNum,");
-
-            return string.Format(
-                @"WITH Buffer AS ({0}) SELECT {4} FROM Buffer WHERE RowNum BETWEEN {3} AND {3}+{2}-1 {1};",
-                select, orderby, limit, offset + 1, fields);
-        }
-
         protected override DbCommand Command(string query)
         {
             return new SqlCommand(query, new SqlConnection(ConnectionString));
@@ -201,6 +185,22 @@ namespace ITCreatings.Ndb.Accessors
 //                    @"SELECT TABLE_SCHEMA, TABLE_NAME, OBJECTPROPERTY(object_id(TABLE_NAME), N'IsUserTable') AS type 
                     @"SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE OBJECTPROPERTY(object_id(TABLE_NAME), N'IsUserTable')=1",
                     "TABLE_NAME");
+        }
+
+        public override string BuildLimits(string query, int limit, int offset)
+        {
+            //TODO: move to dbquery?
+            int index = query.IndexOf("ORDER BY", StringComparison.OrdinalIgnoreCase);
+
+            string select = (index >= 0) ? query.Substring(0, index) : query;
+            string fields = select.Substring(7, select.IndexOf("FROM") - 7);
+            string orderby = (index >= 0) ? query.Substring(index) : "ORDER BY Id";
+
+            select = select.Insert(6, " ROW_NUMBER() OVER(" + orderby + ") AS RowNum,");
+
+            return string.Format(
+                @"WITH Buffer AS ({0}) SELECT {4} FROM Buffer WHERE RowNum BETWEEN {3} AND {3}+{2}-1 {1};",
+                select, orderby, limit, offset + 1, fields);
         }
     }
 }

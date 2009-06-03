@@ -92,6 +92,10 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Accessors\DataReaders\CsvDataReader.cs" />
+    <Compile Include="Accessors\DataReaders\DataReaderUtils.cs" />
+    <Compile Include="Accessors\DataReaders\ExcelDataReader.cs" />
+    <Compile Include="Accessors\ExcelAccessor.cs" />
     <Compile Include="Accessors\PostgreAccessor.cs" />
     <Compile Include="Attributes\Relations\DbChildRecords.cs" />
     <Compile Include="Attributes\Relations\DbParentRecordAttribute.cs" />
@@ -139,6 +143,10 @@
     <Compile Include="Exceptions\NdbInvalidColumnNameException.cs" />
     <Compile Include="Execution\DbExecutionErrorMessage.cs" />
     <Compile Include="Execution\IDbExecution.cs" />
+    <Compile Include="Import\CsvImporter.cs" />
+    <Compile Include="Import\DataReaderImporter.cs" />
+    <Compile Include="Import\Importer.cs" />
+    <Compile Include="Import\ImportUtils.cs" />
     <Compile Include="Query\DbColumnFilterExpression.cs" />
     <Compile Include="Query\DbColumnToColumnFilterExpression.cs" />
     <Compile Include="Query\DbExpressionType.cs" />
@@ -158,6 +166,7 @@
     <Compile Include="Tests\Data\BinaryDataRecord3.cs" />
     <Compile Include="Tests\Data\ExecutionResultCode.cs" />
     <Compile Include="Tests\Execution\ExecutionFlow.cs" />
+    <Compile Include="Tests\Import\GenericTests.cs" />
     <Compile Include="Tests\MsSqlCe\MsSqlCeDbGatewayTests.cs" />
     <Compile Include="Tests\MsSqlCe\MsSqlCeDbStructureGatewayTests.cs" />
     <Compile Include="Tests\MsSql\MsSqlDbGatewayTests.cs" />

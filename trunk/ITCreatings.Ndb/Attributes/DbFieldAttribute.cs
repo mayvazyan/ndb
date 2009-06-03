@@ -20,6 +20,12 @@ namespace ITCreatings.Ndb.Attributes
     public class DbFieldAttribute : Attribute
     {
         /// <summary>
+        /// Gets or sets the default value.
+        /// </summary>
+        /// <value>The default value.</value>
+        public object DefaultValue { get; set; }
+
+        /// <summary>
         /// Name of the associated column
         /// <example>
         /// <code>
@@ -83,10 +89,10 @@ namespace ITCreatings.Ndb.Attributes
         /// <summary>
         /// Initializes a new instance of the <see cref="DbFieldAttribute"/> class.
         /// </summary>
-        /// <param name="type">Database field type.</param>
-        public DbFieldAttribute(Type type)
+        /// <param name="dbType">Database field type.</param>
+        public DbFieldAttribute(Type dbType)
         {
-            DbType = type;
+            DbType = dbType;
             Size = 255;
         }
 

@@ -92,6 +92,12 @@ namespace ITCreatings.Ndb.Query
             return new DbQuery(gateway, filterExpressions);
         }
 
+        /// <summary>
+        /// Creates the specified gateway.
+        /// </summary>
+        /// <param name="gateway">The gateway.</param>
+        /// <param name="filterGroup">The filter group.</param>
+        /// <returns></returns>
         public static DbQuery Create(DbGateway gateway, DbFilterGroup filterGroup)
         {
             return new DbQuery(gateway, filterGroup);

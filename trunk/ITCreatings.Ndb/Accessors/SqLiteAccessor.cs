@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Reflection;
 using System.Text;
 using ITCreatings.Ndb.Core;
 using ITCreatings.Ndb.Exceptions;
@@ -10,11 +9,6 @@ namespace ITCreatings.Ndb.Accessors
 {
     internal class SqLiteAccessor : DbAccessor
     {
-        public override string BuildLimits(string query, int limit, int offset)
-        {
-            return string.Concat(query, " LIMIT ", offset.ToString(), ",", limit.ToString());
-        }
-
         protected override System.Data.Common.DbCommand Command(string query)
         {
             return new SQLiteCommand(query, new SQLiteConnection(ConnectionString));
@@ -279,6 +273,11 @@ namespace ITCreatings.Ndb.Accessors
         private void dropTrigger(string triggerName)
         {
             ExecuteNonQuery("DROP TRIGGER IF EXISTS " + triggerName);
+        }
+
+        public override string BuildLimits(string query, int limit, int offset)
+        {
+            return string.Concat(query, " LIMIT ", offset.ToString(), ",", limit.ToString());
         }
     }
 }

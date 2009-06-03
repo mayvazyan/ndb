@@ -131,6 +131,10 @@ namespace ITCreatings.Ndb
                     accessor = new MsSqlCeAccessor();
                     break;
 
+                case DbProvider.Excel:
+                    accessor = new ExcelAccessor();
+                    break;
+
                 default:
                     throw new NdbConnectionFailedException(string.Format("Provider {0} doesn't supported", dbProvider));
             }
@@ -282,7 +286,6 @@ namespace ITCreatings.Ndb
             {
                 if (command.Connection != null)
                 {
-                    command.Connection.Close();
                     command.Connection.Dispose();
                 }
                 command.Dispose();
@@ -392,7 +395,6 @@ namespace ITCreatings.Ndb
                     {
                         if (adapter.SelectCommand.Connection != null)
                         {
-                            adapter.SelectCommand.Connection.Close();
                             adapter.SelectCommand.Connection.Dispose();
                         }
                         adapter.SelectCommand.Dispose();
@@ -521,7 +523,7 @@ namespace ITCreatings.Ndb
         /// <param name="query">Query</param>
         /// <param name="args">Filter</param>
         /// <returns>DataReader</returns>
-        public IDataReader ExecuteReader(string query, params object[] args)
+        public virtual IDataReader ExecuteReader(string query, params object[] args)
         {
             DbCommand command = null;
             try

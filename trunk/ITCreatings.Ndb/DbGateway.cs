@@ -156,15 +156,8 @@ namespace ITCreatings.Ndb
         {
             using (IDataReader reader = Accessor.ExecuteReader(query))
             {
-                try
-                {
-                    DbDependenciesResolver<T> resolver = new DbDependenciesResolver<T>(reader, dependenciesTypes);
-                    return resolver.Root;
-                }
-                finally
-                {
-                    reader.Close();
-                }
+                DbDependenciesResolver<T> resolver = new DbDependenciesResolver<T>(reader, dependenciesTypes);
+                return resolver.Root;
             }
         }
 
@@ -407,22 +400,15 @@ namespace ITCreatings.Ndb
             
             using (IDataReader reader = Accessor.ExecuteReaderEx(DbQueryBuilder.BuildSelect(info), args))
             {
-                try
+                if (reader.Read())
                 {
+                    Bind(data, reader, info);
+
                     if (reader.Read())
-                    {
-                        Bind(data, reader, info);
+                        throw new NdbException(
+                            "There are several records in database which match the specifyed filter");
 
-                        if (reader.Read())
-                            throw new NdbException(
-                                "There are several records in database which match the specifyed filter");
-
-                        return true;
-                    }
-                }
-                finally
-                {
-                    reader.Close();
+                    return true;
                 }
             }
 
@@ -678,7 +664,6 @@ namespace ITCreatings.Ndb
                 {
                     values.Add((TKey)reader[key], (TValue)reader[value]);
                 }
-                reader.Close();
             }
             return values;
         }
@@ -699,7 +684,6 @@ namespace ITCreatings.Ndb
                 {
                     list.Add((T)reader[column]);
                 }
-                reader.Close();
             }
             return list.ToArray();
         }
@@ -885,7 +869,34 @@ namespace ITCreatings.Ndb
             return _args;
         }
 
-        
+        /// <summary>
+        /// Binds the specified row.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="row">The row.</param>
+        /// <returns></returns>
+        public static T Bind<T>(IDataRecord row)
+        {
+            T obj = Activator.CreateInstance<T>();
+            Bind(obj, row, typeof(T));
+            return obj;
+        }
+
+        /// <summary>
+        /// Binds the specified obj.
+        /// </summary>
+        /// <param name="obj">The obj.</param>
+        /// <param name="row">The row.</param>
+        public static void Bind(object obj, IDataRecord row)
+        {
+            Bind(obj, row, obj.GetType());
+        }
+
+        private static void Bind(object data, IDataRecord row, Type type)
+        {
+            DbRecordInfo info = DbAttributesManager.GetRecordInfo(type);
+            Bind(data, row, info);
+        }
 
         private static void Bind(object data, IDataRecord row, DbRecordInfo info)
         {
@@ -894,9 +905,18 @@ namespace ITCreatings.Ndb
             var identityRecordInfo = info as DbIdentityRecordInfo;
             if (identityRecordInfo != null)
             {
-                DbFieldInfo pkey = identityRecordInfo.PrimaryKey;
-                object value = DbConvertor.GetValue(pkey, row[i]);
-                setValue(pkey, data, value);
+                DbFieldInfo field = identityRecordInfo.PrimaryKey;
+
+                object value = row[field.Name];
+                if (value == DBNull.Value)
+                {
+                    if (field.DefaultValue != null)
+                        value = field.DefaultValue;
+                }
+                else
+                    value = DbConvertor.GetValue(field, value);
+
+                setValue(field, data, value);
 
                 i++;
             }
@@ -905,7 +925,15 @@ namespace ITCreatings.Ndb
             for (int j = 0; j < count; j++)
             {
                 DbFieldInfo field = info.Fields[j];
-                object value = DbConvertor.GetValue(field, row[i]);
+                object value = row[field.Name];
+                if (value == DBNull.Value)
+                {
+                    if (field.DefaultValue != null)
+                        value = field.DefaultValue;
+                }
+                else
+                    value = DbConvertor.GetValue(field, value);
+
                 setValue(field, data, value);
 
                 i++;
@@ -920,11 +948,7 @@ namespace ITCreatings.Ndb
                     field.SetValue(data, null);
                 else
                 {
-                    Type fieldType = field.FieldType;
-
-                    Type type = (fieldType.BaseType != null && fieldType.BaseType == typeof (Enum))
-                        ? Enum.GetUnderlyingType(fieldType)
-                        : Nullable.GetUnderlyingType(fieldType) ?? fieldType;
+                    Type type = DbConvertor.GetType(field.FieldType);                    
                     
                     object convertedValue = Convert.ChangeType(value, type);
                     field.SetValue(data, convertedValue);
@@ -974,14 +998,7 @@ namespace ITCreatings.Ndb
             
             using (IDataReader reader = Accessor.ExecuteReader(query, args))
             {
-                try
-                {
-                    return loadRecords<T>(reader, info);
-                }
-                finally
-                {
-                    reader.Close();
-                }
+                return loadRecords<T>(reader, info);
             }
         }
 

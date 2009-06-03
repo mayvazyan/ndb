@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 namespace ITCreatings.Ndb.Query
 {
+    /// <summary>
+    /// Or Filters Group
+    /// </summary>
     public class DbOrFilterGroup : DbFilterGroup
     {
         /// <summary>
@@ -10,9 +13,16 @@ namespace ITCreatings.Ndb.Query
         /// <param name="nodes">The nodes.</param>
         public DbOrFilterGroup(List<DbFilterNode> nodes) : base(nodes){}
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbOrFilterGroup"/> class.
+        /// </summary>
+        /// <param name="nodes">The nodes.</param>
         public DbOrFilterGroup(params DbFilterNode [] nodes) : base(new List<DbFilterNode>(nodes)){}
     }
 
+    /// <summary>
+    /// And Filters Group
+    /// </summary>
     public class DbAndFilterGroup : DbFilterGroup
     {
         /// <summary>
@@ -21,6 +31,10 @@ namespace ITCreatings.Ndb.Query
         /// <param name="nodes">The nodes.</param>
         public DbAndFilterGroup(List<DbFilterNode> nodes) : base(nodes) { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbAndFilterGroup"/> class.
+        /// </summary>
+        /// <param name="nodes">The nodes.</param>
         public DbAndFilterGroup(params DbFilterNode [] nodes) : base(new List<DbFilterNode>(nodes)){}
     }
 

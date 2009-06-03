@@ -13,12 +13,14 @@ namespace ITCreatings.Ndb.Utils
                        : value;
         }
 
+        
+
         public static object GetValue(DbFieldInfo field, object value)
         {
+            Type type = GetType(field.FieldType);
             return field.IsDiffersFromDatabaseType
-                               ? convertData(field.FieldType, value)
-                               : fixData(field.FieldType, value);
-
+                               ? convertData(type, value)
+                               : fixData(type, value);
         }
 
         private static object fixData(Type fieldType, object value)
@@ -61,7 +63,20 @@ namespace ITCreatings.Ndb.Utils
                 return Int32.TryParse(value.ToString(), out ival) ? ival : 0;
             }
 
+            if (targetType == typeof(double))
+            {
+                Double dval;
+                return Double.TryParse(value.ToString(), out dval) ? dval : 0;
+            }
+            
             return Convert.ChangeType(value, targetType);
+        }
+
+        internal static Type GetType(Type fieldType)
+        {
+            return (fieldType.BaseType != null && fieldType.BaseType == typeof(Enum))
+                        ? Enum.GetUnderlyingType(fieldType)
+                        : Nullable.GetUnderlyingType(fieldType) ?? fieldType;
         }
     }
 }

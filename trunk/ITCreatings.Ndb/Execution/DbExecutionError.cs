@@ -133,7 +133,8 @@ namespace ITCreatings.Ndb.Execution
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="ITCreatings.Ndb.Execution.DbExecutionError&lt;TExecutionResultCode&gt;"/> to <see cref="TExecutionResultCode"/>.
+        /// Performs an implicit conversion from <see cref="ITCreatings.Ndb.Execution.DbExecutionError&lt;TExecutionResultCode&gt;"/>
+        /// to TExecutionResultCode.
         /// </summary>
         /// <param name="d">The d.</param>
         /// <returns>The result of the conversion.</returns>

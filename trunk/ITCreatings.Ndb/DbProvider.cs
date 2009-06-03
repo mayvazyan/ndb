@@ -33,6 +33,11 @@
         /// <summary>
         /// MS SQL Compact Edition database
         /// </summary>
-        MsSqlCe
+        MsSqlCe,
+
+        /// <summary>
+        /// MS Excel
+        /// </summary>
+        Excel
     }
 }
