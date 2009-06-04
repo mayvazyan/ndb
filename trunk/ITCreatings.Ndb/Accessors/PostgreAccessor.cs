@@ -25,7 +25,7 @@ namespace ITCreatings.Ndb.Accessors
             return new NpgsqlCommand(query, new NpgsqlConnection(ConnectionString));
         }
 
-        protected override DbDataAdapter GetAdapter()
+        public override DbDataAdapter GetAdapter()
         {
             return new NpgsqlDataAdapter();
         }

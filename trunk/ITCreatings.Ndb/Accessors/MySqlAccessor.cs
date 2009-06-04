@@ -31,7 +31,7 @@ namespace ITCreatings.Ndb.Accessors
             return new MySqlCommand(query, connection);
         }
 
-        protected override DbDataAdapter GetAdapter()
+        public override DbDataAdapter GetAdapter()
         {
             return new MySqlDataAdapter();
         }

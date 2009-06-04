@@ -27,7 +27,7 @@ namespace ITCreatings.Ndb.Accessors
         /// Creates DbDataAdapter for the active database
         /// </summary>
         /// <returns></returns>
-        protected override DbDataAdapter GetAdapter()
+        public override DbDataAdapter GetAdapter()
         {
             return new OleDbDataAdapter();
         }
@@ -104,13 +104,64 @@ namespace ITCreatings.Ndb.Accessors
 
         /// <summary>
         /// Gets the data reader of the specified Excel Sheet.
+        /// <example>
+        /// <code>
+        /// using(IDataReader reader = excelAccessor.GetReader("Sheet1$"))
+        /// {
+        ///     DoSomeStuff(reader);
+        /// }
+        /// </code>
+        /// </example>
         /// </summary>
         /// <param name="sheetName">Name of the sheet.</param>
         /// <returns></returns>
         public IDataReader GetReader(string sheetName)
         {
-            string query = string.Format("SELECT * FROM [{0}$]", sheetName);
+            return GetReader(sheetName, string.Empty);
+        }
+
+        /// <summary>
+        /// Gets the data reader of the specified Excel Sheet.
+        /// <example>
+        /// <code>
+        /// using(IDataReader reader = excelAccessor.GetReader("Sheet1", "A1:B10"))
+        /// {
+        ///     DoSomeStuff(reader);
+        /// }
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="sheetName">Name of the sheet.</param>
+        /// <param name="range">The range.</param>
+        /// <returns></returns>
+        public IDataReader GetReader(string sheetName, string range)
+        {
+            string query = string.Format("SELECT * FROM [{0}${1}]", sheetName, range);
             return ExecuteReader(query);
+        }
+
+        /// <summary>
+        /// Loads the list.
+        /// <example>
+        /// <code>
+        /// User[] users = excelAccessor.LoadList&lt;User&gt;("Users Sheet");
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sheetName">Name of the sheet.</param>
+        /// <returns></returns>
+        public T[] LoadList<T>(string sheetName)
+        {
+            List<T> list = new List<T>();
+            using (IDataReader reader = GetReader(sheetName))
+            {
+                while (reader.Read())
+                {
+                    list.Add(DbGateway.Bind<T>(reader));
+                }
+            }
+            return list.ToArray();
         }
     }
 }

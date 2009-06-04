@@ -14,7 +14,7 @@ namespace ITCreatings.Ndb.Accessors
             return new SQLiteCommand(query, new SQLiteConnection(ConnectionString));
         }
 
-        protected override System.Data.Common.DbDataAdapter GetAdapter()
+        public override System.Data.Common.DbDataAdapter GetAdapter()
         {
             return new SQLiteDataAdapter();
         }

@@ -15,7 +15,7 @@ namespace ITCreatings.Ndb.Accessors
             return new SqlCommand(query, new SqlConnection(ConnectionString));
         }
 
-        protected override DbDataAdapter GetAdapter()
+        public override DbDataAdapter GetAdapter()
         {
             return new SqlDataAdapter();
         }

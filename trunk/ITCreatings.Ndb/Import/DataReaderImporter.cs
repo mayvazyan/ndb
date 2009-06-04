@@ -9,14 +9,24 @@ namespace ITCreatings.Ndb.Import
     /// <typeparam name="T"></typeparam>
     public abstract class DataReaderImporter<T> : DataReaderImporter
     {
+        /// <summary>
+        /// Contains imported row
+        /// </summary>
         protected readonly T row = Activator.CreateInstance<T>();
 
-        protected override void ReadLine(IDataRecord args)
+        /// <summary>
+        /// Reads the line.
+        /// </summary>
+        /// <param name="args">The args.</param>
+        protected sealed override void ReadLine(IDataRecord args)
         {
             DbGateway.Bind(row, args);
             ReadLine();
         }
 
+        /// <summary>
+        /// Reads the line.
+        /// </summary>
         protected abstract void ReadLine();
     }
 

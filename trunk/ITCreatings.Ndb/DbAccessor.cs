@@ -316,7 +316,7 @@ namespace ITCreatings.Ndb
         /// Creates DbDataAdapter for the active database
         /// </summary>
         /// <returns></returns>
-        protected abstract DbDataAdapter GetAdapter();
+        public abstract DbDataAdapter GetAdapter();
 
         /// <summary>
         /// Creates DbDataAdapter for the passed query

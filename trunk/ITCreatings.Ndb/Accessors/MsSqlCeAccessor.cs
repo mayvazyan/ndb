@@ -10,7 +10,7 @@ namespace ITCreatings.Ndb.Accessors
             return new SqlCeCommand(query, new SqlCeConnection(ConnectionString));
         }
 
-        protected override DbDataAdapter GetAdapter()
+        public override DbDataAdapter GetAdapter()
         {
             return new SqlCeDataAdapter();
         }
