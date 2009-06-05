@@ -143,7 +143,7 @@
     <Compile Include="Exceptions\NdbInvalidColumnNameException.cs" />
     <Compile Include="Execution\DbExecutionErrorMessage.cs" />
     <Compile Include="Execution\IDbExecution.cs" />
-    <Compile Include="Import\CsvImporter.cs" />
+    <Compile Include="Import\DbCsvImporter.cs" />
     <Compile Include="Import\DbDataReaderImporter.cs" />
     <Compile Include="Import\DbImporter.cs" />
     <Compile Include="Import\DbImportUtils.cs" />
