@@ -222,8 +222,6 @@ namespace ITCreatings.Ndb
 
             int i = 0;
 
-            // TODO: optimize DropTables logic
-
             // so "pretty" code tryes to remove all tables. 
             // but checks if we have some problems like not connected to database
             while (true)

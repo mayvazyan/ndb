@@ -7,7 +7,7 @@ namespace ITCreatings.Ndb.Import
     /// Data Reader Typed Importer
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class DataReaderImporter<T> : DataReaderImporter
+    public abstract class DbDataReaderImporter<T> : DbDataReaderImporter
     {
         /// <summary>
         /// Contains imported row
@@ -34,7 +34,7 @@ namespace ITCreatings.Ndb.Import
     /// <summary>
     /// Data Reader Importer base class
     /// </summary>
-    public abstract class DataReaderImporter : Importer
+    public abstract class DbDataReaderImporter : DbImporter
     {
         /// <summary>
         /// Reads the line.
@@ -46,7 +46,7 @@ namespace ITCreatings.Ndb.Import
         /// Processes the specified input.
         /// </summary>
         /// <param name="input">The input.</param>
-        protected override void ProcessRow(object input)
+        protected sealed override void ProcessRow(object input)
         {
             using (IDataReader reader = (IDataReader)input)
             {

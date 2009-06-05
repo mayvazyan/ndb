@@ -10,7 +10,7 @@ namespace ITCreatings.Ndb.Tests.Import
         [Test]
         public void RemoveExtraSpacesTest()
         {
-            Assert.AreEqual("John Doe", ImportUtils.RemoveExtraSpaces("John  Doe "));
+            Assert.AreEqual("John Doe", DbImportUtils.RemoveExtraSpaces("John  Doe "));
         }
     }
 }

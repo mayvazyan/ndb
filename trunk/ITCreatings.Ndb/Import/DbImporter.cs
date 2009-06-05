@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -9,7 +8,7 @@ namespace ITCreatings.Ndb.Import
     /// <summary>
     /// Importer base class
     /// </summary>
-    public abstract class Importer
+    public abstract class DbImporter
     {
         private StringBuilder sb;
 
@@ -90,33 +89,7 @@ namespace ITCreatings.Ndb.Import
             sb.AppendLine(string.Format(format, args));
         }
 
-        /// <summary>
-        /// Allows the identity insert.
-        /// </summary>
-        /// <param name="tableName">Name of the table.</param>
-        protected void AllowIdentityInsert(string tableName)
-        {
-            Add("set IDENTITY_INSERT {0} on", tableName);
-        }
-
-        /// <summary>
-        /// Sets the specified name.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="value">The value.</param>
-        protected void Set(string name, object value)
-        {
-            Add("SET {0}={1}", name, value);
-        }
-
-        /// <summary>
-        /// Declares the specified desc.
-        /// </summary>
-        /// <param name="desc">The desc.</param>
-        protected void Declare(string desc)
-        {
-            Add("DECLARE " + desc);
-        }
+       
 
         #endregion
 
@@ -156,5 +129,60 @@ namespace ITCreatings.Ndb.Import
         {
             return ExecuteProcess("cmd", args) == 0;
         }
+
+        #region Database Specific Utils
+
+        /// <summary>
+        /// MsSql Specific Utils
+        /// </summary>
+        public static class MsSql
+        {
+            /// <summary>
+            /// Sets the identity insert On.
+            /// </summary>
+            /// <param name="tableName">Name of the table.</param>
+            public static string SetIdentityInsertOn(string tableName)
+            {
+                return string.Format("set IDENTITY_INSERT {0} on", tableName);
+            }
+
+            /// <summary>
+            /// Sets the identity insert Off.
+            /// </summary>
+            /// <param name="tableName">Name of the table.</param>
+            public static string SetIdentityInsertOff(string tableName)
+            {
+                return string.Format("set IDENTITY_INSERT {0} OFF", tableName);
+            }
+
+            /// <summary>
+            /// Sets the specified variable.
+            /// </summary>
+            /// <param name="name">The variable.</param>
+            /// <param name="value">The value.</param>
+            public static string Set(string name, object value)
+            {
+                return string.Format("SET {0}={1}", name, value);
+            }
+
+            /// <summary>
+            /// Declares the specified variable.
+            /// </summary>
+            /// <param name="variable">The variable.</param>
+            public static string Declare(string variable)
+            {
+                return "DECLARE " + variable;
+            }
+
+            /// <summary>
+            /// Returns GO.
+            /// </summary>
+            /// <returns></returns>
+            public static string Go()
+            {
+                return "GO";
+            }
+        }
+        #endregion
     }
 }

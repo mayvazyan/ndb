@@ -11,7 +11,9 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
             List<string> names = new List<string>();
             for (int i = 0; i < reader.FieldCount; i++)
             {
-                names.Add(reader.GetString(i));
+                object value = reader[i];
+                if (value != DBNull.Value)
+                    names.Add(value.ToString());
             }
             return names;
         }

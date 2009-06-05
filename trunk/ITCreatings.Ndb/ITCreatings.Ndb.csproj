@@ -144,9 +144,9 @@
     <Compile Include="Execution\DbExecutionErrorMessage.cs" />
     <Compile Include="Execution\IDbExecution.cs" />
     <Compile Include="Import\CsvImporter.cs" />
-    <Compile Include="Import\DataReaderImporter.cs" />
-    <Compile Include="Import\Importer.cs" />
-    <Compile Include="Import\ImportUtils.cs" />
+    <Compile Include="Import\DbDataReaderImporter.cs" />
+    <Compile Include="Import\DbImporter.cs" />
+    <Compile Include="Import\DbImportUtils.cs" />
     <Compile Include="Query\DbColumnFilterExpression.cs" />
     <Compile Include="Query\DbColumnToColumnFilterExpression.cs" />
     <Compile Include="Query\DbExpressionType.cs" />

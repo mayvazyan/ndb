@@ -5,15 +5,15 @@ namespace ITCreatings.Ndb.Import
     /// <summary>
     /// Csv Importer base class
     /// </summary>
-    public abstract class CsvImporter : Importer
+    public abstract class DbCsvImporter : DbImporter
     {
         private readonly char delimiter;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CsvImporter"/> class.
+        /// Initializes a new instance of the <see cref="DbCsvImporter"/> class.
         /// </summary>
         /// <param name="delimiter">The delimiter.</param>
-        protected CsvImporter(char delimiter)
+        protected DbCsvImporter(char delimiter)
         {
             this.delimiter = delimiter;
         }
@@ -28,7 +28,7 @@ namespace ITCreatings.Ndb.Import
         /// Processes the specified input.
         /// </summary>
         /// <param name="input">The input.</param>
-        protected override void ProcessRow(object input)
+        protected sealed override void ProcessRow(object input)
         {
             using (StreamReader sr = File.OpenText((string)input))
             {
