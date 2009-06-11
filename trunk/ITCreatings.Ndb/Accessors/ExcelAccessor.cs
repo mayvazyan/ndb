@@ -106,7 +106,7 @@ namespace ITCreatings.Ndb.Accessors
         /// Gets the data reader of the specified Excel Sheet.
         /// <example>
         /// <code>
-        /// using(IDataReader reader = excelAccessor.GetReader("Sheet1$"))
+        /// using(IDataReader reader = excelAccessor.GetReader("Sheet1"))
         /// {
         ///     DoSomeStuff(reader);
         /// }
@@ -162,6 +162,46 @@ namespace ITCreatings.Ndb.Accessors
                 }
             }
             return list.ToArray();
+        }
+
+        /// <summary>
+        /// Exports the specified sheet to passed gateway.
+        /// <example>
+        /// <code>
+        /// var target = new DbGateway(DbAccessor.Create("SampleDb"));
+        /// var source = (ExcelAccessor)DbAccessor.Create("SampleExcelFile");
+        /// 
+        /// source.Export<Contact>("Contacts", target);
+        /// </code>
+        /// </example>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sheetName">Name of the sheet.</param>
+        /// <param name="targetGateway">The target gateway.</param>
+        public void Export<T>(string sheetName, DbGateway targetGateway)
+        {
+            T[] list = LoadList<T>(sheetName);
+            targetGateway.Import(list);
+        }
+
+        /// <summary>
+        /// Exports the specified sheet to passed gateway and removes old data from passed gateway
+        /// <example>
+        /// <code>
+        /// var target = new DbGateway(DbAccessor.Create("SampleDb"));
+        /// var source = (ExcelAccessor)DbAccessor.Create("SampleExcelFile");
+        /// 
+        /// source.ExportWithClean<Contact>("Contacts", target);
+        /// </code>
+        /// </example>
+        /// </summary> 
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sheetName">Name of the sheet.</param>
+        /// <param name="targetGateway">The target gateway.</param>
+        public void ExportWithClean<T>(string sheetName, DbGateway targetGateway)
+        {
+            T[] list = LoadList<T>(sheetName);
+            targetGateway.Delete(typeof (T));
+            targetGateway.Import(list);
         }
     }
 }

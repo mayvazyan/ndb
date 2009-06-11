@@ -44,6 +44,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
             sr = new StreamReader(path, encoding);
             this.delimiter = delimiter;
 
+            Read();
             names = DataReaderUtils.ReadNames(this);
         }
 

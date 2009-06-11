@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Text;
 using ITCreatings.Ndb.Core;
 using ITCreatings.Ndb.Exceptions;
 using ITCreatings.Ndb.Query;
@@ -722,7 +721,39 @@ namespace ITCreatings.Ndb
                 save(data, identityInfo);
             }
             else
+            {
                 Accessor.Insert(info.TableName, info.GetValues(data));
+            }
+        }
+
+        /// <summary>
+        /// Saves the specified items to database.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        public void Save(object [] items)
+        {
+            if (items == null || items.Length == 0)
+                return;
+
+            var info = DbAttributesManager.GetRecordInfo(items[0].GetType());
+
+            DbIdentityRecordInfo identityInfo = info as DbIdentityRecordInfo;
+
+            if (identityInfo != null)
+            {
+                foreach (object item in items)
+                {
+                    save(item, identityInfo);    
+                }
+            }
+            else
+            {
+                foreach (object item in items)
+                {
+                    Accessor.Insert(info.TableName, info.GetValues(item));
+                }
+            }
+                
         }
 
         /// <summary>
@@ -737,6 +768,32 @@ namespace ITCreatings.Ndb
                 insert(info as DbIdentityRecordInfo, data);
             else
                 Accessor.Insert(info.TableName, info.GetValues(data));
+        }
+
+        /// <summary>
+        /// Imports all fields of passed objects to mapped tables\columns in database (Primary Keys and other generated content).
+        /// </summary>
+        /// <param name="records">The records.</param>
+        public void Import(object [] records)
+        {
+            if (records == null || records.Length == 0)
+                return;
+
+            var info = DbAttributesManager.GetRecordInfo(records[0].GetType());
+            for (int i = 0; i < records.Length; i++)
+            {
+                Accessor.Insert(info.TableName, info.GetValues(records));    
+            }
+        }
+
+        /// <summary>
+        /// Imports all fields of passed DbRecord to database (Primary Keys etc).
+        /// </summary>
+        /// <param name="record">The record.</param>
+        public void Import(object record)
+        {
+            var info = DbAttributesManager.GetRecordInfo(record.GetType());
+            Accessor.Insert(info.TableName, info.GetValues(record));
         }
 
         /// <summary>
@@ -900,7 +957,7 @@ namespace ITCreatings.Ndb
 
         private static void Bind(object data, IDataRecord row, DbRecordInfo info)
         {
-            int i = 0;
+//            int i = 0;
 
             var identityRecordInfo = info as DbIdentityRecordInfo;
             if (identityRecordInfo != null)
@@ -918,7 +975,7 @@ namespace ITCreatings.Ndb
 
                 setValue(field, data, value);
 
-                i++;
+//                i++;
             }
 
             int count = info.Fields.Length;
@@ -936,7 +993,7 @@ namespace ITCreatings.Ndb
 
                 setValue(field, data, value);
 
-                i++;
+//                i++;
             }
         }
 

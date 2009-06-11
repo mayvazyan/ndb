@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Reflection;
 using ITCreatings.Ndb.Attributes;
-using ITCreatings.Ndb.Exceptions;
 
 namespace ITCreatings.Ndb.Core
 {
@@ -11,6 +10,8 @@ namespace ITCreatings.Ndb.Core
     /// </summary>
     public class DbAttributesManager
     {
+        #region statics
+
         private static readonly Dictionary<Type, DbRecordInfo> records = new Dictionary<Type, DbRecordInfo>();
 
         /// <summary>
@@ -22,21 +23,7 @@ namespace ITCreatings.Ndb.Core
         {
             return GetRecordInfo(type).TableName;
         }
-
-        private static string LoadTableName(Type type)
-        {
-            var attributes = type.GetCustomAttributes(typeof(DbRecordAttribute), false);
-            DbRecordAttribute recordAttribute = null;
-
-            if (attributes.Length > 0)
-                recordAttribute = attributes[0] as DbRecordAttribute;
-
-            if (recordAttribute == null || string.IsNullOrEmpty(recordAttribute.TableName))
-                return type.Name + "s";
-
-            return recordAttribute.TableName;
-        }
-
+        
         /// <summary>
         /// Load Record Structure Information
         /// </summary>
@@ -46,97 +33,33 @@ namespace ITCreatings.Ndb.Core
         {
             if (!records.ContainsKey(type))
             {
-                DbFieldInfo primaryKey = null;
-                List<DbFieldInfo> dbFields = new List<DbFieldInfo>();
-                Dictionary<Type, FieldInfo> childs = new Dictionary<Type, FieldInfo>();
-                Dictionary<Type, FieldInfo> parents = new Dictionary<Type, FieldInfo>();
-                Dictionary<Type, DbFieldInfo> foreignKeys = new Dictionary<Type, DbFieldInfo>();
-
-                FieldInfo[] fields = type.GetFields();
-                foreach (FieldInfo field in fields)
-                {
-                    object[] parentRecordsAttributes = field.GetCustomAttributes(typeof(DbParentRecordAttribute), true);
-                    if (parentRecordsAttributes != null && parentRecordsAttributes.Length > 0)
-                    {
-                        parents.Add(field.FieldType, field);
-                    }
-
-                    object[] childRecordsAttributes = field.GetCustomAttributes(typeof(DbChildRecordsAttribute), true);
-                    if (childRecordsAttributes != null && childRecordsAttributes.Length > 0)
-                    {
-                        if (field.FieldType.BaseType != typeof(Array))
-                            throw new NdbException("DbChildRecordsAttribute can belong to Array field ONLY");
-
-                        childs.Add(field.FieldType.GetElementType(), field);
-                    }
-
-                    object[] attributes = field.GetCustomAttributes(typeof(DbFieldAttribute), true);
-                    if (attributes != null && attributes.Length > 0)
-                    {
-                        var foreignTypes = new List<Type>(attributes.Length);
-                        bool isPrimary = false;
-                        object defaultValue = null;
-                        string Name = null;
-                        uint Size = 0;
-                        Type DbType = null;
-                        foreach (DbFieldAttribute attribute in attributes)
-                        {
-                            if (attribute.DefaultValue != null)
-                                defaultValue = attribute.DefaultValue;
-
-                            if (attribute.DiffersFromDatabaseType)
-                                DbType = attribute.DbType;
-
-                            if (attribute.Size > 0)
-                                Size = attribute.Size;
-
-                            if (string.IsNullOrEmpty(Name))
-                                Name = attribute.Name;
-
-                            if (attribute is DbPrimaryKeyFieldAttribute)
-                            {
-                                isPrimary = true;
-                            }
-                            else
-                            {
-                                var dbForeignKeyFieldAttribute = attribute as DbForeignKeyFieldAttribute;
-                                if (dbForeignKeyFieldAttribute != null)
-                                    foreignTypes.Add(dbForeignKeyFieldAttribute.Type);
-//                                    foreignKeys.Add(dbForeignKeyFieldAttribute.Type, dbFieldInfo);
-                            }
-                        }
-                        DbFieldInfo dbFieldInfo = new DbFieldInfo(field, Name, Size, DbType, defaultValue);
-
-                        if (isPrimary)
-                        {
-                            primaryKey = dbFieldInfo;
-                        }
-                        else
-                        {
-                            dbFields.Add(dbFieldInfo);
-                        }
-
-                        foreach (Type foreignType in foreignTypes)
-                        {
-                            foreignKeys.Add(foreignType, dbFieldInfo);
-                        }
-                    }
-                }
-
-                DbRecordInfo info = (primaryKey != null) 
-                    ? new DbIdentityRecordInfo(primaryKey) 
-                    : new DbRecordInfo();
-
-                info.RecordType = type;
-                info.ForeignKeys = foreignKeys;
-                info.TableName = LoadTableName(type);
-                info.Fields = dbFields.ToArray();
-                info.Childs = childs;
-                info.Parents = parents;
-                records.Add(type, info);
+                DbRecordInfo recordInfo = LoadRecordInfo(type);
+                
+                records.Add(type, recordInfo);
             }
 
             return records[type];
+        }
+
+        private static DbRecordInfo LoadRecordInfo(Type type)
+        {
+#if LINQ
+            object[] attributes = type.GetCustomAttributes(true);
+            foreach (object attribute in attributes)
+            {
+                if (attribute is DbRecordAttribute)
+                {
+                    break;
+                }
+                if (attribute is System.Data.Linq.Mapping.TableAttribute)
+                {
+                    DbLinqAttributesLoader loader = new DbLinqAttributesLoader(type, (System.Data.Linq.Mapping.TableAttribute)attribute);
+                    return loader.RecordInfo;
+                }
+            }
+#endif
+            DbNdbAttributesLoader attributesManager = new DbNdbAttributesLoader(type);
+            return attributesManager.RecordInfo;
         }
 
         /// <summary>
@@ -153,42 +76,6 @@ namespace ITCreatings.Ndb.Core
             }
             return list;
         }
-
-        /*
-        public static DbViewInfo GetViewInfo(Type type)
-        {
-            if (!views.ContainsKey(type))
-            {
-                FieldInfo primaryKey = null;
-                List<FieldInfo> dbFields = new List<FieldInfo>();
-                Dictionary<Type, FieldInfo> foreignKeys = new Dictionary<Type, FieldInfo>();
-
-                FieldInfo[] fields = type.GetFields();
-                foreach (FieldInfo field in fields)
-                {
-                    object[] attributes = field.GetCustomAttributes(typeof(DbFieldAttribute), true);
-                    if (attributes.Length > 0)
-                    {
-                        DbFieldAttribute attribute = (DbFieldAttribute)attributes[0];// as DbPrimaryKeyFieldAttribute;
-                        if (attribute is DbPrimaryKeyFieldAttribute)
-                            primaryKey = field;
-                        else
-                        {
-                            var dbForeignKeyFieldAttribute = attribute as DbForeignKeyFieldAttribute;
-                            if (dbForeignKeyFieldAttribute != null)
-                                foreignKeys.Add(dbForeignKeyFieldAttribute.Type, field);
-
-                            dbFields.Add(field);
-                        }
-                    }
-                }
-
-                var info = new DbViewInfo();
-                views.Add(type, info);
-            }
-
-            return views[type];
-        }*/
 
         /// <summary>
         /// Load all types with DbRecordAttribute
@@ -239,5 +126,7 @@ namespace ITCreatings.Ndb.Core
 
             return indexesInfo;
         }
+
+        #endregion
     }
 }
