@@ -107,6 +107,7 @@ namespace ITCreatings.Ndb.Execution
 
             if (exception is Exceptions.NdbConnectionFailedException)
                 ErrorCode = DbExecutionErrorCode.ConnectionFailed;
+
             //TODO: add other types of exception
         }
 

@@ -76,19 +76,9 @@ namespace ITCreatings.Ndb.Accessors
             throw new NdbUnsupportedColumnTypeException(Provider, type);
         }
 
-        public override bool DropTable(string TableName)
+        public override void DropTable(string tableName)
         {
-            try
-            {
-                ExecuteNonQuery("DROP TABLE IF EXISTS " + TableName);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(string.Format(
-                                      "Can't delete table {0} error {1}", TableName, ex.Message));
-                return false;
-            }
+            ExecuteNonQuery("DROP TABLE IF EXISTS " + tableName);
         }
 
         internal override void AlterTable(DbTableCheckResult checkResult)

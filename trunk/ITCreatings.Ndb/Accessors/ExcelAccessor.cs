@@ -75,7 +75,7 @@ namespace ITCreatings.Ndb.Accessors
         /// </summary>
         /// <param name="name"></param>
         /// <returns>true if success</returns>
-        public override bool DropTable(string name)
+        public override void DropTable(string name)
         {
             throw new System.NotImplementedException();
         }

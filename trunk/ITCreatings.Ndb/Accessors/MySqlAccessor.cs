@@ -133,29 +133,9 @@ namespace ITCreatings.Ndb.Accessors
             return string.Concat(prefix, type);
         }
 
-        public override bool DropTable(string TableName)
+        public override void DropTable(string TableName)
         {
-            try
-            {
-                ExecuteNonQuery(string.Concat("DROP TABLE IF EXISTS ", TableName, " CASCADE"));
-                return true;
-            }
-            catch (NdbConnectionFailedException)
-            {
-                throw;
-            }
-#if DEBUG
-            catch (Exception ex)
-            {
-                Console.WriteLine(string.Format(
-                                      "Can't delete table {0} error {1}", TableName, ex.Message));
-            }
-#else
-            catch
-            {
-            }
-#endif
-            return false;
+            ExecuteNonQuery(string.Concat("DROP TABLE IF EXISTS ", TableName, " CASCADE"));
         }
 
         internal override void AlterTable(DbTableCheckResult checkResult)

@@ -632,12 +632,43 @@ namespace ITCreatings.Ndb
         /// <summary>
         /// Drops Table from Database
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns>true if success</returns>
-        public abstract bool DropTable(string name);
+        /// <param name="tableName"></param>
+        public abstract void DropTable(string tableName);
 
         internal abstract void AlterTable(DbTableCheckResult checkResult);
         internal abstract void CreateTable(DbRecordInfo info);
+
+
+        /// <summary>
+        /// Tries to drop the table.
+        /// Suppress exceptions (except of NdbConnectionFailedException).
+        /// </summary>
+        /// <param name="tableName">Name of the table.</param>
+        /// <returns>true if success</returns>
+        public bool DropTableSafe(string tableName)
+        {
+            try
+            {
+                DropTable(tableName);
+                return true;
+            }
+            catch (NdbConnectionFailedException)
+            {
+                throw;
+            }
+#if DEBUG
+            catch (Exception ex)
+            {
+                Console.WriteLine(string.Format("Can't drop table {0} error {1}", tableName, ex.Message));
+            }
+#else
+            catch
+            {
+            }
+#endif
+            return false;
+            
+        }
 
         /// <summary>
         /// Gets SQL definition for a specifyed field

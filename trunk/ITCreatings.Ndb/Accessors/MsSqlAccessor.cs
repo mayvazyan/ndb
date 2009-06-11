@@ -72,12 +72,11 @@ namespace ITCreatings.Ndb.Accessors
 
         }
 
-        public override bool DropTable(string name)
+        public override void DropTable(string tableName)
         {
             ExecuteNonQuery(string.Format(
                 @"IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{0}') DROP TABLE {0};",
-                name));
-            return true;
+                tableName));
         }
 
         internal override void AlterTable(DbTableCheckResult checkResult)
@@ -189,7 +188,6 @@ namespace ITCreatings.Ndb.Accessors
 
         public override string BuildLimits(string query, int limit, int offset)
         {
-            //TODO: move to dbquery?
             int index = query.IndexOf("ORDER BY", StringComparison.OrdinalIgnoreCase);
 
             string select = (index >= 0) ? query.Substring(0, index) : query;

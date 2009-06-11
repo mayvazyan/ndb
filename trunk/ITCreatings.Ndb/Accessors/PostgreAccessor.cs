@@ -99,32 +99,9 @@ namespace ITCreatings.Ndb.Accessors
             throw new NdbUnsupportedColumnTypeException(Provider, type);
         }
 
-        public override bool DropTable(string TableName)
+        public override void DropTable(string TableName)
         {
-            try
-            {
-//                object scalar = ExecuteScalar("select count(*) from pg_class where relname = '" + TableName + "'");
-//                int count = Convert.ToInt32(scalar);
-//                if (count == 1)
-                    ExecuteNonQuery("DROP TABLE " + TableName);
-                return true;
-            }
-            catch (NdbConnectionFailedException)
-            {
-                throw;
-            }
-#if DEBUG
-            catch (Exception ex)
-            {
-                Console.WriteLine(string.Format(
-                                      "Can't delete table {0} error {1}", TableName, ex.Message));
-            }
-#else
-            catch
-            {
-            }
-#endif
-            return true;//TODO:Droptable method for postgree
+            ExecuteNonQuery(string.Concat("DROP TABLE IF EXISTS ", TableName, " CASCADE"));
         }
 
         private static string[] getPrimaryKeys(DbRecordInfo info)

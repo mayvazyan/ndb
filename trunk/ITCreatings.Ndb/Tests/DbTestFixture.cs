@@ -39,7 +39,6 @@ namespace ITCreatings.Ndb.Tests
 
         public void CreateTables()
         {
-            //TODO: Add GUID support to Postgree and SQLite and remove below fix
             var types =  new[]
                                   {
                                       typeof (TestGuidRecord),

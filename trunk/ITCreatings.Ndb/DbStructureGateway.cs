@@ -208,7 +208,7 @@ namespace ITCreatings.Ndb
         {
             DbRecordInfo info = DbAttributesManager.GetRecordInfo(type);
 
-            return accessor.DropTable(info.TableName);
+            return accessor.DropTableSafe(info.TableName);
         }
 
 
