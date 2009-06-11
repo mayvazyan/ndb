@@ -7,12 +7,12 @@ namespace ITCreatings.Ndb.Import
     /// Data Reader Typed Importer
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class DbDataReaderImporter<T> : DbDataReaderImporter
+    public abstract class DbDataReaderImporter<T> : DbDataReaderImporter where T : new()
     {
         /// <summary>
         /// Contains imported row
         /// </summary>
-        protected readonly T row = Activator.CreateInstance<T>();
+        protected readonly T row = new T();
 
         /// <summary>
         /// Reads the line.

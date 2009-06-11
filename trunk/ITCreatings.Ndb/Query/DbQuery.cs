@@ -310,7 +310,7 @@ namespace ITCreatings.Ndb.Query
         /// Loads Array of objects
         /// </summary>
         /// <returns></returns>
-        public T[] Load<T>()
+        public T[] Load<T>() where T : new()
         {
             DbRecordInfo recordInfo = DbAttributesManager.GetRecordInfo(typeof(T));
             
@@ -346,7 +346,7 @@ namespace ITCreatings.Ndb.Query
         /// <typeparam name="T"></typeparam>
         /// <param name="LoadTotalCount">if set to <c>true</c> [load total count].</param>
         /// <returns></returns>
-        public DbQueryResult<T> LoadResult<T>(bool LoadTotalCount)
+        public DbQueryResult<T> LoadResult<T>(bool LoadTotalCount) where T : new()
         {
             var result = new DbQueryResult<T>();
             if (!LoadTotalCount)

@@ -151,7 +151,7 @@ namespace ITCreatings.Ndb.Accessors
         /// <typeparam name="T"></typeparam>
         /// <param name="sheetName">Name of the sheet.</param>
         /// <returns></returns>
-        public T[] LoadList<T>(string sheetName)
+        public T[] LoadList<T>(string sheetName) where T : new()
         {
             List<T> list = new List<T>();
             using (IDataReader reader = GetReader(sheetName))
@@ -171,13 +171,14 @@ namespace ITCreatings.Ndb.Accessors
         /// var target = new DbGateway(DbAccessor.Create("SampleDb"));
         /// var source = (ExcelAccessor)DbAccessor.Create("SampleExcelFile");
         /// 
-        /// source.Export<Contact>("Contacts", target);
+        /// source.Export&lt;Contact&gt;("Contacts", target);
         /// </code>
         /// </example>
+        /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="sheetName">Name of the sheet.</param>
         /// <param name="targetGateway">The target gateway.</param>
-        public void Export<T>(string sheetName, DbGateway targetGateway)
+        public void Export<T>(string sheetName, DbGateway targetGateway) where T : class, new()
         {
             T[] list = LoadList<T>(sheetName);
             targetGateway.Import(list);
@@ -190,14 +191,14 @@ namespace ITCreatings.Ndb.Accessors
         /// var target = new DbGateway(DbAccessor.Create("SampleDb"));
         /// var source = (ExcelAccessor)DbAccessor.Create("SampleExcelFile");
         /// 
-        /// source.ExportWithClean<Contact>("Contacts", target);
+        /// source.ExportWithClean&lt;Contact&gt;("Contacts", target);
         /// </code>
         /// </example>
         /// </summary> 
         /// <typeparam name="T"></typeparam>
         /// <param name="sheetName">Name of the sheet.</param>
         /// <param name="targetGateway">The target gateway.</param>
-        public void ExportWithClean<T>(string sheetName, DbGateway targetGateway)
+        public void ExportWithClean<T>(string sheetName, DbGateway targetGateway) where T : class, new()
         {
             T[] list = LoadList<T>(sheetName);
             targetGateway.Delete(typeof (T));

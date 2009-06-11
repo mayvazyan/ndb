@@ -204,7 +204,7 @@ namespace ITCreatings.Ndb
         ///     }
         /// </code>
         /// </example>
-        public TargetType[] LoadAssociated<TargetType, AssociationType>(object data)
+        public TargetType[] LoadAssociated<TargetType, AssociationType>(object data) where TargetType : new()
         {
             Type primaryType = data.GetType();
 
@@ -268,7 +268,7 @@ namespace ITCreatings.Ndb
         ///     }
         /// </code>
         /// </example>
-        public ChildType[] LoadChilds<ChildType>(object data, params object [] args)
+        public ChildType[] LoadChilds<ChildType>(object data, params object[] args) where ChildType : new()
         {
             Type primaryType = data.GetType();
 
@@ -319,7 +319,7 @@ namespace ITCreatings.Ndb
         ///     }
         /// </code>
         /// </example>
-        public ParentType LoadParent<ParentType>(object data)
+        public ParentType LoadParent<ParentType>(object data) where ParentType : new()
         {
             Type childType = data.GetType();
 
@@ -437,13 +437,13 @@ namespace ITCreatings.Ndb
         /// </code>
         /// </example>
         /// <exception cref="NdbException">If Primary Key not found</exception>
-        public T Load<T>(object primaryKey)
+        public T Load<T>(object primaryKey) where T : new()
         {
             DbIdentityRecordInfo info = DbAttributesManager.GetRecordInfo(typeof(T)) as DbIdentityRecordInfo;
             if (info == null)
                 throw new NdbNotIdentityException("Can't load record of type " + typeof(T));
 
-            T data = (T) Activator.CreateInstance(typeof(T));
+            T data = new T();
 
             info.PrimaryKey.SetValue(data, primaryKey);
 
@@ -459,9 +459,9 @@ namespace ITCreatings.Ndb
         /// <typeparam name="T">Type to load</typeparam>
         /// <param name="args">Filter</param>
         /// <returns>Record or null if it doesn't exists</returns>
-        public T Load<T>(params object[] args)
+        public T Load<T>(params object[] args) where T : new()
         {
-            T data = (T)Activator.CreateInstance(typeof(T));
+            T data = new T();
             
             if (Load(data, args))
                 return data;
@@ -500,7 +500,7 @@ namespace ITCreatings.Ndb
         ///     }
         /// </code>
         /// </example>
-        public T[] LoadList<T>(params object[] args)
+        public T[] LoadList<T>(params object[] args) where T : new()
         {
             DbRecordInfo recordInfo = DbAttributesManager.GetRecordInfo(typeof(T));
             string query = DbAccessor.BuildWhere(DbQueryBuilder.BuildSelect(recordInfo), args);
@@ -539,7 +539,7 @@ namespace ITCreatings.Ndb
         ///     }
         /// </code>
         /// </example>
-        public T[] LoadListLimited<T>(int limit, params object[] args)
+        public T[] LoadListLimited<T>(int limit, params object[] args) where T : new()
         {
             return LoadListLimited<T>(limit, 0, args);
         }
@@ -577,7 +577,7 @@ namespace ITCreatings.Ndb
         ///     }
         /// </code>
         /// </example>
-        public T[] LoadListLimited<T>(int limit, int offset, params object[] args)
+        public T[] LoadListLimited<T>(int limit, int offset, params object[] args) where T : new()
         {
             DbRecordInfo recordInfo = DbAttributesManager.GetRecordInfo(typeof(T));
             string query = DbAccessor.BuildWhere(DbQueryBuilder.BuildSelect(recordInfo), args);
@@ -596,7 +596,7 @@ namespace ITCreatings.Ndb
         /// ViewRecordType[] list = DbGateway.Instance.LoadRecords{ViewRecordType}("SELECT ***.... ", "UserId", UserId)
         /// </code>
         /// </example>
-        public T[] LoadRecords<T>(string query, params object[] args)
+        public T[] LoadRecords<T>(string query, params object[] args) where T : new()
         {
             return LoadRecords<T>(query, 0, 0, args);
         }
@@ -614,7 +614,7 @@ namespace ITCreatings.Ndb
         /// ViewRecordType[] list = DbGateway.Instance.LoadRecords{ViewRecordType}("SELECT ***.... ", 7, "UserId", UserId)
         /// </code>
         /// </example>
-        public T[] LoadRecords<T>(string query, int limit, params object[] args)
+        public T[] LoadRecords<T>(string query, int limit, params object[] args) where T : new()
         {
             return LoadRecords<T>(query, limit, 0, args);
         }
@@ -633,7 +633,7 @@ namespace ITCreatings.Ndb
         /// ViewRecordType[] list = DbGateway.Instance.LoadRecords{ViewRecordType}("SELECT ***.... ", 7, 7, "UserId", UserId)
         /// </code>
         /// </example>
-        public T[] LoadRecords<T>(string query, int limit, int offset, params object[] args)
+        public T[] LoadRecords<T>(string query, int limit, int offset, params object[] args) where T : new()
         {
             DbRecordInfo info = DbAttributesManager.GetRecordInfo(typeof(T));
             return loadRecords<T>(info, query, limit, offset, args);
@@ -782,18 +782,8 @@ namespace ITCreatings.Ndb
             var info = DbAttributesManager.GetRecordInfo(records[0].GetType());
             for (int i = 0; i < records.Length; i++)
             {
-                Accessor.Insert(info.TableName, info.GetValues(records));    
+                Accessor.Insert(info.TableName, info.GetValues(records[i]));    
             }
-        }
-
-        /// <summary>
-        /// Imports all fields of passed DbRecord to database (Primary Keys etc).
-        /// </summary>
-        /// <param name="record">The record.</param>
-        public void Import(object record)
-        {
-            var info = DbAttributesManager.GetRecordInfo(record.GetType());
-            Accessor.Insert(info.TableName, info.GetValues(record));
         }
 
         /// <summary>
@@ -932,9 +922,9 @@ namespace ITCreatings.Ndb
         /// <typeparam name="T"></typeparam>
         /// <param name="row">The row.</param>
         /// <returns></returns>
-        public static T Bind<T>(IDataRecord row)
+        public static T Bind<T>(IDataRecord row) where T : new()
         {
-            T obj = Activator.CreateInstance<T>();
+            T obj = new T();
             Bind(obj, row, typeof(T));
             return obj;
         }
@@ -1041,12 +1031,12 @@ namespace ITCreatings.Ndb
             return Load(data, info.PrimaryKey.Name, info.PrimaryKey.GetValue(data));
         }
 
-        private T[] loadRecords<T>(DbRecordInfo info, string query, params object[] args)
+        private T[] loadRecords<T>(DbRecordInfo info, string query, params object[] args) where T : new()
         {
             return loadRecords<T>(info, query, 0, 0, args);
         }
 
-        private T[] loadRecords<T>(DbRecordInfo info, string query, int limit, int offset, params object[] args)
+        private T[] loadRecords<T>(DbRecordInfo info, string query, int limit, int offset, params object[] args) where T : new()
         {
             if (limit != 0 || offset != 0)
             {
@@ -1059,12 +1049,12 @@ namespace ITCreatings.Ndb
             }
         }
 
-        private static T[] loadRecords<T>(IDataReader reader, DbRecordInfo info)
+        private static T[] loadRecords<T>(IDataReader reader, DbRecordInfo info) where T : new()
         {
             List<T> list = new List<T>();
             while (reader.Read())
             {
-                T data = Activator.CreateInstance<T>();
+                T data = new T();
                 Bind(data, reader, info);
                 list.Add(data);
             }

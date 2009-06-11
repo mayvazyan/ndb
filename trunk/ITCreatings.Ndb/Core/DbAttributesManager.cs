@@ -10,8 +10,6 @@ namespace ITCreatings.Ndb.Core
     /// </summary>
     public class DbAttributesManager
     {
-        #region statics
-
         private static readonly Dictionary<Type, DbRecordInfo> records = new Dictionary<Type, DbRecordInfo>();
 
         /// <summary>
@@ -126,7 +124,5 @@ namespace ITCreatings.Ndb.Core
 
             return indexesInfo;
         }
-
-        #endregion
     }
 }

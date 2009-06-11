@@ -46,7 +46,7 @@ namespace ITCreatings.Ndb
         /// <param name="key">Key in cache</param>
         /// <param name="args">Filter</param>
         /// <returns>List</returns>
-        public T[] LoadList<T>(string key, params object[] args)
+        public T[] LoadList<T>(string key, params object[] args) where T : new()
         {
             T[] result = Cache.Get(key) as T[];
 
