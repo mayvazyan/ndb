@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using ITCreatings.Ndb.Core;
 using ITCreatings.Ndb.Exceptions;
+using ITCreatings.Ndb.Import;
 using ITCreatings.Ndb.Query;
 using ITCreatings.Ndb.Utils;
 
@@ -782,7 +783,22 @@ namespace ITCreatings.Ndb
             var info = DbAttributesManager.GetRecordInfo(records[0].GetType());
             for (int i = 0; i < records.Length; i++)
             {
-                Accessor.Insert(info.TableName, info.GetValues(records[i]));    
+                object record = records[i];
+
+                if (info is DbIdentityRecordInfo)
+                {
+//                    if (Accessor.IsMsSql)
+//                        Accessor.ExecuteNonQuery(DbImporter.MsSql.SetIdentityInsertOn(info.TableName));
+            
+                    DbIdentityRecordInfo recordInfo = (DbIdentityRecordInfo)info;
+                    Accessor.Insert(info.TableName, 
+                        info.GetValues(record, recordInfo.PrimaryKey.Name, recordInfo.PrimaryKey.GetValue(record)));
+
+//                    if (Accessor.IsMsSql)
+//                        Accessor.ExecuteNonQuery(DbImporter.MsSql.SetIdentityInsertOff(info.TableName));
+                }
+                else
+                    Accessor.Insert(info.TableName, info.GetValues(record));
             }
         }
 

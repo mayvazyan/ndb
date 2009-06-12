@@ -143,7 +143,7 @@ namespace ITCreatings.Ndb.Import
             /// <param name="tableName">Name of the table.</param>
             public static string SetIdentityInsertOn(string tableName)
             {
-                return string.Format("set IDENTITY_INSERT {0} on", tableName);
+                return string.Format("SET IDENTITY_INSERT [{0}] ON", tableName);
             }
 
             /// <summary>
@@ -152,7 +152,7 @@ namespace ITCreatings.Ndb.Import
             /// <param name="tableName">Name of the table.</param>
             public static string SetIdentityInsertOff(string tableName)
             {
-                return string.Format("set IDENTITY_INSERT {0} OFF", tableName);
+                return string.Format("SET IDENTITY_INSERT [{0}] OFF", tableName);
             }
 
             /// <summary>

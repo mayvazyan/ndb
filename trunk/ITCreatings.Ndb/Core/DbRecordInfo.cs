@@ -30,12 +30,12 @@ namespace ITCreatings.Ndb.Core
         /// <summary>
         /// Childs
         /// </summary>
-        public Dictionary<Type, FieldInfo> Childs;
+        public Dictionary<Type, MemberInfo> Childs;
 
         /// <summary>
         /// Parents
         /// </summary>
-        public Dictionary<Type, FieldInfo> Parents;
+        public Dictionary<Type, MemberInfo> Parents;
 
         /// <summary>
         /// Foreign Keys

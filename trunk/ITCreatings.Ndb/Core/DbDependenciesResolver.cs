@@ -35,8 +35,8 @@ namespace ITCreatings.Ndb.Core
 
         private void mapRecordSets(DbRecords dbRecords)
         {
-            Dictionary<Type, FieldInfo> childs = dbRecords.RecordInfo.Childs;
-            foreach (KeyValuePair<Type, FieldInfo> child in childs)
+            Dictionary<Type, MemberInfo> childs = dbRecords.RecordInfo.Childs;
+            foreach (KeyValuePair<Type, MemberInfo> child in childs)
             {
                 Type childRecordType = child.Key;
                 

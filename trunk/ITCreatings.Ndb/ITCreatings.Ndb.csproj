@@ -156,6 +156,7 @@
     <Compile Include="Import\DbDataReaderImporter.cs" />
     <Compile Include="Import\DbImporter.cs" />
     <Compile Include="Import\DbImportUtils.cs" />
+    <Compile Include="Import\DbExcelExport.cs" />
     <Compile Include="Query\DbColumnFilterExpression.cs" />
     <Compile Include="Query\DbColumnToColumnFilterExpression.cs" />
     <Compile Include="Query\DbExpressionType.cs" />

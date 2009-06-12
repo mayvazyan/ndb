@@ -12,29 +12,31 @@ namespace ITCreatings.Ndb.Core
     internal class DbNdbAttributesLoader : DbAttributesLoader
     {
         readonly DbFieldInfo primaryKey;
-        readonly Dictionary<Type, FieldInfo> childs = new Dictionary<Type, FieldInfo>();
-        readonly Dictionary<Type, FieldInfo> parents = new Dictionary<Type, FieldInfo>();
+        readonly Dictionary<Type, MemberInfo> childs = new Dictionary<Type, MemberInfo>();
+        readonly Dictionary<Type, MemberInfo> parents = new Dictionary<Type, MemberInfo>();
         readonly Dictionary<Type, DbFieldInfo> foreignKeys = new Dictionary<Type, DbFieldInfo>();
 
         public DbNdbAttributesLoader(Type type)
         {
-            FieldInfo[] fields = type.GetFields();
+            MemberInfo[] fields = type.GetMembers(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
-            foreach (FieldInfo field in fields)
+            foreach (MemberInfo field in fields)
             {
+                Type memberType = DbFieldInfo.GetType(field);
+
                 object[] parentRecordsAttributes = field.GetCustomAttributes(typeof (DbParentRecordAttribute), true);
                 if (parentRecordsAttributes != null && parentRecordsAttributes.Length > 0)
                 {
-                    parents.Add(field.FieldType, field);
+                    parents.Add(memberType, field);
                 }
 
                 object[] childRecordsAttributes = field.GetCustomAttributes(typeof (DbChildRecordsAttribute), true);
                 if (childRecordsAttributes != null && childRecordsAttributes.Length > 0)
                 {
-                    if (field.FieldType.BaseType != typeof (Array))
+                    if (memberType.BaseType != typeof(Array))
                         throw new NdbException("DbChildRecordsAttribute can belong to Array field ONLY");
 
-                    childs.Add(field.FieldType.GetElementType(), field);
+                    childs.Add(memberType.GetElementType(), field);
                 }
 
                 object[] attributes = field.GetCustomAttributes(typeof (DbFieldAttribute), true);
@@ -72,6 +74,7 @@ namespace ITCreatings.Ndb.Core
                             //                                    foreignKeys.Add(dbForeignKeyFieldAttribute.Type, dbFieldInfo);
                         }
                     }
+                    
                     DbFieldInfo dbFieldInfo = new DbFieldInfo(field, Name, Size, DbType, defaultValue);
 
                     if (isPrimary)

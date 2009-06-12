@@ -10,22 +10,26 @@ namespace ITCreatings.Ndb.Core
         public DbLinqAttributesLoader(Type type, TableAttribute tableAttribute)
         {
             DbFieldInfo primaryKey = null;
-            FieldInfo[] fields = type.GetFields();
 
-            foreach (FieldInfo field in fields)
+            MemberInfo[] fields = type.GetMembers(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+            foreach (MemberInfo field in fields)
             {
-                object[] attributes = field.GetCustomAttributes(typeof(ColumnAttribute), true);
-                ColumnAttribute attribute = (ColumnAttribute)attributes[0];
-                
-                DbFieldInfo dbFieldInfo = new DbFieldInfo(field, attribute.Name, 0, null, null);
+                object[] attributes = field.GetCustomAttributes(typeof (ColumnAttribute), true);
+                if (attributes.Length > 0)
+                {
+                    ColumnAttribute attribute = (ColumnAttribute) attributes[0];
 
-                if (attribute.IsPrimaryKey)
-                {
-                    primaryKey = dbFieldInfo;
-                }
-                else
-                {
-                    dbFields.Add(dbFieldInfo);
+                    DbFieldInfo dbFieldInfo = new DbFieldInfo(field, attribute.Name, 0, null, null);
+
+                    if (attribute.IsPrimaryKey)
+                    {
+                        primaryKey = dbFieldInfo;
+                    }
+                    else
+                    {
+                        dbFields.Add(dbFieldInfo);
+                    }
                 }
             }
 

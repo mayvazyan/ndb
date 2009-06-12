@@ -26,8 +26,8 @@ namespace ITCreatings.Ndb.Core
                 throw new NdbRelationException("{0} doesn't contains Childs of {1} type",
                     primaryRecordInfo.RecordType, childRecordInfo.RecordType);
 
-            FieldInfo childReferenceField = primaryRecordInfo.Childs[childRecordInfo.RecordType];
-            Type childType = childReferenceField.FieldType.GetElementType();
+            MemberInfo childReferenceField = primaryRecordInfo.Childs[childRecordInfo.RecordType];
+            Type childType = DbFieldInfo.GetType(childReferenceField).GetElementType();
 
             var childsList = new List<object>(childs);
             foreach (object parent in parents)
@@ -43,14 +43,16 @@ namespace ITCreatings.Ndb.Core
                     {
                         Type type = parent.GetType();
                         if (childRecordInfo.Parents.ContainsKey(type))
-                            childRecordInfo.Parents[type].SetValue(childRecord, parent);
+                        {
+                            DbFieldInfo.SetValue(childRecordInfo.Parents[type], childRecord, parent);
+                        }
 
                         list.Add(childRecord);
                         childsList.RemoveAt(i);
                     }
                 }
-                
-                childReferenceField.SetValue(parent, list.ToArray(childType));
+
+                DbFieldInfo.SetValue(childReferenceField, parent, list.ToArray(childType));
             }
         }
 

@@ -38,7 +38,7 @@ namespace ITCreatings.Ndb.Accessors
         /// <param name="query">Query</param>
         /// <param name="args">Filter</param>
         /// <returns>DataReader</returns>
-        public override IDataReader ExecuteReader(string query, params object[] args)
+        public override IDataReader ExecuteReader(string query, object[] args)
         {
             IDataReader reader = base.ExecuteReader(query, args);
             return new ExcelDataReader(reader);
@@ -176,11 +176,51 @@ namespace ITCreatings.Ndb.Accessors
         /// </example>
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="sheetName">Name of the sheet.</param>
         /// <param name="targetGateway">The target gateway.</param>
-        public void Export<T>(string sheetName, DbGateway targetGateway) where T : class, new()
+        /// <param name="sheetName">Name of the sheet.</param>
+        public void Export<T>(DbGateway targetGateway, string sheetName) where T : class, new()
         {
             T[] list = LoadList<T>(sheetName);
+            targetGateway.Import(list);
+        }
+
+        /// <summary>
+        /// Exports the specified sheet to passed gateway.
+        /// <example>
+        /// <code>
+        /// var target = new DbGateway(DbAccessor.Create("SampleDb"));
+        /// var source = (ExcelAccessor)DbAccessor.Create("SampleExcelFile");
+        /// 
+        /// source.Export&lt;Contact&gt;(target);
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="targetGateway">The target gateway.</param>
+        public void Export<T>(DbGateway targetGateway) where T : class, new()
+        {
+            string tableName = DbAttributesManager.GetTableName(typeof(T));
+            Export<T>(targetGateway, tableName);
+        }
+
+        /// <summary>
+        /// Exports the specified sheet to passed gateway and removes old data from passed gateway
+        /// <example>
+        /// <code>
+        /// var target = new DbGateway(DbAccessor.Create("SampleDb"));
+        /// var source = (ExcelAccessor)DbAccessor.Create("SampleExcelFile");
+        /// 
+        /// source.ExportWithClean&lt;Contact&gt;(target, "Contacts");
+        /// </code>
+        /// </example>
+        /// </summary> 
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sheetName">Name of the sheet.</param>
+        /// <param name="targetGateway">The target gateway.</param>
+        public void ExportWithClean<T>(DbGateway targetGateway, string sheetName) where T : class, new()
+        {
+            T[] list = LoadList<T>(sheetName);
+            targetGateway.Delete(typeof (T));
             targetGateway.Import(list);
         }
 
@@ -191,18 +231,16 @@ namespace ITCreatings.Ndb.Accessors
         /// var target = new DbGateway(DbAccessor.Create("SampleDb"));
         /// var source = (ExcelAccessor)DbAccessor.Create("SampleExcelFile");
         /// 
-        /// source.ExportWithClean&lt;Contact&gt;("Contacts", target);
+        /// source.ExportWithClean&lt;Contact&gt;(target, "Contacts");
         /// </code>
         /// </example>
         /// </summary> 
         /// <typeparam name="T"></typeparam>
-        /// <param name="sheetName">Name of the sheet.</param>
         /// <param name="targetGateway">The target gateway.</param>
-        public void ExportWithClean<T>(string sheetName, DbGateway targetGateway) where T : class, new()
+        public void ExportWithClean<T>(DbGateway targetGateway) where T : class, new()
         {
-            T[] list = LoadList<T>(sheetName);
-            targetGateway.Delete(typeof (T));
-            targetGateway.Import(list);
+            string tableName = DbAttributesManager.GetTableName(typeof(T));
+            Export<T>(targetGateway, tableName);
         }
     }
 }

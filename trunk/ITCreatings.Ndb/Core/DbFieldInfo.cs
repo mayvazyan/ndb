@@ -10,12 +10,12 @@ namespace ITCreatings.Ndb.Core
     [DebuggerDisplay("DbFieldInfo ({Name}, {FieldType})")]
     public class DbFieldInfo
     {
-        private readonly FieldInfo FieldInfo;
+        private readonly MemberInfo FieldInfo;
 
         /// <summary>
         /// Gets or sets the Field Type
         /// </summary>
-        public Type FieldType { get { return FieldInfo.FieldType; } }
+        public Type FieldType { get { return DbFieldInfo.GetType(FieldInfo); } }
 
         /// <summary>
         /// Gets or sets the associated column Name.
@@ -56,7 +56,7 @@ namespace ITCreatings.Ndb.Core
         /// <param name="size">Size of the associated column</param>
         /// <param name="dbType">Type of the db field.</param>
         /// <param name="defaultValue">The default value.</param>
-        public DbFieldInfo(FieldInfo fieldInfo, string name, uint size, Type dbType, object defaultValue)
+        public DbFieldInfo(MemberInfo fieldInfo, string name, uint size, Type dbType, object defaultValue)
         {
             FieldInfo = fieldInfo;
             Name = (string.IsNullOrEmpty(name)) ? fieldInfo.Name : name;
@@ -68,11 +68,43 @@ namespace ITCreatings.Ndb.Core
         /// <summary>
         /// Gets value of the field
         /// </summary>
+        /// <param name="memberInfo">The member info.</param>
+        /// <param name="obj">Source object</param>
+        /// <returns>Current value</returns>
+        public static object GetValue(MemberInfo memberInfo, object obj)
+        {
+            if (memberInfo is PropertyInfo)
+            {
+                return ((PropertyInfo)memberInfo).GetValue(obj, null);
+            }
+
+            return ((FieldInfo)memberInfo).GetValue(obj);
+        }
+
+        /// <summary>
+        /// Gets value of the field
+        /// </summary>
         /// <param name="obj">Source object</param>
         /// <returns>Current value</returns>
         public object GetValue(object obj)
         {
-            return FieldInfo.GetValue(obj);
+            return GetValue(FieldInfo, obj);
+        }
+
+        /// <summary>
+        /// Gets value of the field
+        /// </summary>
+        /// <param name="memberInfo">The member info.</param>
+        /// <param name="data">Target object</param>
+        /// <param name="value">New value</param>
+        public static void SetValue(MemberInfo memberInfo, object data, object value)
+        {
+            if (memberInfo is PropertyInfo)
+            {
+                ((PropertyInfo)memberInfo).SetValue(data, value, null);
+            }
+            else
+                ((FieldInfo)memberInfo).SetValue(data, value);
         }
 
         /// <summary>
@@ -82,7 +114,7 @@ namespace ITCreatings.Ndb.Core
         /// <param name="value">New value</param>
         public void SetValue(object data, object value)
         {
-            FieldInfo.SetValue(data, value);
+            SetValue(FieldInfo,data,value);
         }
 
         /// <summary>
@@ -133,6 +165,20 @@ namespace ITCreatings.Ndb.Core
         public override int GetHashCode()
         {
             return (Name + Size + FieldType).GetHashCode();
+        }
+
+        /// <summary>
+        /// Gets the type.
+        /// </summary>
+        /// <param name="memberInfo">The member info.</param>
+        /// <returns></returns>
+        public static Type GetType(MemberInfo memberInfo)
+        {
+            if (memberInfo is PropertyInfo)
+            {
+                return ((PropertyInfo)memberInfo).PropertyType;
+            }
+            return ((FieldInfo)memberInfo).FieldType;
         }
     }
 }
