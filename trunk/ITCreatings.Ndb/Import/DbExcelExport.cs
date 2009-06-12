@@ -14,8 +14,8 @@ namespace ITCreatings.Ndb.Import
     /// 
     ///     public void Run()
     ///     {
-    ///         Export<WorkLog>("WorkLogsSheetName");
-    ///         Export<User>("UsersSheetName");
+    ///         Export&lt;WorkLog&gt;("WorkLogsSheetName");
+    ///         Export&lt;User&gt;("UsersSheetName");
     ///     }
     /// }
     /// </code>
@@ -23,7 +23,16 @@ namespace ITCreatings.Ndb.Import
     /// </summary>
     public class DbExcelExport
     {
+        /// <summary>
+        /// Gets or sets the target DbGateway.
+        /// </summary>
+        /// <value>The target.</value>
         protected DbGateway Target { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the source ExcelAccessor.
+        /// </summary>
+        /// <value>The source.</value>
         protected ExcelAccessor Source { get; private set; }
 
         /// <summary>
@@ -65,8 +74,6 @@ namespace ITCreatings.Ndb.Import
         {
             Source.ExportWithClean<T>(Target);
         }
-
-        
 
         /// <summary>
         /// Exports the specified sheet to target source.
