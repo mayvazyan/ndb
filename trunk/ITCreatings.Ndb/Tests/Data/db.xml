@@ -5,8 +5,8 @@
 	  <field name="Id" />
 	  <field name="FullName" />
 	  <indexes>
-		<index source="Id" isPrimary="True"/>
-		<index source="FullName"/>
+		  <index source="Id" isPrimary="True"/>
+		  <index source="FullName"/>
 	  </indexes>
 	</record>
 
@@ -22,9 +22,9 @@
 	  <field name="TaskId" foreignKey="Task"/>
 	  <field name="UserId" foreignKey="User"/>
 	  <indexes>
-		<index source="TaskId, UserId" isPrimary="True" />
-		<index source="UserId" />
-		<index source="TaskId" />
+		  <index source="TaskId, UserId" isPrimary="True" />
+		  <index source="UserId" />
+		  <index source="TaskId" />
 	  </indexes>
 	</record>
 	

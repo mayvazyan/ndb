@@ -153,15 +153,10 @@ namespace ITCreatings.Ndb.Accessors
         /// <returns></returns>
         public T[] LoadList<T>(string sheetName) where T : new()
         {
-            List<T> list = new List<T>();
             using (IDataReader reader = GetReader(sheetName))
             {
-                while (reader.Read())
-                {
-                    list.Add(DbGateway.Bind<T>(reader));
-                }
+                return DbGateway.LoadList<T>(reader);
             }
-            return list.ToArray();
         }
 
         /// <summary>

@@ -11,6 +11,13 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
     /// </summary>
     public class CsvDataReader : IDataReader
     {
+        public int BufferSize = 1024 * 1024;
+
+        /// <summary>
+        /// Attemps to fix invalid CSV file (if CSV contains not quoted multiline columns)
+        /// NOTE: last column can't be multiline
+        /// </summary>
+        public bool IsAttemptToFixMultiline;
         private StreamReader sr;
         private readonly List<string> names;
         private string[] args;
@@ -388,7 +395,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         ///                 </exception><filterpriority>2</filterpriority>
         public string GetString(int i)
         {
-            return args[i].Trim();
+            return args[i];
         }
 
         /// <summary>
@@ -555,7 +562,39 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         {
             if (!sr.EndOfStream)
             {
-                args = sr.ReadLine().Split(delimiter);
+                if (IsAttemptToFixMultiline)
+                {
+                    args = new string[names.Count];
+                    int i = 0;
+                    StringBuilder sb = new StringBuilder();
+                    while (i++ < names.Count)
+                    {
+                        char ch;
+                        while (!sr.EndOfStream && (ch = Convert.ToChar(sr.Read())) != delimiter)
+                        {
+                            if (i == names.Count)
+                            {
+                                if (ch == '\r')
+                                {
+                                    sr.Read(); //skip '\n'
+                                    break;
+                                }
+                                
+                                if (ch == '\n')
+                                    break;
+                            }
+
+                            sb.Append(ch);
+                        }
+
+                        args[i - 1] = sb.ToString();
+                        sb.Remove(0, sb.Length);
+                    }
+                }
+                else
+                {
+                    args = sr.ReadLine().Split(delimiter);
+                }
                 return true;
             }
             return false;
@@ -598,5 +637,16 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         }
 
         #endregion
+
+
+        /// <summary>
+        /// Loads the list of objects.
+        /// </summary>
+        /// <typeparam name="T">Type to load</typeparam>
+        /// <returns></returns>
+        public T[] LoadList<T>() where T : new()
+        {
+            return DbGateway.LoadList<T>(this);
+        }
     }
 }

@@ -11,15 +11,22 @@ namespace ITCreatings.Ndb.Core
     /// </summary>
     internal class DbNdbAttributesLoader : DbAttributesLoader
     {
-        readonly DbFieldInfo primaryKey;
-        readonly Dictionary<Type, MemberInfo> childs = new Dictionary<Type, MemberInfo>();
-        readonly Dictionary<Type, MemberInfo> parents = new Dictionary<Type, MemberInfo>();
-        readonly Dictionary<Type, DbFieldInfo> foreignKeys = new Dictionary<Type, DbFieldInfo>();
+        private DbFieldInfo primaryKey;
+        private readonly Dictionary<Type, MemberInfo> childs = new Dictionary<Type, MemberInfo>();
+        private readonly Dictionary<Type, MemberInfo> parents = new Dictionary<Type, MemberInfo>();
+        private readonly Dictionary<Type, DbFieldInfo> foreignKeys = new Dictionary<Type, DbFieldInfo>();
 
         public DbNdbAttributesLoader(Type type)
         {
-            MemberInfo[] fields = type.GetMembers(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            FieldInfo[] fields = type.GetFields();
+            Load(type, fields);
 
+            PropertyInfo[] properties = type.GetProperties();
+            Load(type, properties);
+        }
+
+        private void Load(Type type, IEnumerable<MemberInfo> fields)
+        {
             foreach (MemberInfo field in fields)
             {
                 Type memberType = DbFieldInfo.GetType(field);

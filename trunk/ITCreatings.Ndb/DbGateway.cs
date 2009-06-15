@@ -955,6 +955,22 @@ namespace ITCreatings.Ndb
             Bind(obj, row, obj.GetType());
         }
 
+        /// <summary>
+        /// Loads the list of objects.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="reader">The reader.</param>
+        /// <returns></returns>
+        public static T[] LoadList<T>(IDataReader reader) where T : new()
+        {
+            List<T> list = new List<T>();
+            while (reader.Read())
+            {
+                list.Add(Bind<T>(reader));
+            }
+            return list.ToArray();
+        }
+
         private static void Bind(object data, IDataRecord row, Type type)
         {
             DbRecordInfo info = DbAttributesManager.GetRecordInfo(type);
@@ -1019,7 +1035,7 @@ namespace ITCreatings.Ndb
             }
             catch (Exception ex)
             {
-                throw new NdbException("Can't set field value.\r\nField: " + field.Name + "\r\nError: " + ex.Message);
+                throw new NdbException("Can't set field value.\r\nField: " + field.Name + "\r\nValue: '" + value + "'\r\nError: " + ex.Message);
             }
         }
 

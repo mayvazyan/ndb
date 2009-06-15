@@ -172,6 +172,7 @@
     <Compile Include="Query\DbQueryResult.cs" />
     <Compile Include="Query\DbSortingDirection.cs" />
     <Compile Include="Execution\DbExecution.cs" />
+    <Compile Include="Tests\Accessors\CsvDataReaderTests.cs" />
     <Compile Include="Tests\Data\BinaryDataRecord2.cs" />
     <Compile Include="Tests\Data\BinaryDataRecord3.cs" />
     <Compile Include="Tests\Data\ExecutionResultCode.cs" />
@@ -218,6 +219,12 @@
     <Compile Include="Utils\DbValidator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Tests\Accessors\SingleLineCsv.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tests\Accessors\MultiLineCsv.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Tests\App.config" />
   </ItemGroup>
   <ItemGroup>
