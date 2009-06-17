@@ -1,4 +1,5 @@
-﻿using ITCreatings.Ndb.Accessors.DataReaders;
+﻿#if DEBUG
+using ITCreatings.Ndb.Accessors.DataReaders;
 using ITCreatings.Ndb.Attributes;
 using NUnit.Framework;
 
@@ -54,7 +55,7 @@ namespace ITCreatings.Ndb.Tests.Accessors
         {
             using (CsvDataReader reader = GetReader("MultiLine"))
             {
-                reader.IsAttemptToFixMultiline = true;
+                reader.AttemptToFixMultiline = true;
 
                 CsvUser[] users = reader.LoadList<CsvUser>();
 
@@ -75,3 +76,4 @@ Multiline note line 2", user1.Note);
         }
     }
 }
+#endif

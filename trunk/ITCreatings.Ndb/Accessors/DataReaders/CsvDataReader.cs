@@ -17,7 +17,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         /// Attemps to fix invalid CSV file (if CSV contains not quoted multiline columns)
         /// NOTE: last column can't be multiline
         /// </summary>
-        public bool IsAttemptToFixMultiline;
+        public bool AttemptToFixMultiline;
         private StreamReader sr;
         private readonly List<string> names;
         private string[] args;
@@ -88,7 +88,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         ///                 </exception><filterpriority>2</filterpriority>
         public string GetName(int i)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         ///                 </exception><filterpriority>2</filterpriority>
         public string GetDataTypeName(int i)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         ///                 </exception><filterpriority>2</filterpriority>
         public Type GetFieldType(int i)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         ///                 </exception><filterpriority>2</filterpriority>
         public object GetValue(int i)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         ///                 </param><filterpriority>2</filterpriority>
         public int GetValues(object[] values)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         ///                 </exception><filterpriority>2</filterpriority>
         public bool GetBoolean(int i)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -201,7 +201,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         ///                 </exception><filterpriority>2</filterpriority>
         public byte GetByte(int i)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -230,7 +230,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         ///                 </exception><filterpriority>2</filterpriority>
         public long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -247,7 +247,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         ///                 </exception><filterpriority>2</filterpriority>
         public char GetChar(int i)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -276,7 +276,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         ///                 </exception><filterpriority>2</filterpriority>
         public long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         ///                 </exception><filterpriority>2</filterpriority>
         public Guid GetGuid(int i)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -310,7 +310,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         ///                 </exception><filterpriority>2</filterpriority>
         public short GetInt16(int i)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -327,7 +327,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         ///                 </exception><filterpriority>2</filterpriority>
         public int GetInt32(int i)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -344,7 +344,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         ///                 </exception><filterpriority>2</filterpriority>
         public long GetInt64(int i)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -361,7 +361,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         ///                 </exception><filterpriority>2</filterpriority>
         public float GetFloat(int i)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -378,7 +378,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         ///                 </exception><filterpriority>2</filterpriority>
         public double GetDouble(int i)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -412,7 +412,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         ///                 </exception><filterpriority>2</filterpriority>
         public decimal GetDecimal(int i)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -429,7 +429,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         ///                 </exception><filterpriority>2</filterpriority>
         public DateTime GetDateTime(int i)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -446,7 +446,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         ///                 </exception><filterpriority>2</filterpriority>
         public IDataReader GetData(int i)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -536,7 +536,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         ///                 </exception><filterpriority>2</filterpriority>
         public DataTable GetSchemaTable()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -562,7 +562,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         {
             if (!sr.EndOfStream)
             {
-                if (IsAttemptToFixMultiline)
+                if (AttemptToFixMultiline)
                 {
                     args = new string[names.Count];
                     int i = 0;
@@ -609,7 +609,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         /// <filterpriority>2</filterpriority>
         public int Depth
         {
-            get { throw new System.NotImplementedException(); }
+            get { throw new NotImplementedException(); }
         }
 
         /// <summary>
@@ -633,7 +633,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         /// <filterpriority>2</filterpriority>
         public int RecordsAffected
         {
-            get { throw new System.NotImplementedException(); }
+            get { throw new NotImplementedException(); }
         }
 
         #endregion
@@ -647,6 +647,51 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         public T[] LoadList<T>() where T : new()
         {
             return DbGateway.LoadList<T>(this);
+        }
+
+        /// <summary>
+        /// Loads the list of objects.
+        /// </summary>
+        /// <typeparam name="T">Type to load</typeparam>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns></returns>
+        public static T[] LoadList<T>(string fileName) where T : new()
+        {
+            using (CsvDataReader reader = new CsvDataReader(fileName))
+            {
+                return reader.LoadList<T>();
+            }
+        }
+        
+        /// <summary>
+        /// Loads the list of objects.
+        /// </summary>
+        /// <typeparam name="T">Type to load</typeparam>
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="delimeter">The delimeter.</param>
+        /// <returns></returns>
+        public static T[] LoadList<T>(string fileName, char delimeter) where T : new()
+        {
+            using (CsvDataReader reader = new CsvDataReader(fileName, delimeter))
+            {
+                return reader.LoadList<T>();
+            }
+        }
+
+        /// <summary>
+        /// Loads the list of objects.
+        /// </summary>
+        /// <typeparam name="T">Type to load</typeparam>
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="delimeter">The delimeter.</param>
+        /// <param name="encoding">The encoding.</param>
+        /// <returns></returns>
+        public static T[] LoadList<T>(string fileName, char delimeter, Encoding encoding) where T : new()
+        {
+            using (CsvDataReader reader = new CsvDataReader(fileName, delimeter, encoding))
+            {
+                return reader.LoadList<T>();
+            }
         }
     }
 }

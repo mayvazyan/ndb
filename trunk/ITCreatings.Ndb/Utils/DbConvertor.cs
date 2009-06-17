@@ -39,34 +39,47 @@ namespace ITCreatings.Ndb.Utils
 
         internal static object convertData(Type targetType, object value)
         {
-            if (targetType == typeof(byte[]) && value is string)
-                return Encoding.UTF8.GetBytes(value as string);
+            if (value is string)
+            {
+                if (string.IsNullOrEmpty((string) value) 
+                    || Equals(value, "NULL")) //fix for CSV files
+                    return DBNull.Value;
+
+                if (targetType == typeof (byte[]))
+                    return Encoding.UTF8.GetBytes((string) value);
+            }
+
+            if (value is byte[])
+            {
+                if (targetType == typeof(string))
+                    return Encoding.UTF8.GetString((byte[])value);
+
+                if (targetType == typeof(Int32))
+                    return BitConverter.ToInt32((byte[])value, 0);
+            }
 
             if (targetType == typeof(byte[]) && value is Int32)
                 return BitConverter.GetBytes((Int32)value);
-
-            if (targetType == typeof(string) && value is byte[])
-                return Encoding.UTF8.GetString(value as byte[]);
-
-            if (targetType == typeof(Int32) && value is byte[])
-                return BitConverter.ToInt32(value as byte[], 0);
-
-            if (targetType == typeof(Int32) && value is string)
+            
+            if (targetType == typeof(Int32))
             {
-                Int32 ival;
-                return Int32.TryParse(value.ToString(), out ival) ? ival : 0;
+                return Convert.ToInt32(value);
+//                Int32 ival;
+//                return Int32.TryParse(value.ToString(), out ival) ? ival : 0;
             }
 
-            if (targetType == typeof(Int64) && value is string)
+            if (targetType == typeof(Int64))
             {
-                Int32 ival;
-                return Int32.TryParse(value.ToString(), out ival) ? ival : 0;
+                return Convert.ToInt64(value);
+//                Int32 ival;
+//                return Int32.TryParse(value.ToString(), out ival) ? ival : 0;
             }
 
             if (targetType == typeof(double))
             {
-                Double dval;
-                return Double.TryParse(value.ToString(), out dval) ? dval : 0;
+                return Convert.ToDouble(value);
+//                Double dval;
+//                return Double.TryParse(value.ToString(), out dval) ? dval : 0;
             }
             
             return Convert.ChangeType(value, targetType);
