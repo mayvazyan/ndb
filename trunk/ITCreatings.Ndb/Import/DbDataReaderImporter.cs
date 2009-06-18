@@ -1,4 +1,3 @@
-using System;
 using System.Data;
 
 namespace ITCreatings.Ndb.Import
@@ -15,19 +14,19 @@ namespace ITCreatings.Ndb.Import
         protected readonly T row = new T();
 
         /// <summary>
-        /// Reads the line.
+        /// Reads the next entry from the underlyed IDataReader and binds this data to "row" field
         /// </summary>
         /// <param name="args">The args.</param>
-        protected sealed override void ReadLine(IDataRecord args)
+        protected sealed override void ProcessLine(IDataRecord args)
         {
             DbGateway.Bind(row, args);
-            ReadLine();
+            ProcessLine();
         }
 
         /// <summary>
-        /// Reads the line.
+        /// Called for every row in IDataReader, corresponding object can be found in "row" field
         /// </summary>
-        protected abstract void ReadLine();
+        protected abstract void ProcessLine();
     }
 
 
@@ -40,7 +39,7 @@ namespace ITCreatings.Ndb.Import
         /// Reads the line.
         /// </summary>
         /// <param name="row">The row.</param>
-        protected abstract void ReadLine(IDataRecord row);
+        protected abstract void ProcessLine(IDataRecord row);
 
         /// <summary>
         /// Processes the specified input.
@@ -52,7 +51,7 @@ namespace ITCreatings.Ndb.Import
             {
                 while (reader.Read())
                 {
-                    ReadLine(reader);
+                    ProcessLine(reader);
                 }
             }
         }

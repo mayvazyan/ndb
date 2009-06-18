@@ -362,10 +362,6 @@ namespace ITCreatings.Ndb.Execution
          @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
          @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
 
-//            const string pattern = @"^[a-z][a-z|0-9|]*([_][a-z|0-9]+)*([.][a-z|" +
-//                                   @"0-9]+([_][a-z|0-9]+)*)?@[a-z][a-z|0-9|]*\.([a-z]" +
-//                                   @"[a-z|0-9]*(\.[a-z][a-z|0-9]*)?)$";
-
             return IsMatchRegex(value, pattern, message);
         }
 
