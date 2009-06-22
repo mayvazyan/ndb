@@ -81,7 +81,7 @@ namespace ITCreatings.Ndb.Accessors
 
         internal override void AlterTable(DbTableCheckResult checkResult)
         {
-            // TODO: update indexes - remove indexes before alter, and recreate after
+            // TODO: (Ndb) update indexes - remove indexes before alter, and recreate after
 
             StringBuilder sb = new StringBuilder("ALTER TABLE " + checkResult.TableName + " ");
             foreach (var item in checkResult.FieldsToCreate)

@@ -5,12 +5,41 @@ using System.Text;
 
 namespace ITCreatings.Ndb.Import
 {
+    
     /// <summary>
     /// Importer base class
     /// </summary>
     public abstract class DbImporter
     {
+        private class LinePrefix : IDisposable
+        {
+            public string Prefix { get; private set; }
+            public string GroupPostfix { get; private set; }
+            private DbImporter Importer;
+
+            public LinePrefix(DbImporter importer, string prefix, string groupPostfix)
+            {
+                Importer = importer;
+                Prefix = prefix;
+                GroupPostfix = groupPostfix;
+            }
+
+            public void Dispose()
+            {
+                if (Importer != null)
+                {
+                    if (Importer.Prefix != this)
+                        throw new Exception("Invalid Importer link");
+                    
+                    Importer.Prefix = null;
+                    Importer.Add(GroupPostfix);
+                    Importer = null;
+                }
+            }
+        }
+
         private StringBuilder sb;
+        private LinePrefix Prefix { get; set; }
 
         /// <summary>
         /// Inits this instance.
@@ -86,9 +115,30 @@ namespace ITCreatings.Ndb.Import
                     args[i] = args[i].ToString().Replace("'", "''");
             }
 
+            if (Prefix != null)
+            {
+                sb.Append(Prefix.Prefix);
+                format = format.Replace("\r\n", "\r\n" + Prefix.Prefix);
+            }
+
             sb.AppendLine(string.Format(format, args));
         }
+        
+        protected IDisposable NewPrefix(string prefix)
+        {
+            return NewPrefix(prefix, string.Empty, string.Empty);
+        }
 
+        protected IDisposable NewPrefix(string prefix, string groupPrefix, string groupPostfix)
+        {
+            if (Prefix != null)
+                throw new Exception("Previous prefix wan't disposed yet");
+
+            Add(groupPrefix);
+
+            Prefix = new LinePrefix(this, prefix, groupPostfix);
+            return Prefix;
+        }
        
 
         #endregion
