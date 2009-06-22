@@ -124,11 +124,41 @@ namespace ITCreatings.Ndb.Import
             sb.AppendLine(string.Format(format, args));
         }
         
+        /// <summary>
+        /// Adds the new prefix.
+        /// <example>
+        /// <code>
+        /// Add(@"IF (NOT EXISTS(SELECT OrganizationId FROM Organizations WHERE OrganizationId=777))");
+        /// using (NewPrefix("\t"))
+        /// {
+        ///     Add("INSERT INTO Organizations (OrganizationId, OrganizationName) VALUES (777,'{0}')", "Some Organization");
+        /// }
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="prefix">The prefix.</param>
+        /// <returns></returns>
         protected IDisposable NewPrefix(string prefix)
         {
             return NewPrefix(prefix, string.Empty, string.Empty);
         }
 
+        /// <summary>
+        /// Adds the new prefix.
+        /// <example>
+        /// <code>
+        /// Add(@"IF (NOT EXISTS(SELECT OrganizationId FROM Organizations WHERE OrganizationId=777))");
+        /// using (NewPrefix("\t", "BEGIN", "END"))
+        /// {
+        ///     Add("INSERT INTO Organizations (OrganizationId, OrganizationName) VALUES (777,'{0}')", "Some Organization");
+        /// }
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="prefix">The prefix.</param>
+        /// <param name="groupPrefix">The group prefix.</param>
+        /// <param name="groupPostfix">The group postfix.</param>
+        /// <returns></returns>
         protected IDisposable NewPrefix(string prefix, string groupPrefix, string groupPostfix)
         {
             if (Prefix != null)

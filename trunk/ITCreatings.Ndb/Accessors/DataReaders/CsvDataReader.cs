@@ -11,8 +11,6 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
     /// </summary>
     public class CsvDataReader : IDataReader
     {
-        public int BufferSize = 1024 * 1024;
-
         /// <summary>
         /// Attemps to fix invalid CSV file (if CSV contains not quoted multiline columns)
         /// NOTE: last column can't be multiline
