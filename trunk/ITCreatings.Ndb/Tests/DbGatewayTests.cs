@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using ITCreatings.Ndb;
 using ITCreatings.Ndb.Exceptions;
 using ITCreatings.Ndb.Query;
+using ITCreatings.Ndb.Query.Filters;
 using ITCreatings.Ndb.Tests.Data;
 using NUnit.Framework;
 

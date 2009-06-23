@@ -6,6 +6,7 @@ using ITCreatings.Ndb.Core;
 using ITCreatings.Ndb.Exceptions;
 using ITCreatings.Ndb.Import;
 using ITCreatings.Ndb.Query;
+using ITCreatings.Ndb.Query.Filters;
 using ITCreatings.Ndb.Utils;
 
 namespace ITCreatings.Ndb
@@ -1135,7 +1136,5 @@ namespace ITCreatings.Ndb
         }
 
         #endregion
-
-        
     }
 }

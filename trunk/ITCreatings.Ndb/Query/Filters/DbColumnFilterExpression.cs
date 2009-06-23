@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using ITCreatings.Ndb.Exceptions;
-using ITCreatings.Ndb.Query.Filters;
 
-namespace ITCreatings.Ndb.Query
+namespace ITCreatings.Ndb.Query.Filters
 {
     /// <summary>
     /// Once column filter expression

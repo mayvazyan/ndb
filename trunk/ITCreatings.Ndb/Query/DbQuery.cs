@@ -2,6 +2,7 @@
 using System.Text;
 using ITCreatings.Ndb.Core;
 using ITCreatings.Ndb.Exceptions;
+using ITCreatings.Ndb.Query.Filters;
 
 namespace ITCreatings.Ndb.Query
 {
@@ -317,7 +318,7 @@ namespace ITCreatings.Ndb.Query
             var sb = new StringBuilder();
             DbQueryBuilder.BuildSelect(sb, recordInfo);
 
-            object [] args = buildWhere(sb, Gateway);
+            object [] args = buildWhere(sb, Gateway.Accessor);
             buildOrderBy(sb);
 
             return Gateway.LoadRecords<T>(sb.ToString(), limit, offset, args);
@@ -334,7 +335,7 @@ namespace ITCreatings.Ndb.Query
             var sb = new StringBuilder();
             DbQueryBuilder.BuildSelectCount(sb, recordInfo);
 
-            object [] args = buildWhere(sb, Gateway);
+            object [] args = buildWhere(sb, Gateway.Accessor);
             buildOrderBy(sb);
 
             return Gateway.LoadResult<ulong>(sb.ToString(), args);
@@ -361,7 +362,7 @@ namespace ITCreatings.Ndb.Query
                 var sb = new StringBuilder();
                 DbQueryBuilder.BuildSelect(sb, recordInfo);
 
-                object[] args = buildWhere(sb, Gateway);
+                object[] args = buildWhere(sb, Gateway.Accessor);
                 buildOrderBy(sb);
 
                 sb.Insert(7, "SQL_CALC_FOUND_ROWS ");
@@ -384,13 +385,53 @@ namespace ITCreatings.Ndb.Query
             }
         }
 
-        private object[] buildWhere(StringBuilder sb, DbGateway gateway)
+        private object[] buildWhere(StringBuilder sb, DbAccessor accessor)
         {
             var args = new List<object>();
-            var builder = new DbFilterBuilder(sb, gateway, args);
-            builder.Build(FilterGroup);
+            var builder = new DbFilterBuilder(sb, accessor, args);
+            builder.Build(FilterGroup, true);
             return args.ToArray();
-            
+        }
+
+        #endregion
+
+        #region GetFiltersSql
+
+        /// <summary>
+        /// Gets the filters SQL.
+        /// </summary>
+        /// <param name="accessor">The accessor.</param>
+        /// <param name="filters">The filters.</param>
+        /// <returns></returns>
+        public static string GetFiltersSql(DbAccessor accessor, List<DbFilterNode> filters)
+        {
+            return GetFiltersSql(accessor, new DbAndFilterGroup(filters));
+        }
+
+        /// <summary>
+        /// Gets the filters SQL.
+        /// </summary>
+        /// <param name="accessor">The accessor.</param>
+        /// <param name="filters">The filters.</param>
+        /// <returns></returns>
+        public static string GetFiltersSql(DbAccessor accessor, params DbFilterNode [] filters)
+        {
+            return GetFiltersSql(accessor, new DbAndFilterGroup(filters));
+        }
+
+        /// <summary>
+        /// Gets the filters SQL.
+        /// </summary>
+        /// <param name="accessor">The accessor.</param>
+        /// <param name="args"></param>
+        /// <param name="filterNode">The filter node.</param>
+        /// <returns></returns>
+        public static string GetFiltersSql(DbAccessor accessor, List<object> args, DbFilterGroup filterNode)
+        {
+            var sb = new StringBuilder();
+            var builder = new DbFilterBuilder(sb, accessor, args);
+            builder.Build(filterNode, false);
+            return sb.ToString();
         }
 
         #endregion
