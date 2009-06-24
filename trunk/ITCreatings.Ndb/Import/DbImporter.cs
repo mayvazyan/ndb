@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -11,35 +12,34 @@ namespace ITCreatings.Ndb.Import
     /// </summary>
     public abstract class DbImporter
     {
-        private class LinePrefix : IDisposable
+        private StringBuilder sb;
+        private readonly Stack<LinePrefix> Prefixes = new Stack<LinePrefix>();
+
+        private LinePrefix Prefix
         {
-            public string Prefix { get; private set; }
-            public string GroupPostfix { get; private set; }
-            private DbImporter Importer;
-
-            public LinePrefix(DbImporter importer, string prefix, string groupPostfix)
+            get
             {
-                Importer = importer;
-                Prefix = prefix;
-                GroupPostfix = groupPostfix;
+                if (Prefixes.Count > 0)
+                    return Prefixes.Peek();
+
+                return null;
             }
-
-            public void Dispose()
+            set
             {
-                if (Importer != null)
-                {
-                    if (Importer.Prefix != this)
-                        throw new Exception("Invalid Importer link");
-                    
-                    Importer.Prefix = null;
-                    Importer.Add(GroupPostfix);
-                    Importer = null;
-                }
+                LinePrefix prefix = value;
+
+                if (Prefix != null)
+                    prefix.Prefix += Prefix.Prefix;
+                
+                Prefixes.Push(prefix);
             }
         }
 
-        private StringBuilder sb;
-        private LinePrefix Prefix { get; set; }
+        private void RemovePrefix()
+        {
+            if (Prefixes.Count > 0)
+                Prefixes.Pop();
+        }
 
         /// <summary>
         /// Inits this instance.
@@ -161,9 +161,6 @@ namespace ITCreatings.Ndb.Import
         /// <returns></returns>
         protected IDisposable NewPrefix(string prefix, string groupPrefix, string groupPostfix)
         {
-            if (Prefix != null)
-                throw new Exception("Previous prefix wan't disposed yet");
-
             Add(groupPrefix);
 
             Prefix = new LinePrefix(this, prefix, groupPostfix);
@@ -263,6 +260,37 @@ namespace ITCreatings.Ndb.Import
                 return "GO";
             }
         }
+        #endregion
+
+        #region LinePrefix class
+
+        private class LinePrefix : IDisposable
+        {
+            public string Prefix;
+            public string GroupPostfix { get; private set; }
+            private DbImporter Importer;
+
+            public LinePrefix(DbImporter importer, string prefix, string groupPostfix)
+            {
+                Importer = importer;
+                Prefix = prefix;
+                GroupPostfix = groupPostfix;
+            }
+
+            public void Dispose()
+            {
+                if (Importer != null)
+                {
+                    if (Importer.Prefix != this)
+                        throw new Exception("Invalid Importer link");
+                    
+                    Importer.RemovePrefix();
+                    Importer.Add(GroupPostfix);
+                    Importer = null;
+                }
+            }
+        }
+
         #endregion
     }
 }
