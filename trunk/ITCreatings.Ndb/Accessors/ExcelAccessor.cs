@@ -16,11 +16,10 @@ namespace ITCreatings.Ndb.Accessors
         /// <summary>
         /// Creates DbCommand for active database
         /// </summary>
-        /// <param name="query"></param>
         /// <returns></returns>
-        protected override DbCommand Command(string query)
+        protected override DbConnection CreateConnection()
         {
-            return new OleDbCommand(query, new OleDbConnection(ConnectionString));
+            return new OleDbConnection(ConnectionString);
         }
 
         /// <summary>

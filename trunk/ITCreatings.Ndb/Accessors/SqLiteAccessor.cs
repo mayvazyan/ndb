@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.SQLite;
 using System.Text;
 using ITCreatings.Ndb.Core;
@@ -9,12 +10,12 @@ namespace ITCreatings.Ndb.Accessors
 {
     internal class SqLiteAccessor : DbAccessor
     {
-        protected override System.Data.Common.DbCommand Command(string query)
+        protected override DbConnection CreateConnection()
         {
-            return new SQLiteCommand(query, new SQLiteConnection(ConnectionString));
+            return new SQLiteConnection(ConnectionString);
         }
 
-        public override System.Data.Common.DbDataAdapter GetAdapter()
+        public override DbDataAdapter GetAdapter()
         {
             return new SQLiteDataAdapter();
         }
@@ -94,16 +95,16 @@ namespace ITCreatings.Ndb.Accessors
                 DbFieldInfo key = (info as DbIdentityRecordInfo).PrimaryKey;
 
                 if (key.FieldType == typeof(Guid))
-                    sb.Append(getDefinition(key) + " NOT NULL PRIMARY KEY UNIQUE");
+                    sb.Append(GetDefinition(key) + " NOT NULL PRIMARY KEY UNIQUE");
                 else
-                    sb.Append(getDefinition(key) + " NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE");
+                    sb.Append(GetDefinition(key) + " NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE");
 
                 sb.Append(',');
             }
 
             foreach (DbFieldInfo field in info.Fields)
             {
-                sb.Append(getDefinition(field));
+                sb.Append(GetDefinition(field));
                 sb.Append(',');
             }
 

@@ -10,9 +10,9 @@ namespace ITCreatings.Ndb.Accessors
 {
     internal class MsSqlAccessor : DbAccessor
     {
-        protected override DbCommand Command(string query)
+        protected override DbConnection CreateConnection()
         {
-            return new SqlCommand(query, new SqlConnection(ConnectionString));
+            return new SqlConnection(ConnectionString);
         }
 
         public override DbDataAdapter GetAdapter()
@@ -106,17 +106,17 @@ namespace ITCreatings.Ndb.Accessors
                 DbFieldInfo key = ((DbIdentityRecordInfo)info).PrimaryKey;
                 if (key.FieldType == typeof(Guid))
                 {
-                    sb.Append(getDefinition(key) + " NOT NULL");
+                    sb.Append(GetDefinition(key) + " NOT NULL");
                 }
                 else
-                    sb.Append(getDefinition(key) + " NOT NULL IDENTITY(1,1)");
+                    sb.Append(GetDefinition(key) + " NOT NULL IDENTITY(1,1)");
 
                 sb.Append(',');
             }
 
             foreach (DbFieldInfo field in info.Fields)
             {
-                sb.Append(getDefinition(field));
+                sb.Append(GetDefinition(field));
                 sb.Append(',');
             }
 
@@ -200,5 +200,6 @@ namespace ITCreatings.Ndb.Accessors
                 @"WITH Buffer AS ({0}) SELECT {4} FROM Buffer WHERE RowNum BETWEEN {3} AND {3}+{2}-1 {1};",
                 select, orderby, limit, offset + 1, fields);
         }
+
     }
 }

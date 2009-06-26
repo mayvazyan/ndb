@@ -13,8 +13,6 @@ namespace ITCreatings.Ndb.Utils
                        : value;
         }
 
-        
-
         public static object GetValue(DbFieldInfo field, object value)
         {
             Type type = GetType(field.FieldType);

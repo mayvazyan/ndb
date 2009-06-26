@@ -3,12 +3,21 @@ using System.Text;
 
 namespace ITCreatings.Ndb.Query.Filters
 {
+    /// <summary>
+    /// Filter Builder 
+    /// </summary>
     public class DbFilterBuilder
     {
-        private List<object> args;
-        private StringBuilder sb;
-        private DbAccessor accessor;
+        private readonly List<object> args;
+        private readonly StringBuilder sb;
+        private readonly DbAccessor accessor;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbFilterBuilder"/> class.
+        /// </summary>
+        /// <param name="sb">The sb.</param>
+        /// <param name="accessor">The accessor.</param>
+        /// <param name="args">The args.</param>
         public DbFilterBuilder(StringBuilder sb, DbAccessor accessor, List<object> args)
         {
             this.args = args;
@@ -16,6 +25,11 @@ namespace ITCreatings.Ndb.Query.Filters
             this.accessor = accessor;
         }
 
+        /// <summary>
+        /// Builds the specified filter node.
+        /// </summary>
+        /// <param name="filterNode">The filter node.</param>
+        /// <param name="appendWhere">if set to <c>true</c> [append where].</param>
         public void Build(DbFilterGroup filterNode, bool appendWhere)
         {
             if (filterNode.Nodes.Count > 0)

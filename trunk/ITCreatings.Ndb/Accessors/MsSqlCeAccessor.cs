@@ -5,9 +5,9 @@ namespace ITCreatings.Ndb.Accessors
 {
     internal class MsSqlCeAccessor : MsSqlAccessor
     {
-        protected override DbCommand Command(string query)
+        protected override DbConnection CreateConnection()
         {
-            return new SqlCeCommand(query, new SqlCeConnection(ConnectionString));
+            return new SqlCeConnection(ConnectionString);
         }
 
         public override DbDataAdapter GetAdapter()

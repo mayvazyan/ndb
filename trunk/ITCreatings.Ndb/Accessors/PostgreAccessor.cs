@@ -20,9 +20,9 @@ namespace ITCreatings.Ndb.Accessors
             return string.Concat(query, " LIMIT ", limit.ToString(), " OFFSET ", offset.ToString());
         }
 
-        protected override DbCommand Command(string query)
+        protected override DbConnection CreateConnection()
         {
-            return new NpgsqlCommand(query, new NpgsqlConnection(ConnectionString));
+            return new NpgsqlConnection(ConnectionString);
         }
 
         public override DbDataAdapter GetAdapter()
@@ -157,7 +157,7 @@ ALTER SEQUENCE tablename_colname_seq OWNED BY tablename.colname;*/
 
                 if (key.FieldType == typeof(Guid))
                 {
-                    sb.Append(getDefinition(key) + " NOT NULL");
+                    sb.Append(GetDefinition(key) + " NOT NULL");
                     sb.Append(',');
                 }
                 else
@@ -167,14 +167,14 @@ ALTER SEQUENCE tablename_colname_seq OWNED BY tablename.colname;*/
 
                     postQueries = string.Format("ALTER SEQUENCE {0}_{1}_seq OWNED BY {0}.{1};",
                                                 info.TableName, key.Name);
-                    sb.Append(getDefinition(key) + " NOT NULL DEFAULT nextval('" + sequenceName + "'::regclass)");
+                    sb.Append(GetDefinition(key) + " NOT NULL DEFAULT nextval('" + sequenceName + "'::regclass)");
                     sb.Append(',');
                 }
             }
 
             foreach (DbFieldInfo field in info.Fields)
             {
-                sb.Append(getDefinition(field));
+                sb.Append(GetDefinition(field));
                 sb.Append(',');
             }
 

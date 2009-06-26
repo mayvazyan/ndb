@@ -25,10 +25,9 @@ namespace ITCreatings.Ndb.Accessors
             return string.Concat(query, " LIMIT ", offset.ToString(), ",", limit.ToString());
         }
 
-        protected override DbCommand Command(string query)
+        protected override DbConnection CreateConnection()
         {
-            var connection = new MySqlConnection(ConnectionString);
-            return new MySqlCommand(query, connection);
+            return new MySqlConnection(ConnectionString);
         }
 
         public override DbDataAdapter GetAdapter()
@@ -166,17 +165,17 @@ namespace ITCreatings.Ndb.Accessors
                 DbFieldInfo key = ((DbIdentityRecordInfo)info).PrimaryKey;
                 if (key.FieldType == typeof(Guid))
                 {
-                    sb.Append(getDefinition(key) + " NOT NULL");
+                    sb.Append(GetDefinition(key) + " NOT NULL");
                 }
                 else
-                    sb.Append(getDefinition(key) + " NOT NULL auto_increment");
+                    sb.Append(GetDefinition(key) + " NOT NULL auto_increment");
 
                 sb.Append(',');
             }
 
             foreach (DbFieldInfo field in info.Fields)
             {
-                sb.Append(getDefinition(field));
+                sb.Append(GetDefinition(field));
                 sb.Append(',');
             }
 

@@ -788,15 +788,18 @@ namespace ITCreatings.Ndb
 
                 if (info is DbIdentityRecordInfo)
                 {
-//                    if (Accessor.IsMsSql)
-//                        Accessor.ExecuteNonQuery(DbImporter.MsSql.SetIdentityInsertOn(info.TableName));
-            
                     DbIdentityRecordInfo recordInfo = (DbIdentityRecordInfo)info;
-                    Accessor.Insert(info.TableName, 
-                        info.GetValues(record, recordInfo.PrimaryKey.Name, recordInfo.PrimaryKey.GetValue(record)));
-
-//                    if (Accessor.IsMsSql)
-//                        Accessor.ExecuteNonQuery(DbImporter.MsSql.SetIdentityInsertOff(info.TableName));
+                    
+                    object[] values = info.GetValues(record, recordInfo.PrimaryKey.Name, recordInfo.PrimaryKey.GetValue(record));
+                    
+                    if (Accessor.IsMsSql)
+                    {
+                        Accessor.ExecuteNonQuery(DbImporter.MsSql.SetIdentityInsertOn(info.TableName));
+                        Accessor.Insert(info.TableName, values);
+                        Accessor.ExecuteNonQuery(DbImporter.MsSql.SetIdentityInsertOff(info.TableName));
+                    }
+                    else
+                        Accessor.Insert(info.TableName, values);
                 }
                 else
                     Accessor.Insert(info.TableName, info.GetValues(record));

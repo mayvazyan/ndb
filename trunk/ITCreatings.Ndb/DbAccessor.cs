@@ -242,14 +242,79 @@ namespace ITCreatings.Ndb
         /// <returns></returns>
         public abstract string BuildLimits(string query, int limit, int offset);
 
-        #region Command
+        #region Connection
+
+
+        private bool shareConnection;
+
+        /// <summary>
+        /// Determines if Accessor should use shared connection. Can be usefull for time consuming operations such data import
+        /// </summary>
+        public bool ShareConnection
+        {
+            get
+            {
+                return shareConnection;
+            }
+            set
+            {
+                if (shareConnection == value)
+                    return;
+
+                if (shareConnection && !value && connection != null)
+                {
+                    connection.Dispose();
+                    connection = null;
+                }
+
+                shareConnection = value;
+            }
+        }
+
+        private DbConnection connection;
 
         /// <summary>
         /// Creates DbCommand for active database
         /// </summary>
-        /// <param name="query"></param>
         /// <returns></returns>
-        protected abstract DbCommand Command(string query);
+        
+        protected DbConnection Connection
+        {
+            get
+            {
+                if (ShareConnection)
+                {
+                    if (connection == null)
+                        connection = CreateConnection();
+
+                    return connection;
+                }
+
+                return CreateConnection();
+            }
+        }
+
+        /// <summary>
+        /// Creates DbCommand for active database
+        /// </summary>
+        /// <returns></returns>
+        protected abstract DbConnection CreateConnection();
+
+        #endregion
+
+        #region Command
+        
+        /// <summary>
+        /// Creates DbCommand for active database
+        /// </summary>
+        /// <param name="CommandText"></param>
+        /// <returns></returns>
+        protected DbCommand Command(string CommandText)
+        {
+            DbCommand command = Connection.CreateCommand();
+            command.CommandText = CommandText;
+            return command;
+        }
 
         /// <summary>
         /// Creates DbCommand for passed query
@@ -280,13 +345,17 @@ namespace ITCreatings.Ndb
             return command;
         }
 
-        private static void CommandDispose(DbCommand command)
+        private void CommandDispose(DbCommand command)
         {
             if (command != null)
             {
-                if (command.Connection != null)
+                if (!ShareConnection)
                 {
-                    command.Connection.Dispose();
+                    if (command.Connection != null)
+                    {
+                        command.Connection.Dispose();
+                        command.Connection = null;
+                    }
                 }
                 command.Dispose();
             }
@@ -295,16 +364,17 @@ namespace ITCreatings.Ndb
         private DbCommand CommandEx(string query, params object [] args)
         {
             var command = Command(query, args);
-
-            try
+            if (command.Connection.State != ConnectionState.Open)
             {
-                command.Connection.Open();
+                try
+                {
+                    command.Connection.Open();
+                }
+                catch (Exception ex)
+                {
+                    throw new NdbConnectionFailedException(command.Connection.ConnectionString, ex);
+                }
             }
-            catch (Exception ex)
-            {
-                throw new NdbConnectionFailedException(command.Connection.ConnectionString, ex);
-            }
-
             return command;
         }
 
@@ -530,7 +600,7 @@ namespace ITCreatings.Ndb
             {
                 command = CommandEx(query, args);
                 
-                return command.ExecuteReader(CommandBehavior.CloseConnection);
+                return command.ExecuteReader(ShareConnection ? CommandBehavior.Default : CommandBehavior.CloseConnection);
             }
             catch (NdbConnectionFailedException)
             {
@@ -539,8 +609,12 @@ namespace ITCreatings.Ndb
             catch (Exception ex)
             {
                 CommandDispose(command);
-
                 throw new NdbException("Execute Reader failed", ex);
+            }
+            finally
+            {
+                if (command != null)
+                    command.Dispose();
             }
         }
 
@@ -675,7 +749,7 @@ namespace ITCreatings.Ndb
         /// </summary>
         /// <param name="field"></param>
         /// <returns>SDL column definition</returns>
-        protected string getDefinition(DbFieldInfo field)
+        internal string GetDefinition(DbFieldInfo field)
         {
             StringBuilder sb = new StringBuilder(field.Name);
             sb.Append(' ');
@@ -839,18 +913,14 @@ namespace ITCreatings.Ndb
         {
             get
             {
-                DbCommand command = null;
                 try
                 {
-                    command = CommandEx(""); 
+                    using (DbConnection dbConnection = CreateConnection())
+                       dbConnection.Open();
                 }
-                catch(NdbConnectionFailedException)
+                catch//(NdbConnectionFailedException)
                 {
                     return false;
-                }
-                finally
-                {
-                    CommandDispose(command);
                 }
                 return true;
             }
