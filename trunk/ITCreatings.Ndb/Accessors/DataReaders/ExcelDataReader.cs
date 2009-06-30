@@ -7,7 +7,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
     /// <summary>
     /// Excel Data Reader
     /// </summary>
-    public class ExcelDataReader : IDataReader
+    internal class ExcelDataReader : IDataReader
     {
         private IDataReader reader;
         private List<string> names;

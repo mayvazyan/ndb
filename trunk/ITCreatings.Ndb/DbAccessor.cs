@@ -17,7 +17,7 @@ namespace ITCreatings.Ndb
     /// </summary>
     public abstract class DbAccessor
     {
-        #region properties
+        #region Properties
 
         /// <summary>
         /// Is Instance is SqLite database
@@ -222,29 +222,9 @@ namespace ITCreatings.Ndb
         }
 
         #endregion
-
-        /// <summary>
-        /// change @ to appropriative char (ex ? for MySql)
-        /// </summary>
-        /// <param name="sql"></param>
-        /// <returns></returns>
-        protected virtual string Format(string sql)
-        {
-            return sql;
-        }
-
-        /// <summary>
-        /// Adds limit to query
-        /// </summary>
-        /// <param name="query">SQL Query</param>
-        /// <param name="limit">Records Limit</param>
-        /// <param name="offset">Records Offset</param>
-        /// <returns></returns>
-        public abstract string BuildLimits(string query, int limit, int offset);
-
+        
         #region Connection
-
-
+        
         private bool shareConnection;
 
         /// <summary>
@@ -622,6 +602,24 @@ namespace ITCreatings.Ndb
 
         #region Utils Methods
 
+        /// <summary>
+        /// change @ to appropriative char (ex ? for MySql)
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        protected virtual string Format(string sql)
+        {
+            return sql;
+        }
+
+        /// <summary>
+        /// Adds limit to query
+        /// </summary>
+        /// <param name="query">SQL Query</param>
+        /// <param name="limit">Records Limit</param>
+        /// <param name="offset">Records Offset</param>
+        /// <returns></returns>
+        public abstract string BuildLimits(string query, int limit, int offset);
         internal abstract string GetIdentity(string pk);
 //        internal abstract string ExpressionToString(DbExpressionType expressionType);
 
