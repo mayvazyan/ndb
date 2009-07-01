@@ -11,6 +11,7 @@ namespace ITCreatings.Ndb.Core
     /// </summary>
     internal class DbNdbAttributesLoader : DbAttributesLoader
     {
+        private bool IsDbGeneratedPrimaryKey;
         private DbFieldInfo primaryKey;
         private readonly Dictionary<Type, MemberInfo> childs = new Dictionary<Type, MemberInfo>();
         private readonly Dictionary<Type, MemberInfo> parents = new Dictionary<Type, MemberInfo>();
@@ -71,6 +72,7 @@ namespace ITCreatings.Ndb.Core
 
                         if (attribute is DbPrimaryKeyFieldAttribute)
                         {
+                            IsDbGeneratedPrimaryKey = ((DbPrimaryKeyFieldAttribute)attribute).IsDbGenerated;
                             isPrimary = true;
                         }
                         else
@@ -101,7 +103,7 @@ namespace ITCreatings.Ndb.Core
             }
 
             RecordInfo = (primaryKey != null)
-                             ? new DbIdentityRecordInfo(primaryKey)
+                             ? new DbIdentityRecordInfo(primaryKey, IsDbGeneratedPrimaryKey)
                              : new DbRecordInfo();
 
             RecordInfo.RecordType = type;

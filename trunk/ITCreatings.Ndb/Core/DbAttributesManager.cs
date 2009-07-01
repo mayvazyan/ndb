@@ -29,13 +29,15 @@ namespace ITCreatings.Ndb.Core
         /// <returns></returns>
         public static DbRecordInfo GetRecordInfo(Type type)
         {
-            if (!records.ContainsKey(type))
+            lock (records)
             {
-                DbRecordInfo recordInfo = LoadRecordInfo(type);
-                
-                records.Add(type, recordInfo);
-            }
+                if (!records.ContainsKey(type))
+                {
+                    DbRecordInfo recordInfo = LoadRecordInfo(type);
 
+                    records.Add(type, recordInfo);
+                }
+            }
             return records[type];
         }
 

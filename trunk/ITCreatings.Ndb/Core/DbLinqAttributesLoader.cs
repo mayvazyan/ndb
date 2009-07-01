@@ -34,7 +34,7 @@ namespace ITCreatings.Ndb.Core
             }
 
             RecordInfo = (primaryKey != null)
-                             ? new DbIdentityRecordInfo(primaryKey)
+                             ? new DbIdentityRecordInfo(primaryKey, false)
                              : new DbRecordInfo();
 
             RecordInfo.RecordType = type;

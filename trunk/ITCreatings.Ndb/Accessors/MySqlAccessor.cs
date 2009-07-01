@@ -162,8 +162,9 @@ namespace ITCreatings.Ndb.Accessors
             StringBuilder sb = new StringBuilder("CREATE TABLE " + info.TableName + "(");
             if (info is DbIdentityRecordInfo)
             {
-                DbFieldInfo key = ((DbIdentityRecordInfo)info).PrimaryKey;
-                if (key.FieldType == typeof(Guid))
+                DbIdentityRecordInfo identityRecordInfo = ((DbIdentityRecordInfo)info);
+                DbFieldInfo key = identityRecordInfo.PrimaryKey;
+                if (key.FieldType == typeof(Guid) || !identityRecordInfo.IsDbGeneratedPrimaryKey)
                 {
                     sb.Append(GetDefinition(key) + " NOT NULL");
                 }

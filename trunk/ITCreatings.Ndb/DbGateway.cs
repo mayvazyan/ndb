@@ -405,7 +405,6 @@ namespace ITCreatings.Ndb
         /// </example>
         public bool Load(object data, params object[] args)
         {
-            
             DbRecordInfo info = DbAttributesManager.GetRecordInfo(data.GetType());
             
             using (IDataReader reader = Accessor.ExecuteReaderEx(DbQueryBuilder.BuildSelect(info), args))
@@ -1127,6 +1126,12 @@ namespace ITCreatings.Ndb
                 primaryKey.SetValue(data, guid);
 
                 object[] values = info.GetValues(data, primaryKey.Name, guid);
+                Accessor.Insert(info.TableName, values);
+            }
+            else
+            if (!info.IsDbGeneratedPrimaryKey)
+            {
+                object[] values = info.GetValues(data, primaryKey.Name, primaryKey.GetValue(data));
                 Accessor.Insert(info.TableName, values);
             }
             else
