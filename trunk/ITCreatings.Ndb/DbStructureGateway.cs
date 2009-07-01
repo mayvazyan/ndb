@@ -164,17 +164,17 @@ namespace ITCreatings.Ndb
         /// <summary>
         /// Creates associated table and all foreign keys tables
         /// </summary>
-        /// <param name="type"></param>
-        public void CreateTableEx(Type type)
+        /// <param name="type">Returns true if table created otherwise false</param>
+        public bool CreateTableEx(Type type)
         {
             DbRecordInfo info = DbAttributesManager.GetRecordInfo(type);
-            CreateTableEx(info);
+            return CreateTableEx(info);
         }
 
-        private void CreateTableEx(DbRecordInfo info)
+        private bool CreateTableEx(DbRecordInfo info)
         {
             if (IsTableExists(info.TableName))
-                return;
+                return false;
 
             foreach (KeyValuePair<Type, DbFieldInfo> key in info.ForeignKeys)
             {
@@ -197,6 +197,8 @@ namespace ITCreatings.Ndb
             }
 
             accessor.CreateTable(info);
+
+            return true;
         }
 
         /// <summary>
@@ -250,7 +252,7 @@ namespace ITCreatings.Ndb
         /// Create Tables for all classes with DbRecordAttribute from specifyed Assembly
         /// </summary>
         /// <param name="sourceAssembly"></param>
-        /// <returns>List of Types processed</returns>
+        /// <returns>Returns only types tables for which were created</returns>
         public Type[] CreateTables(Assembly sourceAssembly)
         {
             Type[] types = DbAttributesManager.LoadDbRecordTypes(sourceAssembly);
@@ -261,13 +263,15 @@ namespace ITCreatings.Ndb
         /// Create tables for all specifyed types
         /// </summary>
         /// <param name="types"></param>
-        /// <returns></returns>
+        /// <returns>Returns only types tables for which were created</returns>
         public Type[] CreateTables(Type[] types)
         {
+            List<Type> list = new List<Type>(types.Length);
             foreach (Type type in types)
-                CreateTableEx(type);
+                if (CreateTableEx(type))
+                    list.Add(type);
 
-            return types;
+            return list.ToArray();
         }
 
         /// <summary>
