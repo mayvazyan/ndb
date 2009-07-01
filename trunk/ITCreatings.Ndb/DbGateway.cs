@@ -44,14 +44,23 @@ namespace ITCreatings.Ndb
         /// Provides access to underlayed DbAccessor
         /// </summary>
         public DbAccessor Accessor { get { return Da; } }
-        
+
         /// <summary>
-        /// Creates new DbGateway instance
+        /// Initializes a new instance of the <see cref="DbGateway"/> class.
         /// </summary>
-        /// <param name="accessor">DbAccessor</param>
+        /// <param name="accessor">The accessor.</param>
         public DbGateway(DbAccessor accessor)
         {
             Da = accessor;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbGateway"/> class.
+        /// </summary>
+        /// <param name="connectionStringName">Name of the connection string.</param>
+        public DbGateway(string connectionStringName)
+        {
+            Da = DbAccessor.Create(connectionStringName);
         }
 
         #endregion
