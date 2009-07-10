@@ -9,6 +9,7 @@ namespace ITCreatings.Ndb.Core
     {
         public DbLinqAttributesLoader(Type type, TableAttribute tableAttribute)
         {
+            bool IsDbGeneratedPrimaryKey = false;
             DbFieldInfo primaryKey = null;
 
             MemberInfo[] fields = type.GetMembers(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
@@ -24,6 +25,7 @@ namespace ITCreatings.Ndb.Core
 
                     if (attribute.IsPrimaryKey)
                     {
+                        IsDbGeneratedPrimaryKey = attribute.IsDbGenerated;
                         primaryKey = dbFieldInfo;
                     }
                     else
@@ -34,7 +36,7 @@ namespace ITCreatings.Ndb.Core
             }
 
             RecordInfo = (primaryKey != null)
-                             ? new DbIdentityRecordInfo(primaryKey, false)
+                             ? new DbIdentityRecordInfo(primaryKey, IsDbGeneratedPrimaryKey)
                              : new DbRecordInfo();
 
             RecordInfo.RecordType = type;
