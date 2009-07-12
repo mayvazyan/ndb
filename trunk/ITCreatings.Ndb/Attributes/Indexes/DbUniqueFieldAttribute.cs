@@ -21,5 +21,20 @@
     /// </code></example>
     public class DbUniqueFieldAttribute : DbIndexedFieldAttribute
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbUniqueFieldAttribute"/> class.
+        /// </summary>
+        public DbUniqueFieldAttribute()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbUniqueFieldAttribute"/> class.
+        /// </summary>
+        /// <param name="indexName">Name of the index.</param>
+        public DbUniqueFieldAttribute(string indexName)
+        {
+            IndexName = indexName;
+        }
     }
 }

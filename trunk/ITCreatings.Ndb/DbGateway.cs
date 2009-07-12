@@ -707,6 +707,9 @@ namespace ITCreatings.Ndb
         public T LoadResult<T>(string query, params object [] args)
         {
             object value = Accessor.ExecuteScalar(query, args);
+            
+            if (value == null)
+                return default(T);
 
             return (T)Convert.ChangeType(value, typeof(T));
         }

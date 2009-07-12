@@ -36,7 +36,7 @@
 		<list class="bullet">
 		  <listItem>Partially supported</listItem>
 		  <listItem>Database and column names in database are lowercased</listItem>
-		  <listItem>There are no unsigned types in PostgreSQL so you will have an exception if you use one of them.</listItem>
+		  <listItem>There are no unsigned types in PostgreSQL therefore system use bigger type. For example Ndb uses int8 for UInt32 values storing</listItem>
 		</list>
     </content>
   </section>
@@ -54,8 +54,8 @@
     <title>MS SQL</title>
     <content>
 		<list class="bullet">
-		  <listItem>Partially supported</listItem>
-		  <listItem>There are no unsigned types in PostgreSQL so you will have an exception if you use one of them.</listItem>
+		  <listItem>Full support added in 1.0.611.0</listItem>
+		  <listItem>There are no unsigned types in MS SQL so you will have an exception if you use one of them</listItem>
 		</list>
     </content>
   </section>

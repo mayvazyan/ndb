@@ -14,4 +14,8 @@ _ReSharper.ITCreatings.Ndb
 ITCreatings.Ndb.4.0.resharper
 ITCreatings.Ndb.4.0.resharper.user
 automate
+</Value></Property><Property><Name>svn:ignore</Name><Value>_ReSharper.ITCreatings.Ndb
+*.resharper
+*.user
+*.suo
 </Value></Property></Properties></ItemProperties>
