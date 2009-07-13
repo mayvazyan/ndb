@@ -1,4 +1,4 @@
-﻿#if DEBUG
+﻿#if TESTS
 using System.Collections.Generic;
 
 namespace ITCreatings.Ndb.Tests.Data

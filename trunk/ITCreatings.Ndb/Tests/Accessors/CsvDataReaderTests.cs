@@ -1,4 +1,4 @@
-﻿#if DEBUG
+﻿#if TESTS
 using ITCreatings.Ndb.Accessors.DataReaders;
 using ITCreatings.Ndb.Attributes;
 using NUnit.Framework;

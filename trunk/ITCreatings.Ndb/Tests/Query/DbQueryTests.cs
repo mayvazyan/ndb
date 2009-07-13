@@ -1,4 +1,4 @@
-﻿#if DEBUG
+﻿#if TESTS
 using System.Data;
 using ITCreatings.Ndb.Query;
 using ITCreatings.Ndb.Query.Filters;

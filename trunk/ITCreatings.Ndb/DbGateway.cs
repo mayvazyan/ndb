@@ -1008,7 +1008,7 @@ namespace ITCreatings.Ndb
                         value = field.DefaultValue;
                 }
                 else
-                    value = DbConvertor.GetValue(field, value);
+                    value = DbConverter.GetValue(field, value);
 
                 setValue(field, data, value);
 
@@ -1026,7 +1026,7 @@ namespace ITCreatings.Ndb
                         value = field.DefaultValue;
                 }
                 else
-                    value = DbConvertor.GetValue(field, value);
+                    value = DbConverter.GetValue(field, value);
 
                 setValue(field, data, value);
 
@@ -1042,7 +1042,7 @@ namespace ITCreatings.Ndb
                     field.SetValue(data, null);
                 else
                 {
-                    Type type = DbConvertor.GetType(field.FieldType);                    
+                    Type type = DbConverter.GetType(field.FieldType);                    
                     
                     object convertedValue = Convert.ChangeType(value, type);
                     field.SetValue(data, convertedValue);

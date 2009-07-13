@@ -1,4 +1,4 @@
-﻿#if DEBUG
+﻿#if TESTS
 using ITCreatings.Ndb.Exceptions;
 using ITCreatings.Ndb.Execution;
 using ITCreatings.Ndb.Tests.Data;

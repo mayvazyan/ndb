@@ -1,4 +1,4 @@
-﻿#if DEBUG
+﻿#if TESTS
 using System.CodeDom.Compiler;
 using System.Reflection;
 using ITCreatings.Ndb.Exceptions;

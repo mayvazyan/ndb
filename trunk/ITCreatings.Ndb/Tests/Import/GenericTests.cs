@@ -1,4 +1,4 @@
-﻿#if DEBUG
+﻿#if TESTS
 using ITCreatings.Ndb.Import;
 using NUnit.Framework;
 

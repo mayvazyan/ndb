@@ -1,4 +1,4 @@
-﻿#if DEBUG
+﻿#if TESTS
 using ITCreatings.Ndb.ActiveRecord;
 using ITCreatings.Ndb.Attributes;
 using ITCreatings.Ndb.Tests.Data;

@@ -1,4 +1,4 @@
-#if DEBUG
+#if TESTS
 namespace ITCreatings.Ndb.Tests.Data
 {
     public enum ExecutionResultCode

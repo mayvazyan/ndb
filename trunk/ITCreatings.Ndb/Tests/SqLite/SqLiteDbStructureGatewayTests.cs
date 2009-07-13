@@ -1,4 +1,4 @@
-﻿#if DEBUG
+﻿#if TESTS
 using NUnit.Framework;
 
 namespace ITCreatings.Ndb.Tests.SqLite

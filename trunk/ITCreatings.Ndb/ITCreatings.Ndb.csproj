@@ -218,7 +218,8 @@
     <Compile Include="Tests\SqLite\SqLiteDbGatewayTests.cs" />
     <Compile Include="Tests\SqLite\SqLiteDbStructureGatewayTests.cs" />
     <Compile Include="Tests\Utils\DbValidatorTests.cs" />
-    <Compile Include="Utils\DbConvertor.cs" />
+    <Compile Include="Utils\DbConverter.cs" />
+    <Compile Include="Utils\DbTestUtils.cs" />
     <Compile Include="Utils\DbValidator.cs" />
   </ItemGroup>
   <ItemGroup>

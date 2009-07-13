@@ -1,4 +1,4 @@
-﻿#if DEBUG
+﻿#if TESTS
 using System;
 using System.Reflection;
 using System.Text.RegularExpressions;

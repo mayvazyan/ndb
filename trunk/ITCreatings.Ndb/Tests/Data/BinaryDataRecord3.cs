@@ -1,4 +1,4 @@
-#if DEBUG
+#if TESTS
 using ITCreatings.Ndb.Attributes;
 
 namespace ITCreatings.Ndb.Tests.Data

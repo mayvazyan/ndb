@@ -58,7 +58,7 @@ namespace ITCreatings.Ndb.Core
                 args[j++] = Fields[i].Name;
                 object value = Fields[i].GetValue(data);
 
-                args[j++] = DbConvertor.SetValue(Fields[i], value);
+                args[j++] = DbConverter.SetValue(Fields[i], value);
             }
             argsToAppend.CopyTo(args, j);
 

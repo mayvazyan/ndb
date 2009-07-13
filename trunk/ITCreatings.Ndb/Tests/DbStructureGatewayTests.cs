@@ -1,4 +1,4 @@
-﻿#if DEBUG
+﻿#if TESTS
 using System.Reflection;
 using ITCreatings.Ndb.Tests.Data;
 using NUnit.Framework;
