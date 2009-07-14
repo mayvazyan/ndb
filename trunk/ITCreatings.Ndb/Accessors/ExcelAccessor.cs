@@ -48,7 +48,7 @@ namespace ITCreatings.Ndb.Accessors
             throw new System.NotImplementedException();
         }
 
-        internal override string GetSqlType(Type type, uint size)
+        protected override string GetSqlType(Type type, uint size)
         {
             throw new System.NotImplementedException();
         }

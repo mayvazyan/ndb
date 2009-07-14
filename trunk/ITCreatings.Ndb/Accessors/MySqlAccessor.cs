@@ -61,7 +61,7 @@ namespace ITCreatings.Ndb.Accessors
                 "describe " + tableName, "Field", "Type");
         }
 
-        internal override string GetSqlType(Type type, uint size)
+        protected override string GetSqlType(Type type, uint size)
         {
             if (type == typeof(Byte))
                 return "tinyint(4)";

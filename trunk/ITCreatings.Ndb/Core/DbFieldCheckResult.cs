@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace ITCreatings.Ndb.Core
 {
@@ -27,8 +28,7 @@ namespace ITCreatings.Ndb.Core
 
         public void Process(Dictionary<string, string> fields, DbFieldInfo fi)
         {
-            Type fieldType = fi.FieldType;
-            SqlType = accessor.GetSqlType(fieldType, fi.Size);
+            SqlType = accessor.GetSqlType(fi);
 
             string columnName = (accessor.IsPostgre) ? fi.Name.ToLower() : fi.Name;
 
@@ -39,7 +39,19 @@ namespace ITCreatings.Ndb.Core
                 CurrentSqlType = fields[columnName];
 
                 if (CurrentSqlType != SqlType)
+                {
+                    Match m1 = DbCodeGenerator.ParseSqlType(CurrentSqlType);
+                    Match m2 = DbCodeGenerator.ParseSqlType(SqlType);
+                    if (m1.Success)
+                    {
+                        string type = (m2.Success) ? m2.Groups[1].Value : SqlType;
+                        if (m1.Groups[1].Value == type)
+                            return;
+                    }
+                    
                     IsDifferent = true;
+                }
+                    
             }
         }
     }

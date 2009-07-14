@@ -6,12 +6,17 @@ namespace ITCreatings.Ndb.NdbConsole
     public class Program
     {
         //TODO: add params validation
-        public static void Main(string[] args)
+        public static int Main(string[] args)
+        {
+            return (int) Run(args);
+        }
+
+        private static ExitCode Run(string[] args)
         {
             if (args.Length < 4)
             {
                 printUsage();
-                return;
+                return ExitCode.Success;
             }
 
             string action = args[0];
@@ -30,11 +35,11 @@ namespace ITCreatings.Ndb.NdbConsole
             {
                 Console.WriteLine(ex.Message);
                 printUsage();
-                return;
+                return ExitCode.Exception;
             }
 
-            Console.WriteLine("Action: {0}", action);
-
+//            Console.WriteLine("Action: {0}", action);
+            //TODO: refactor
             try
             {
                 switch (processor.action)
@@ -56,12 +61,15 @@ namespace ITCreatings.Ndb.NdbConsole
                         }
 
                         processor.Run(assemblies);
+                        Console.ReadLine();
                         break;
                 }
+                return processor.ExitCode;
             }
             catch(Exception ex)
             {
                 Console.WriteLine("Internal exception occured: " + ex.Message);
+                return ExitCode.Exception;
             }
         }
 

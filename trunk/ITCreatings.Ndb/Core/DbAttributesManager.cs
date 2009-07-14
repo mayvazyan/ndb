@@ -84,16 +84,36 @@ namespace ITCreatings.Ndb.Core
         /// <returns></returns>
         public static Type[] LoadDbRecordTypes(Assembly assembly)
         {
-            var list = new List<Type>();
-            Type[] types = assembly.GetTypes();
-            foreach (Type type in types)
+            try
             {
-                object[] attributes = type.GetCustomAttributes(typeof(DbRecordAttribute), true);
-                if (attributes.Length > 0)
-                    list.Add(type);
+                var list = new List<Type>();
+                Type[] types = assembly.GetTypes();
+                foreach (Type type in types)
+                {
+                    object[] attributes = type.GetCustomAttributes(true);
+                    foreach (object attribute in attributes)
+                    {
+                        if (attribute is DbRecordAttribute
+#if LINQ
+                            || attribute is System.Data.Linq.Mapping.TableAttribute
+#endif
+                            )
+                        {
+                            list.Add(type);
+                            break;
+                        }
+                    }
+                }
+                return list.ToArray();
             }
-
-            return list.ToArray();
+            catch (ReflectionTypeLoadException ex)
+            {
+                foreach (Exception exception in ex.LoaderExceptions)
+                {
+                    Console.WriteLine("\tLoaderExceptions: " + exception.Message);
+                }
+                return new Type[]{};
+            }
         }
 
         /// <summary>

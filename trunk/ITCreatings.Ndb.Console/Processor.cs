@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using ITCreatings.Ndb.Core;
 using ITCreatings.Ndb.Exceptions;
 
 namespace ITCreatings.Ndb.NdbConsole
@@ -12,6 +13,7 @@ namespace ITCreatings.Ndb.NdbConsole
         DbProvider provider;
         DbAccessor accessor;
         DbStructureGateway gateway;
+        public ExitCode ExitCode = 0;
 
         private Type[] Process(Assembly assembly)
         {
@@ -40,16 +42,44 @@ namespace ITCreatings.Ndb.NdbConsole
         {
             foreach (string _assembly in assemblies)
             {
-                string assembly = (Path.IsPathRooted(_assembly)) ? _assembly : FixPath(_assembly);
+                // using LoadFrom since: 
+                // Assemblies can be loaded from multiple paths, not just from beneath the ApplicationBase.
+                // Dependencies in the same dir as the requesting LoadFrom context assembly will automatically be found.
+                // (thanks to Suzanne Cook http://blogs.msdn.com/suzcook/archive/2003/05/29/57143.aspx)
+                Assembly file = Assembly.LoadFrom(_assembly);
 
-                Assembly file = Assembly.LoadFile(assembly);
+                Console.WriteLine("\r\nProcessing {0} assembly", file.FullName);
 
-                Console.WriteLine("Processing {0} assembly", file.FullName);
-
-                Type[] process = Process(file);
-                foreach (Type type in process)
-                    Console.WriteLine("  - {0}", type);
+                if (!ProcessEx(file))
+                {
+                    Type[] process = Process(file);
+                    foreach (Type type in process)
+                        Console.WriteLine("  - {0}", type);
+                }
             }
+        }
+
+        private bool ProcessEx(Assembly assembly)
+        {
+            if (action == Action.Check)
+            {
+                Type[] types = DbAttributesManager.LoadDbRecordTypes(assembly);
+                int errorNumber = 1;
+                for (int i = 0; i < types.Length; i++)
+                {
+                    Type type = types[i];
+                    if (!gateway.IsValid(type))
+                    {
+                        Console.WriteLine(
+                            "\r\n{3}. {0} ({1}) \r\n{4}\r\n{2}\r\n{4}"
+                            , type, assembly.ManifestModule.Name, gateway.LastError, errorNumber++, 
+                            "----------------------------------------------------------------------------"
+                            );
+                    }
+                }
+                return true;
+            }
+            return false;
         }
 
         public void SetProvider(string _provider)

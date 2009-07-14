@@ -9,6 +9,7 @@ using ITCreatings.Ndb.Accessors;
 using ITCreatings.Ndb.Core;
 using ITCreatings.Ndb.Exceptions;
 using ITCreatings.Ndb.Query;
+using ITCreatings.Ndb.Utils;
 
 namespace ITCreatings.Ndb
 {
@@ -673,7 +674,7 @@ namespace ITCreatings.Ndb
 
         #region SDL
 
-        internal abstract string GetSqlType(Type type, uint size);
+        protected abstract string GetSqlType(Type type, uint size);
         internal abstract Dictionary<string, string> LoadFields(DbGateway gateway, string tableName);
         internal Dictionary<string, string> LoadFields(string tableName)
         {
@@ -751,18 +752,16 @@ namespace ITCreatings.Ndb
         {
             StringBuilder sb = new StringBuilder(field.Name);
             sb.Append(' ');
-
-            Type type = field.FieldType;
-
-            if (type.BaseType == typeof(Enum))
-            {
-                type = Enum.GetUnderlyingType(type);
-            }
-            
-            sb.Append(GetSqlType(type, field.Size));
+            sb.Append(GetSqlType(field));
             return sb.ToString();
         }
 
+        internal string GetSqlType(DbFieldInfo fieldInfo)
+        {
+            Type type = DbConverter.GetType(fieldInfo.FieldType);
+            return GetSqlType(type, fieldInfo.Size);
+        }
+        
         #endregion
 
         #region Auto Where Generating Methods

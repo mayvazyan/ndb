@@ -152,7 +152,7 @@ namespace {0}
 
         internal static Match ParseSqlType(string desc)
         {
-            Regex regex = new Regex(@"([a-zA-Z_0-9]+)\(([0-9]+)\)");
+            Regex regex = new Regex(@"([a-zA-Z_0-9]+)\(([-0-9]+)\)");
             return regex.Match(desc);
         }
 

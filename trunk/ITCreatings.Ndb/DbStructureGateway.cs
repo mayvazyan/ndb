@@ -119,6 +119,37 @@ namespace ITCreatings.Ndb
         }
 
         /// <summary>
+        /// Determines whether the specified types are valid.
+        /// </summary>
+        /// <param name="types">The types.</param>
+        /// <returns>
+        /// 	<c>true</c> if the specified types is valid; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsValid(Type [] types)
+        {
+            foreach (Type type in types)
+            {
+                if (!IsValid(type))
+                    return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Determines whether the specified assembly is valid.
+        /// </summary>
+        /// <param name="sourceAssembly">The assembly.</param>
+        /// <returns>
+        /// 	<c>true</c> if the specified assembly is valid; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsValid(Assembly sourceAssembly)
+        {
+            Type[] types = DbAttributesManager.LoadDbRecordTypes(sourceAssembly);
+            return IsValid(types);
+        }
+        
+
+        /// <summary>
         /// Checks is Associated Table Exists
         /// </summary>
         /// <param name="type"></param>

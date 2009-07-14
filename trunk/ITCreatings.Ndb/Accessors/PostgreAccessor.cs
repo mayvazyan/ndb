@@ -58,7 +58,7 @@ namespace ITCreatings.Ndb.Accessors
                      ORDER BY a.attnum", tableName.ToLower()), "field", "type");
         }
 
-        internal override string GetSqlType(Type type, uint size)
+        protected override string GetSqlType(Type type, uint size)
         {
             if (type == typeof(Byte))
                 return "int2";

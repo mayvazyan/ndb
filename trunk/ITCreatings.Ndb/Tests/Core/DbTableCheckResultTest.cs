@@ -9,7 +9,7 @@ namespace ITCreatings.Ndb.Tests.Core
     public class DbTableCheckResultTest : DbTestFixture
     {
         [Test]
-        public void Maintest()
+        public void GeneralTest()
         {
             DbStructureGateway g = DbStructureGateway.Instance;
             g.CreateTable(typeof(NewsItem));
@@ -35,7 +35,6 @@ namespace ITCreatings.Ndb.Tests.Core
 
             Assert.AreEqual(0, result.FieldsToCreate.Count);
             Assert.AreEqual(0, result.FieldsToUpdate.Count);
-
         }
     }
 }

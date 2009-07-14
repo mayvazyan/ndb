@@ -52,7 +52,7 @@ namespace ITCreatings.Ndb.Accessors
             }
         }
 
-        internal override string GetSqlType(Type type, uint size)
+        protected override string GetSqlType(Type type, uint size)
         {
             if (type == typeof(Byte)) return "INTEGER";
 

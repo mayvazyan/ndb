@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ITCreatings.Ndb.Exceptions;
 
 namespace ITCreatings.Ndb.Core
 {
@@ -45,6 +46,9 @@ namespace ITCreatings.Ndb.Core
         {
             DbRecordInfo info = DbAttributesManager.GetRecordInfo(type);
             Dictionary<string, string> fields = accessor.LoadFields(info.TableName);
+            
+            if (fields.Count == 0)
+                throw new NdbException("Unable to load fields for the following table: " + info.TableName);
 
             DbFieldCheckResult checker = new DbFieldCheckResult(accessor);
 
@@ -69,44 +73,5 @@ namespace ITCreatings.Ndb.Core
 
             return true;
         }
-/*
-        private bool IsFieldValid(IDictionary<string, string> fields, Type recordType, Type fieldType, string fieldName)
-        {
-            if (!fields.ContainsKey(fieldName))
-            {
-                LastError = string.Format("{0} in {1} ({2}) isn't present in db"
-                                          , fieldName, recordType, fieldType);
-                return false;
-            }
-
-            if (!accessor.IsPostgre)
-            {
-                Type sqlType = accessor.GetType(fields[fieldName]);
-
-                if (fieldType.BaseType == typeof(Enum))
-                    fieldType = Enum.GetUnderlyingType(fieldType);
-
-                if (sqlType != fieldType)
-                {
-                    LastError = string.Format("{0} in {1} is {2} but column is {3}"
-                                              , fieldName, recordType, fieldType, sqlType);
-                    return false;
-                }
-            }
-            else
-            {
-                string sqlType = accessor.GetSqlType(fieldType);
-                string curSqlType = fields[fieldName];
-                if (sqlType != curSqlType)
-                {
-                    LastError = string.Format("{0} in {1} is {2} but column is {3}"
-                                              , fieldName, recordType, sqlType, curSqlType);
-                    return false;
-                }
-            }
-            return true;
-        }
-*/
-
     }
 }

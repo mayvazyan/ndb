@@ -33,7 +33,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;LINQ</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;LINQ TESTS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -57,6 +57,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\libs\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.SqlServer.Types, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
     <Reference Include="Mono.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\libs\Mono.Security.dll</HintPath>
@@ -219,7 +220,7 @@
     <Compile Include="Tests\SqLite\SqLiteDbStructureGatewayTests.cs" />
     <Compile Include="Tests\Utils\DbValidatorTests.cs" />
     <Compile Include="Utils\DbConverter.cs" />
-    <Compile Include="Utils\DbTestUtils.cs" />
+    <Compile Include="Utils\DbTestHelper.cs" />
     <Compile Include="Utils\DbValidator.cs" />
   </ItemGroup>
   <ItemGroup>

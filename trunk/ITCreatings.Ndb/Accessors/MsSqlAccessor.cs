@@ -25,7 +25,7 @@ namespace ITCreatings.Ndb.Accessors
             return ";SELECT @@IDENTITY";
         }
 
-        internal override string GetSqlType(Type type, uint size)
+        protected override string GetSqlType(Type type, uint size)
         {
             if (type == typeof(Byte))
                 return "tinyint";
@@ -34,7 +34,7 @@ namespace ITCreatings.Ndb.Accessors
                 return "int";
 
             if (type == typeof(Int64))
-                return "int";
+                return "bigint";
 
             if (type == typeof(Int16))
                 return "smallint";
@@ -60,16 +60,27 @@ namespace ITCreatings.Ndb.Accessors
             if (type == typeof(Double)) return "float(8)";
             if (type == typeof(Decimal)) return "money";
             if (type == typeof(Boolean)) return "bit";
+            if (type == typeof(Microsoft.SqlServer.Types.SqlGeography)) return "geography";
 
             throw new NdbUnsupportedColumnTypeException(Provider, type);
         }
 
         internal override Dictionary<string, string> LoadFields(DbGateway gateway, string tableName)
         {
+            // thanks to Kristof Neirynck - http://www.crydust.be/blog/2006/12/26/mssql-lacks-describe-statement/
             return gateway.LoadKeyValue<string, string>(
-                string.Format(@"SELECT [Name], Type FROM syscolumns WHERE id=OBJECT_ID(N'{0}') ORDER BY colid", tableName),
-                "Name", "Type");
-
+                string.Format(
+                    @"SELECT column_name as name,   data_type +
+                        COALESCE(
+                           '(' + CAST(character_maximum_length AS VARCHAR) + ')'
+                        ,  '(' + CAST(numeric_precision AS VARCHAR) + ')'
+                        ,  ''
+                        ) as [type]
+                    FROM
+                        information_schema.columns
+                    WHERE
+                        table_name = N'{0}';", tableName),
+                "name", "type");
         }
 
         public override void DropTable(string tableName)

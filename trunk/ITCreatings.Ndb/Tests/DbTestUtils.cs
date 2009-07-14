@@ -1,4 +1,3 @@
-#if TESTS
 using System;
 using System.Reflection;
 using ITCreatings.Ndb.Core;
@@ -11,8 +10,12 @@ namespace ITCreatings.Ndb.Tests
     /// </summary>
     public class DbTestUtils
     {
-        private DbGateway gateway;
+        private readonly DbGateway gateway;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbTestUtils"/> class.
+        /// </summary>
+        /// <param name="accessor">The accessor.</param>
         public DbTestUtils(DbAccessor accessor)
         {
             gateway = new DbGateway(accessor);
@@ -88,17 +91,6 @@ namespace ITCreatings.Ndb.Tests
             return count == gateway.LoadCount(data.GetType());
         }
 
-//        /// <summary>
-//        /// Updates object in database and check what records counts wasn't changed
-//        /// </summary>
-//        /// <param name="dbIdentityActiveRecord"></param>
-//        public bool UpdateTest(DbActiveRecord dbIdentityActiveRecord)
-//        {
-//            var count = dbIdentityActiveRecord.Count;
-//            dbIdentityActiveRecord.Save();
-//            return count == dbIdentityActiveRecord.Count;
-//        }
-
         /// <summary>
         /// adds new record to database and checks what records count was incremented
         /// </summary>
@@ -109,20 +101,6 @@ namespace ITCreatings.Ndb.Tests
             gateway.Save(data);
             return ++count == gateway.LoadCount(data.GetType());
         }
-
-//        /// <summary>
-//        /// adds new record to database and checks what records count was incremented
-//        /// </summary>
-//        /// <param name="dbActiveRecord"></param>
-//        public bool SaveTest(DbActiveRecord dbActiveRecord)
-//        {
-//            var count = dbActiveRecord.Count;
-//
-//            dbActiveRecord.Save();
-//
-//            return ++count == dbActiveRecord.Count;
-//
-//        }
 
         /// <summary>
         /// Removes object from Database and checks count (should be "-1")
@@ -135,18 +113,6 @@ namespace ITCreatings.Ndb.Tests
             return --count == gateway.LoadCount(data.GetType());
         }
 
-//        /// <summary>
-//        /// Removes object from Database and checks count (should be "-1")
-//        /// </summary>
-//        /// <param name="dbActiveRecord"></param>
-//        public bool DeleteTest(DbActiveRecord dbActiveRecord)
-//        {
-//            var count = dbActiveRecord.Count;
-//            dbActiveRecord.Delete();
-//            return --count == dbActiveRecord.Count;
-//        }
-
         #endregion
     }
 }
-#endif
