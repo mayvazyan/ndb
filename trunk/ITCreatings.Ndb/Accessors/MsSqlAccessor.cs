@@ -57,6 +57,7 @@ namespace ITCreatings.Ndb.Accessors
 
             if (type == typeof(Guid)) return "uniqueidentifier";
             if (type == typeof(DateTime) || type == typeof(DateTime?)) return "datetime";
+            if (type == typeof(TimeSpan) || type == typeof(TimeSpan?)) return "time";
             if (type == typeof(Double)) return "float(8)";
             if (type == typeof(Decimal)) return "money";
             if (type == typeof(Boolean)) return "bit";

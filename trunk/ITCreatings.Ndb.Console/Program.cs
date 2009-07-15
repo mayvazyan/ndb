@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Configuration;
 using System.Text;
+using ITCreatings.Ndb.NdbConsole.Formatters;
 
 namespace ITCreatings.Ndb.NdbConsole
 {
@@ -60,8 +62,13 @@ namespace ITCreatings.Ndb.NdbConsole
                             assemblies[i - 3] = path;
                         }
 
-                        processor.Run(assemblies);
-                        Console.ReadLine();
+                        const string filename = @"results.trx";
+                        string outputFormatter = ConfigurationManager.AppSettings["OutputFormatter"];
+                        using (XmlFormatter xmlFormatter = FormattersFactory.GetFormatter(outputFormatter, filename))
+                        {
+                            processor.Run(assemblies, xmlFormatter);
+                        }
+//                        Console.ReadLine();
                         break;
                 }
                 return processor.ExitCode;
@@ -78,12 +85,17 @@ namespace ITCreatings.Ndb.NdbConsole
         {
             var sb = new StringBuilder();
 
-            sb.AppendLine("Usage: NdbConsole [action] [inputfiles]");
+            sb.AppendLine("Usage: NdbConsole [Action] [Provider] [ConnectionString] [InputFiles]");
             sb.AppendLine();
             sb.AppendLine("Actions:");
             sb.AppendFormat("\\{0} \tCreates database structure based on specifyed  assemblies\r\n", Action.Create);
             sb.AppendFormat("\\{0} \t\tRemoves tables related to the objects in specifyed  assemblies\r\n", Action.Drop);
             sb.AppendFormat("\\{0} \t\tUpdates database structure to match specifyed assemblies\r\n", Action.Alter);
+
+            sb.AppendLine("Providers:");
+            sb.AppendFormat("{0},", DbProvider.MySql);
+            sb.AppendFormat("{0},", DbProvider.MsSql);
+            sb.AppendFormat("{0}, etc.", DbProvider.SqLite);
 
 //            sb.AppendLine("Params:");
 //            sb.AppendLine("- Alter");

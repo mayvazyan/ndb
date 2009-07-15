@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+
+<TestRun id="17ae7d3b-31cc-44f5-bc6d-a66f9bc674e2" name="" runUser="" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2006">
+  <ResultSummary outcome="Completed">
+    <Counters total="9" executed="9" passed="9" failed="0"
+              error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0"
+              notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+  </ResultSummary>
+  <Results>
+    <UnitTestResult testName="LocationGetPrimaryByOrganizationTest" duration="00:00:01.7739751" outcome="Passed"
+                    computerName="" executionId="" testId="" testListId="" testType="" >
+      <Output>
+        <DebugTrace>exec LocationGetPrimaryByOrganization @p0 @p0 = 1</DebugTrace>
+      </Output>
+    </UnitTestResult>
+  </Results>
+</TestRun>

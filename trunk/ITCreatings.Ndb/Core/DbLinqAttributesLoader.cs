@@ -41,7 +41,7 @@ namespace ITCreatings.Ndb.Core
 
             RecordInfo.RecordType = type;
 //            RecordInfo.ForeignKeys = foreignKeys;
-            RecordInfo.TableName = tableAttribute.Name;
+            RecordInfo.TableName = string.IsNullOrEmpty(tableAttribute.Name) ? type.Name :  tableAttribute.Name;
             RecordInfo.Fields = dbFields.ToArray();
 //            RecordInfo.Childs = childs;
 //            RecordInfo.Parents = parents;

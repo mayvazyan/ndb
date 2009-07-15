@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using ITCreatings.Ndb.Core;
 using ITCreatings.Ndb.Exceptions;
+using ITCreatings.Ndb.NdbConsole.Formatters;
 
 namespace ITCreatings.Ndb.NdbConsole
 {
@@ -38,7 +39,7 @@ namespace ITCreatings.Ndb.NdbConsole
             return Path.Combine(Directory.GetCurrentDirectory(), path);
         }
 
-        public void Run(IEnumerable<string> assemblies)
+        public void Run(IEnumerable<string> assemblies, XmlFormatter xmlFormatter)
         {
             foreach (string _assembly in assemblies)
             {
@@ -49,8 +50,8 @@ namespace ITCreatings.Ndb.NdbConsole
                 Assembly file = Assembly.LoadFrom(_assembly);
 
                 Console.WriteLine("\r\nProcessing {0} assembly", file.FullName);
-
-                if (!ProcessEx(file))
+                
+                if (!ProcessEx(file, xmlFormatter))
                 {
                     Type[] process = Process(file);
                     foreach (Type type in process)
@@ -59,7 +60,7 @@ namespace ITCreatings.Ndb.NdbConsole
             }
         }
 
-        private bool ProcessEx(Assembly assembly)
+        private bool ProcessEx(Assembly assembly, XmlFormatter xmlFormatter)
         {
             if (action == Action.Check)
             {
@@ -68,13 +69,26 @@ namespace ITCreatings.Ndb.NdbConsole
                 for (int i = 0; i < types.Length; i++)
                 {
                     Type type = types[i];
-                    if (!gateway.IsValid(type))
+                    bool isValid = gateway.IsValid(type);
+                    if (isValid)
                     {
-                        Console.WriteLine(
+                        xmlFormatter.AppendUnitTestResult("Mapping Test - " + type.FullName, Outcome.Passed, "");
+                        string message = string.Format(
+                            "{0} ({1}) - Ok"
+                            , type, assembly.ManifestModule.Name);
+                        Console.WriteLine(message);
+                    }
+                    else
+                    {
+                        string message = string.Format(
                             "\r\n{3}. {0} ({1}) \r\n{4}\r\n{2}\r\n{4}"
-                            , type, assembly.ManifestModule.Name, gateway.LastError, errorNumber++, 
+                            , type, assembly.ManifestModule.Name, gateway.LastError, errorNumber++,
                             "----------------------------------------------------------------------------"
                             );
+                        Console.WriteLine(message);
+
+                        ExitCode = ExitCode.Failure;
+                        xmlFormatter.AppendUnitTestResult("Mapping Test - " + type.FullName, Outcome.Failed, gateway.LastError);
                     }
                 }
                 return true;

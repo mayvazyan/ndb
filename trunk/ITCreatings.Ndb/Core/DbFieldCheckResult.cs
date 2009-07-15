@@ -40,19 +40,36 @@ namespace ITCreatings.Ndb.Core
 
                 if (CurrentSqlType != SqlType)
                 {
-                    Match m1 = DbCodeGenerator.ParseSqlType(CurrentSqlType);
-                    Match m2 = DbCodeGenerator.ParseSqlType(SqlType);
-                    if (m1.Success)
-                    {
-                        string type = (m2.Success) ? m2.Groups[1].Value : SqlType;
-                        if (m1.Groups[1].Value == type)
-                            return;
-                    }
+                    string type1 = GetSqlType(CurrentSqlType);
+                    string type2 = GetSqlType(SqlType);
+                    if (type1 == type2
+                        || (IsStringType(type1) && IsStringType(type1))
+                        || (IsDateTimeType(type1) && IsDateTimeType(type1))
+                        )
+                        return;
                     
                     IsDifferent = true;
                 }
                     
             }
+        }
+        
+        private static string GetSqlType(string type)
+        {
+            int index = type.IndexOf('(');
+            return index > 0 ? type.Substring(0, index) : type;
+        }
+
+        private static bool IsStringType(string type)
+        {
+            string[] stringTypes = new[] {"varchar", "nvarchar", "ntext", "text", "TINYTEXT", "LONGTEXT", "MEDIUMTEXT", "nchar"};
+            return Array.IndexOf(stringTypes, type) > -1;
+        }
+
+        private static bool IsDateTimeType(string type)
+        {
+            string[] stringTypes = new[] {"datetime", "timestamp", "date", "time"};
+            return Array.IndexOf(stringTypes, type) > -1;
         }
     }
 }

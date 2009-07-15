@@ -6,13 +6,19 @@
     public enum ExitCode
     {
         /// <summary>
-        /// 
+        /// Success
         /// </summary>
         Success = 0,
+
         /// <summary>
-        /// 
+        /// Exception
         /// </summary>
-        Exception
+        Exception,
+
+        /// <summary>
+        /// Failure
+        /// </summary>
+        Failure
     }
 
     public enum Action
