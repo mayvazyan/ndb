@@ -6,7 +6,7 @@ using ITCreatings.Ndb.Exceptions;
 
 namespace ITCreatings.Ndb.Core
 {
-    internal class DbRecordsMapper
+    internal static class DbRecordsMapper
     {
         #region Static
 

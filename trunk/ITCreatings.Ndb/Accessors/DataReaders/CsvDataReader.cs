@@ -61,7 +61,17 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         /// <filterpriority>2</filterpriority>
         public void Dispose()
         {
-            if (sr != null)
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        public void Dispose(bool disposing)
+        {
+            if (disposing && sr != null)
             {
                 sr.Dispose();
                 sr = null;

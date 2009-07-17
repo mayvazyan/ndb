@@ -15,7 +15,7 @@ namespace ITCreatings.Ndb.Core
         /// <summary>
         /// Gets or sets the Field Type
         /// </summary>
-        public Type FieldType { get { return DbFieldInfo.GetType(FieldInfo); } }
+        public Type FieldType { get { return GetType(FieldInfo); } }
 
         /// <summary>
         /// Gets or sets the associated column Name.
@@ -73,9 +73,10 @@ namespace ITCreatings.Ndb.Core
         /// <returns>Current value</returns>
         public static object GetValue(MemberInfo memberInfo, object obj)
         {
-            if (memberInfo is PropertyInfo)
+            PropertyInfo propertyInfo = memberInfo as PropertyInfo;
+            if (propertyInfo != null)
             {
-                return ((PropertyInfo)memberInfo).GetValue(obj, null);
+                return propertyInfo.GetValue(obj, null);
             }
 
             return ((FieldInfo)memberInfo).GetValue(obj);
@@ -99,9 +100,10 @@ namespace ITCreatings.Ndb.Core
         /// <param name="value">New value</param>
         public static void SetValue(MemberInfo memberInfo, object data, object value)
         {
-            if (memberInfo is PropertyInfo)
+            PropertyInfo propertyInfo = memberInfo as PropertyInfo;
+            if (propertyInfo != null)
             {
-                ((PropertyInfo)memberInfo).SetValue(data, value, null);
+                propertyInfo.SetValue(data, value, null);
             }
             else
                 ((FieldInfo)memberInfo).SetValue(data, value);
@@ -174,9 +176,10 @@ namespace ITCreatings.Ndb.Core
         /// <returns></returns>
         public static Type GetType(MemberInfo memberInfo)
         {
-            if (memberInfo is PropertyInfo)
+            PropertyInfo propertyInfo = memberInfo as PropertyInfo;
+            if (propertyInfo != null)
             {
-                return ((PropertyInfo)memberInfo).PropertyType;
+                return propertyInfo.PropertyType;
             }
             return ((FieldInfo)memberInfo).FieldType;
         }

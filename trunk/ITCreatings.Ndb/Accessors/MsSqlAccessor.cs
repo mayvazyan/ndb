@@ -113,9 +113,10 @@ namespace ITCreatings.Ndb.Accessors
         internal override void CreateTable(DbRecordInfo info)
         {
             StringBuilder sb = new StringBuilder("CREATE TABLE " + info.TableName + "(");
-            if (info is DbIdentityRecordInfo)
+            DbIdentityRecordInfo identityRecordInfo = info as DbIdentityRecordInfo;
+            if (identityRecordInfo != null)
             {
-                DbFieldInfo key = ((DbIdentityRecordInfo)info).PrimaryKey;
+                DbFieldInfo key = identityRecordInfo.PrimaryKey;
                 if (key.FieldType == typeof(Guid))
                 {
                     sb.Append(GetDefinition(key) + " NOT NULL");
@@ -176,9 +177,10 @@ namespace ITCreatings.Ndb.Accessors
 
         private static string[] getPrimaryKeys(DbRecordInfo info)
         {
-            if (info is DbIdentityRecordInfo)
+            DbIdentityRecordInfo identityRecordInfo = info as DbIdentityRecordInfo;
+            if (identityRecordInfo != null)
             {
-                return new[] { (info as DbIdentityRecordInfo).PrimaryKey.Name };
+                return new[] { identityRecordInfo.PrimaryKey.Name };
             }
 
             List<string> list = new List<string>(info.Fields.Length);
@@ -203,7 +205,7 @@ namespace ITCreatings.Ndb.Accessors
             int index = query.IndexOf("ORDER BY", StringComparison.OrdinalIgnoreCase);
 
             string select = (index >= 0) ? query.Substring(0, index) : query;
-            string fields = select.Substring(7, select.IndexOf("FROM") - 7);
+            string fields = select.Substring(7, select.IndexOf("FROM", StringComparison.OrdinalIgnoreCase) - 7);
             string orderby = (index >= 0) ? query.Substring(index) : "ORDER BY Id";
 
             select = select.Insert(6, " ROW_NUMBER() OVER(" + orderby + ") AS RowNum,");

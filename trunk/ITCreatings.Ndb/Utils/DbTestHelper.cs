@@ -32,22 +32,47 @@ namespace ITCreatings.Ndb.Utils
             toRemove = new List<object>();
         }
 
+        /// <summary>
+        /// Inserts the specified data.
+        /// </summary>
+        /// <param name="data">The data.</param>
         protected void Insert(object data)
         {
             toRemove.Add(data);
             gateway.Insert(data);
         }
 
+        /// <summary>
+        /// Deletes the specified data.
+        /// </summary>
+        /// <param name="data">The data.</param>
         protected void Delete(object data)
         {
             gateway.Delete(data);
         }
 
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
         public void Dispose()
         {
-            for (int i = toRemove.Count - 1; i >=0; i--)
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        public void Dispose(bool disposing)
+        {
+            if (disposing)
             {
-                Delete(toRemove[i]);
+                for (int i = toRemove.Count - 1; i >= 0; i--)
+                {
+                    Delete(toRemove[i]);
+                }
+                toRemove.Clear();
             }
         }
     }

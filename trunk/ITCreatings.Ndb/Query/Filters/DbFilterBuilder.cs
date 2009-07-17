@@ -43,11 +43,10 @@ namespace ITCreatings.Ndb.Query.Filters
 
         private void build(DbFilterNode filterNode)
         {
-            if (filterNode is DbFilterGroup)
+            DbFilterGroup filterGroup = filterNode as DbFilterGroup;
+            if (filterGroup != null)
             {
                 string expression = (filterNode is DbAndFilterGroup) ? " AND " : " OR ";
-
-                DbFilterGroup filterGroup = (DbFilterGroup) filterNode;
 
                 sb.Append('(');
                 int count = filterGroup.Nodes.Count;

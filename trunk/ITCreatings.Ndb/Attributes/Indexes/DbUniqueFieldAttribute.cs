@@ -19,7 +19,7 @@
     ///        public ulong UserId;
     ///    }
     /// </code></example>
-    public class DbUniqueFieldAttribute : DbIndexedFieldAttribute
+    public sealed class DbUniqueFieldAttribute : DbIndexedFieldAttribute
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DbUniqueFieldAttribute"/> class.

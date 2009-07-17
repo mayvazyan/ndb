@@ -777,8 +777,9 @@ namespace ITCreatings.Ndb
         {
             var info = DbAttributesManager.GetRecordInfo(data.GetType());
 
-            if (info is DbIdentityRecordInfo)
-                insert(info as DbIdentityRecordInfo, data);
+            DbIdentityRecordInfo identityRecordInfo = info as DbIdentityRecordInfo;
+            if (identityRecordInfo != null)
+                insert(identityRecordInfo, data);
             else
                 Accessor.Insert(info.TableName, info.GetValues(data));
         }
@@ -797,11 +798,10 @@ namespace ITCreatings.Ndb
             {
                 object record = records[i];
 
-                if (info is DbIdentityRecordInfo)
+                DbIdentityRecordInfo identityRecordInfo = info as DbIdentityRecordInfo;
+                if (identityRecordInfo != null)
                 {
-                    DbIdentityRecordInfo recordInfo = (DbIdentityRecordInfo)info;
-                    
-                    object[] values = info.GetValues(record, recordInfo.PrimaryKey.Name, recordInfo.PrimaryKey.GetValue(record));
+                    object[] values = info.GetValues(record, identityRecordInfo.PrimaryKey.Name, identityRecordInfo.PrimaryKey.GetValue(record));
                     
                     if (Accessor.IsMsSql)
                     {
@@ -826,8 +826,9 @@ namespace ITCreatings.Ndb
         {
             var info = DbAttributesManager.GetRecordInfo(data.GetType());
 
-            if (info is DbIdentityRecordInfo)
-                return 1 == update(info as DbIdentityRecordInfo, data);
+            DbIdentityRecordInfo identityRecordInfo = info as DbIdentityRecordInfo;
+            if (identityRecordInfo != null)
+                return 1 == update(identityRecordInfo, data);
 
             throw new NdbException(string.Format(
                         "DbPrimaryKeyField attribute wasn't specifyed on {0} type", data.GetType()));
@@ -1064,8 +1065,9 @@ namespace ITCreatings.Ndb
 
         private bool load(object data, DbRecordInfo info)
         {
-            if (info is DbIdentityRecordInfo)
-                return load(data, info as DbIdentityRecordInfo);
+            DbIdentityRecordInfo identityRecordInfo = info as DbIdentityRecordInfo;
+            if (identityRecordInfo != null)
+                return load(data, identityRecordInfo);
 
             throw new NdbNotIdentityException("Can't load record");
         }

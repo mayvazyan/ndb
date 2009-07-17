@@ -106,9 +106,10 @@ namespace ITCreatings.Ndb.Accessors
 
         private static string[] getPrimaryKeys(DbRecordInfo info)
         {
-            if (info is DbIdentityRecordInfo)
+            DbIdentityRecordInfo identityRecordInfo = info as DbIdentityRecordInfo;
+            if (identityRecordInfo != null)
             {
-                return new[] { (info as DbIdentityRecordInfo).PrimaryKey.Name };
+                return new[] { identityRecordInfo.PrimaryKey.Name };
             }
 
             List<string> list = new List<string>(info.Fields.Length);
@@ -151,9 +152,10 @@ CREATE TABLE tablename (
 ALTER SEQUENCE tablename_colname_seq OWNED BY tablename.colname;*/
 
             StringBuilder sb = new StringBuilder("CREATE TABLE " + info.TableName + " (");
-            if (info is DbIdentityRecordInfo)
+            DbIdentityRecordInfo identityRecordInfo = info as DbIdentityRecordInfo;
+            if (identityRecordInfo != null)
             {
-                DbFieldInfo key = (info as DbIdentityRecordInfo).PrimaryKey;
+                DbFieldInfo key = identityRecordInfo.PrimaryKey;
 
                 if (key.FieldType == typeof(Guid))
                 {

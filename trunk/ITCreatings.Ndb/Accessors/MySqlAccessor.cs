@@ -160,9 +160,9 @@ namespace ITCreatings.Ndb.Accessors
         internal override void CreateTable(DbRecordInfo info)
         {
             StringBuilder sb = new StringBuilder("CREATE TABLE " + info.TableName + "(");
-            if (info is DbIdentityRecordInfo)
+            DbIdentityRecordInfo identityRecordInfo = info as DbIdentityRecordInfo;
+            if (identityRecordInfo != null)
             {
-                DbIdentityRecordInfo identityRecordInfo = ((DbIdentityRecordInfo)info);
                 DbFieldInfo key = identityRecordInfo.PrimaryKey;
                 if (key.FieldType == typeof(Guid) || !identityRecordInfo.IsDbGeneratedPrimaryKey)
                 {
@@ -223,9 +223,10 @@ namespace ITCreatings.Ndb.Accessors
 
         private static string[] getPrimaryKeys(DbRecordInfo info)
         {
-            if (info is DbIdentityRecordInfo)
+            DbIdentityRecordInfo identityRecordInfo = info as DbIdentityRecordInfo;
+            if (identityRecordInfo != null)
             {
-                return new[] { (info as DbIdentityRecordInfo).PrimaryKey.Name };
+                return new[] { identityRecordInfo.PrimaryKey.Name };
             }
 
             List<string> list = new List<string>(info.Fields.Length);

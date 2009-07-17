@@ -51,9 +51,10 @@ namespace ITCreatings.Ndb.Core
                 {
                     break;
                 }
-                if (attribute is System.Data.Linq.Mapping.TableAttribute)
+                var tableAttribute = attribute as System.Data.Linq.Mapping.TableAttribute;
+                if (tableAttribute != null)
                 {
-                    DbLinqAttributesLoader loader = new DbLinqAttributesLoader(type, (System.Data.Linq.Mapping.TableAttribute)attribute);
+                    DbLinqAttributesLoader loader = new DbLinqAttributesLoader(type, tableAttribute);
                     return loader.RecordInfo;
                 }
             }

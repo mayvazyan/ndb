@@ -5,7 +5,7 @@ namespace ITCreatings.Ndb.Attributes
     /// <summary>
     /// Marks Field as ForeignKey 
     /// </summary>
-    public class DbForeignKeyFieldAttribute : DbFieldAttribute
+    public sealed class DbForeignKeyFieldAttribute : DbFieldAttribute
     {
         /// <summary>
         /// Return ForeignKey Type

@@ -25,10 +25,12 @@ namespace ITCreatings.Ndb.Utils
         {
             if (fieldType == typeof(Guid)) //if db engine doesn't support GUID we just apply this "patch" for it
             {
-                if (value is string)
-                    return new Guid((string) value);
+                string strValue = value as string;
+                if (strValue != null)
+                    return new Guid(strValue);
 
-                if (value is byte[])
+                byte[] bytes = value as byte[];
+                if (bytes != null)
                     return new Guid((byte[])value);
             }
 
@@ -37,23 +39,25 @@ namespace ITCreatings.Ndb.Utils
 
         internal static object convertData(Type targetType, object value)
         {
-            if (value is string)
+            string stringValue = value as string;
+            if (stringValue != null)
             {
-                if (string.IsNullOrEmpty((string) value) 
+                if (string.IsNullOrEmpty(stringValue) 
                     || Equals(value, "NULL")) //fix for CSV files
                     return DBNull.Value;
 
                 if (targetType == typeof (byte[]))
-                    return Encoding.UTF8.GetBytes((string) value);
+                    return Encoding.UTF8.GetBytes(stringValue);
             }
 
-            if (value is byte[])
+            byte[] bytes = value as byte[];
+            if (bytes != null)
             {
                 if (targetType == typeof(string))
-                    return Encoding.UTF8.GetString((byte[])value);
+                    return Encoding.UTF8.GetString(bytes);
 
                 if (targetType == typeof(Int32))
-                    return BitConverter.ToInt32((byte[])value, 0);
+                    return BitConverter.ToInt32(bytes, 0);
             }
 
             if (targetType == typeof(byte[]) && value is Int32)

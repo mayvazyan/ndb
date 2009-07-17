@@ -26,10 +26,11 @@ namespace ITCreatings.Ndb.Core
             Load(type, properties);
         }
 
-        private void Load(Type type, IEnumerable<MemberInfo> fields)
+        private void Load(Type type, MemberInfo[] fields)
         {
-            foreach (MemberInfo field in fields)
+            for (int i = 0; i < fields.Length; i++)
             {
+                MemberInfo field = fields[i];
                 Type memberType = DbFieldInfo.GetType(field);
 
                 object[] parentRecordsAttributes = field.GetCustomAttributes(typeof (DbParentRecordAttribute), true);
@@ -41,7 +42,7 @@ namespace ITCreatings.Ndb.Core
                 object[] childRecordsAttributes = field.GetCustomAttributes(typeof (DbChildRecordsAttribute), true);
                 if (childRecordsAttributes != null && childRecordsAttributes.Length > 0)
                 {
-                    if (memberType.BaseType != typeof(Array))
+                    if (memberType.BaseType != typeof (Array))
                         throw new NdbException("DbChildRecordsAttribute can belong to Array field ONLY");
 
                     childs.Add(memberType.GetElementType(), field);
@@ -70,9 +71,10 @@ namespace ITCreatings.Ndb.Core
                         if (string.IsNullOrEmpty(Name))
                             Name = attribute.Name;
 
-                        if (attribute is DbPrimaryKeyFieldAttribute)
+                        var primaryKeyFieldAttribute = attribute as DbPrimaryKeyFieldAttribute;
+                        if (primaryKeyFieldAttribute != null)
                         {
-                            IsDbGeneratedPrimaryKey = ((DbPrimaryKeyFieldAttribute)attribute).IsDbGenerated;
+                            IsDbGeneratedPrimaryKey = primaryKeyFieldAttribute.IsDbGenerated;
                             isPrimary = true;
                         }
                         else
@@ -83,7 +85,7 @@ namespace ITCreatings.Ndb.Core
                             //                                    foreignKeys.Add(dbForeignKeyFieldAttribute.Type, dbFieldInfo);
                         }
                     }
-                    
+
                     DbFieldInfo dbFieldInfo = new DbFieldInfo(field, Name, Size, DbType, defaultValue);
 
                     if (isPrimary)

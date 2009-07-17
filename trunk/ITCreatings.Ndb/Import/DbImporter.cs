@@ -279,7 +279,13 @@ namespace ITCreatings.Ndb.Import
 
             public void Dispose()
             {
-                if (Importer != null)
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
+
+            public void Dispose(bool disposing)
+            {
+                if (disposing && Importer != null)
                 {
                     if (Importer.Prefix != this)
                         throw new Exception("Invalid Importer link");

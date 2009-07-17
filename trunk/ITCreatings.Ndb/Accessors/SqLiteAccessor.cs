@@ -90,9 +90,10 @@ namespace ITCreatings.Ndb.Accessors
         internal override void CreateTable(DbRecordInfo info)
         {
             StringBuilder sb = new StringBuilder("CREATE TABLE " + info.TableName + "(");
-            if (info is DbIdentityRecordInfo)
+            DbIdentityRecordInfo identityRecordInfo = info as DbIdentityRecordInfo;
+            if (identityRecordInfo != null)
             {
-                DbFieldInfo key = (info as DbIdentityRecordInfo).PrimaryKey;
+                DbFieldInfo key = identityRecordInfo.PrimaryKey;
 
                 if (key.FieldType == typeof(Guid))
                     sb.Append(GetDefinition(key) + " NOT NULL PRIMARY KEY UNIQUE");

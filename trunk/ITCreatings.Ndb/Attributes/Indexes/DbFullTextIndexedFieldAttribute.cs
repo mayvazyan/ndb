@@ -3,7 +3,7 @@
     /// <summary>
     /// Marks field as Full Text indexed
     /// </summary>
-    public class DbFullTextIndexedFieldAttribute : DbIndexedFieldAttribute
+    public sealed class DbFullTextIndexedFieldAttribute : DbIndexedFieldAttribute
     {
     }
 }
