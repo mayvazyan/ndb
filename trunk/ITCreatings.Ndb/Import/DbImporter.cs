@@ -6,7 +6,6 @@ using ITCreatings.Ndb.Exceptions;
 
 namespace ITCreatings.Ndb.Import
 {
-    
     /// <summary>
     /// Importer base class
     /// </summary>
@@ -46,8 +45,6 @@ namespace ITCreatings.Ndb.Import
         /// </summary>
         protected virtual void Init()
         {
-//            sb = new StringBuilder();
-
             Add("SET NOCOUNT ON");
             NewLine();
         }
@@ -85,7 +82,6 @@ namespace ITCreatings.Ndb.Import
                     streamWriter = null;
                 }
             }
-                
         }
 
         /// <summary>
