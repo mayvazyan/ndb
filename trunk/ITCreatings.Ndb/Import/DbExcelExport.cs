@@ -1,4 +1,7 @@
-﻿using ITCreatings.Ndb.Accessors;
+﻿using System;
+using System.Reflection;
+using ITCreatings.Ndb.Accessors;
+using ITCreatings.Ndb.Core;
 
 namespace ITCreatings.Ndb.Import
 {
@@ -82,6 +85,27 @@ namespace ITCreatings.Ndb.Import
         public void Export<T>() where T : class, new()
         {
             Source.Export<T>(Target);
+        }
+
+        /// <summary>
+        /// Exports the specified types.
+        /// </summary>
+        /// <param name="types">The types.</param>
+        /// <param name="ExportWithClean">if set to <c>true</c> [export with clean].</param>
+        public void Export(Type[] types, bool ExportWithClean)
+        {
+            string methodName = ExportWithClean ? "ExportWithClean" : "Export";
+            MethodInfo method = GetType().GetMethod(methodName, new Type[]{} );
+
+            DbStructureGateway structureGateway = new DbStructureGateway(Source);
+
+            foreach (Type type in types)
+            {
+                string tableName = DbAttributesManager.GetTableName(type);
+                
+                if (structureGateway.IsTableExists(tableName))
+                    method.MakeGenericMethod(type).Invoke(this, null);
+            }
         }
     }
 }

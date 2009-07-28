@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
+using ITCreatings.Ndb.Exceptions;
 
 namespace ITCreatings.Ndb.Import
 {
@@ -12,7 +12,7 @@ namespace ITCreatings.Ndb.Import
     /// </summary>
     public abstract class DbImporter
     {
-        private StringBuilder sb;
+        private StreamWriter streamWriter;
         private readonly Stack<LinePrefix> Prefixes = new Stack<LinePrefix>();
 
         private LinePrefix Prefix
@@ -46,7 +46,7 @@ namespace ITCreatings.Ndb.Import
         /// </summary>
         protected virtual void Init()
         {
-            sb = new StringBuilder();
+//            sb = new StringBuilder();
 
             Add("SET NOCOUNT ON");
             NewLine();
@@ -72,24 +72,33 @@ namespace ITCreatings.Ndb.Import
         /// <param name="outfile">The outfile.</param>
         public void Process(object input, string outfile)
         {
-            string sql = Process(input);
+            using (StreamWriter sw = new StreamWriter(outfile))
+            {
+                streamWriter = sw;
 
-            File.WriteAllText(outfile, sql);
+                try
+                {
+                    Process(input);
+                }
+                finally
+                {
+                    streamWriter = null;
+                }
+            }
+                
         }
 
         /// <summary>
         /// Processes the specified input.
         /// </summary>
         /// <param name="input">The input.</param>
-        public string Process(object input)
+        private void Process(object input)
         {
             Init();
 
             ProcessRow(input);
 
             PostProcessing();
-
-            return sb.ToString();
         }
 
         #region utils
@@ -117,11 +126,11 @@ namespace ITCreatings.Ndb.Import
 
             if (Prefix != null)
             {
-                sb.Append(Prefix.Prefix);
+                streamWriter.Write(Prefix.Prefix);
                 format = format.Replace("\r\n", "\r\n" + Prefix.Prefix);
             }
 
-            sb.AppendLine(string.Format(format, args));
+            streamWriter.WriteLine(string.Format(format, args));
         }
         
         /// <summary>
@@ -187,7 +196,7 @@ namespace ITCreatings.Ndb.Import
             using (var p = System.Diagnostics.Process.Start(info))
             {
                 if (p == null)
-                    throw new Exception("Process can't be started: " + fileName);
+                    throw new NdbException("Process can't be started: " + fileName);
 
                 p.WaitForExit();
 

@@ -6,7 +6,7 @@ namespace ITCreatings.Ndb.Import
     /// <summary>
     /// Impoirt Utils methods
     /// </summary>
-    public class DbImportUtils
+    public static class DbImportUtils
     {
         /// <summary>
         /// Removes the extra spaces.

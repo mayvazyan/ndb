@@ -164,6 +164,7 @@ namespace ITCreatings.Ndb
         /// </summary>
         /// <param name="tableName"></param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public bool IsTableExists(string tableName)
         {
             try

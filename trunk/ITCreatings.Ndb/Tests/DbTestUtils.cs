@@ -25,7 +25,7 @@ namespace ITCreatings.Ndb.Tests
         /// </summary>
         /// <param name="assembly"></param>
         /// <returns></returns>
-        public bool IsDbRecordsValid(Assembly assembly)
+        public static bool IsDbRecordsValid(Assembly assembly)
         {
             Type[] types = DbAttributesManager.LoadDbRecordTypes(assembly);
 

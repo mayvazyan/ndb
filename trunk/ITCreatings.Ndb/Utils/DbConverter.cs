@@ -31,7 +31,7 @@ namespace ITCreatings.Ndb.Utils
 
                 byte[] bytes = value as byte[];
                 if (bytes != null)
-                    return new Guid((byte[])value);
+                    return new Guid(bytes);
             }
 
             return value;

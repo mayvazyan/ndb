@@ -718,6 +718,7 @@ namespace ITCreatings.Ndb
         /// </summary>
         /// <param name="tableName">Name of the table.</param>
         /// <returns>true if success</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public bool DropTableSafe(string tableName)
         {
             try
@@ -906,6 +907,7 @@ namespace ITCreatings.Ndb
         /// <summary>
         /// Returns is accessor can connect to database
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public bool CanConnect
         {
             get
@@ -915,7 +917,7 @@ namespace ITCreatings.Ndb
                     using (DbConnection dbConnection = CreateConnection())
                        dbConnection.Open();
                 }
-                catch//(NdbConnectionFailedException)
+                catch (DbException)
                 {
                     return false;
                 }

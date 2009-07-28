@@ -87,6 +87,7 @@ namespace ITCreatings.Ndb.Execution
         /// </summary>
         /// <param name="resultCode">The result code.</param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters")]
         public TResult GetResult(out TResultCode resultCode)
         {
             resultCode = Error.ResultCode;
@@ -663,6 +664,7 @@ namespace ITCreatings.Ndb.Execution
         /// <param name="data"></param>
         /// <param name="worker"></param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public DbExecution<TResult, TResultCode> Execute(object data, ExecuteDelegate worker)
         {
             if (!IsError)
@@ -687,6 +689,7 @@ namespace ITCreatings.Ndb.Execution
         /// </summary>
         /// <param name="action"></param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public DbExecution<TResult, TResultCode> Execute(Action<IDbExecution<TResult, TResultCode>> action)
         {
             if (!IsError)

@@ -8,7 +8,7 @@ namespace ITCreatings.Ndb.Core
     /// <summary>
     /// Provide access to DbAttributes
     /// </summary>
-    public class DbAttributesManager
+    public static class DbAttributesManager
     {
         private static readonly Dictionary<Type, DbRecordInfo> records = new Dictionary<Type, DbRecordInfo>();
 
