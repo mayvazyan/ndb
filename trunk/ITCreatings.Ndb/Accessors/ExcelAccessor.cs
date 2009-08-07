@@ -157,6 +157,25 @@ namespace ITCreatings.Ndb.Accessors
                 return DbGateway.LoadList<T>(reader);
             }
         }
+        /// <summary>
+        /// Loads the list.
+        /// <example>
+        /// 		<code>
+        /// User[] users = excelAccessor.LoadList&lt;User&gt;("Users Sheet", "A1:B10");
+        /// </code>
+        /// 	</example>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sheetName">Name of the sheet.</param>
+        /// <param name="range">The range.</param>
+        /// <returns></returns>
+        public T[] LoadList<T>(string sheetName, string range) where T : new()
+        {
+            using (IDataReader reader = GetReader(sheetName, range))
+            {
+                return DbGateway.LoadList<T>(reader);
+            }
+        }
 
         /// <summary>
         /// Exports the specified sheet to passed gateway.

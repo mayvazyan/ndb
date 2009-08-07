@@ -646,6 +646,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
 
         #endregion
 
+        #region LoadList methods
 
         /// <summary>
         /// Loads the list of objects.
@@ -701,5 +702,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
                 return reader.LoadList<T>();
             }
         }
+
+        #endregion
     }
 }

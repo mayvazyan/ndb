@@ -11,7 +11,7 @@ namespace ITCreatings.Ndb.Import
         /// <summary>
         /// Contains imported row
         /// </summary>
-        protected readonly T row = new T();
+        protected T row;
 
         /// <summary>
         /// Reads the next entry from the underlyed IDataReader and binds this data to "row" field
@@ -19,6 +19,7 @@ namespace ITCreatings.Ndb.Import
         /// <param name="args">The args.</param>
         protected sealed override void ProcessLine(IDataRecord args)
         {
+            row = new T();
             DbGateway.Bind(row, args);
             ProcessLine();
         }
@@ -33,7 +34,7 @@ namespace ITCreatings.Ndb.Import
     /// <summary>
     /// Data Reader Importer base class
     /// </summary>
-    public abstract class DbDataReaderImporter : DbImporter
+    public abstract class DbDataReaderImporter : DbPerItemImporter
     {
         /// <summary>
         /// Reads the line.

@@ -33,7 +33,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;LINQ</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;LINQ TESTS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -111,6 +111,7 @@
     <Compile Include="Accessors\DataReaders\CsvDataReader.cs" />
     <Compile Include="Accessors\DataReaders\DataReaderUtils.cs" />
     <Compile Include="Accessors\DataReaders\ExcelDataReader.cs" />
+    <Compile Include="Accessors\DataReaders\FixedWidthTextFilesDataReader.cs" />
     <Compile Include="Accessors\ExcelAccessor.cs" />
     <Compile Include="Accessors\PostgreAccessor.cs" />
     <Compile Include="Attributes\Relations\DbChildRecords.cs" />
@@ -162,11 +163,12 @@
     <Compile Include="Exceptions\NdbInvalidColumnNameException.cs" />
     <Compile Include="Execution\DbExecutionErrorMessage.cs" />
     <Compile Include="Execution\IDbExecution.cs" />
+    <Compile Include="Import\DbTextFileGenerator.cs" />
     <Compile Include="Query\Filters\DbColumnFilterExpression.cs" />
     <Compile Include="Query\Filters\DbColumnToColumnFilterExpression.cs" />
     <Compile Include="Import\DbCsvImporter.cs" />
     <Compile Include="Import\DbDataReaderImporter.cs" />
-    <Compile Include="Import\DbImporter.cs" />
+    <Compile Include="Import\DbPerItemImporter.cs" />
     <Compile Include="Import\DbImportUtils.cs" />
     <Compile Include="Import\DbExcelExport.cs" />
     <Compile Include="Query\DbExpressionType.cs" />
@@ -184,6 +186,7 @@
     <Compile Include="Query\DbSortingDirection.cs" />
     <Compile Include="Execution\DbExecution.cs" />
     <Compile Include="Query\Filters\DbOrFilterGroup.cs" />
+    <Compile Include="Tests\Accessors\FixedWidthTextFilesDataReaderTests.cs" />
     <Compile Include="Tests\Accessors\CsvDataReaderTests.cs" />
     <Compile Include="Tests\Data\BinaryDataRecord2.cs" />
     <Compile Include="Tests\Data\BinaryDataRecord3.cs" />
@@ -233,6 +236,9 @@
     <Compile Include="Utils\DbValidator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Tests\Accessors\FixedWidthTextFileSample.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Tests\Accessors\SingleLineCsv.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -272,6 +278,9 @@
       <ProductName>SQL Server Compact 3.5</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="StrongNameKey.pfx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

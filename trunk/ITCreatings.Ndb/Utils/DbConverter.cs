@@ -61,29 +61,39 @@ namespace ITCreatings.Ndb.Utils
             }
 
             if (targetType == typeof(byte[]) && value is Int32)
-                return BitConverter.GetBytes((Int32)value);
-            
+            {
+                return BitConverter.GetBytes((Int32) value);
+            }
             if (targetType == typeof(Int32))
             {
                 return Convert.ToInt32(value);
-//                Int32 ival;
-//                return Int32.TryParse(value.ToString(), out ival) ? ival : 0;
             }
 
             if (targetType == typeof(Int64))
             {
                 return Convert.ToInt64(value);
-//                Int32 ival;
-//                return Int32.TryParse(value.ToString(), out ival) ? ival : 0;
             }
 
             if (targetType == typeof(double))
             {
                 return Convert.ToDouble(value);
-//                Double dval;
-//                return Double.TryParse(value.ToString(), out dval) ? dval : 0;
             }
-            
+
+            if (targetType == typeof(DateTime))
+            {
+                if (stringValue != null)
+                {
+                    Double dval;
+                    if (Double.TryParse(stringValue, out dval))
+                    {
+                        return DateTime.FromOADate(dval);
+                    }
+                }
+
+                if (value is double)
+                    return DateTime.FromOADate(Convert.ToDouble(value));
+            }
+
             return Convert.ChangeType(value, targetType);
         }
 

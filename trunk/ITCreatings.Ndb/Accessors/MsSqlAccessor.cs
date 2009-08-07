@@ -202,6 +202,9 @@ namespace ITCreatings.Ndb.Accessors
 
         public override string BuildLimits(string query, int limit, int offset)
         {
+            if (offset == 0)
+                return query.Insert(6, string.Concat(" TOP ", limit));
+
             int index = query.IndexOf("ORDER BY", StringComparison.OrdinalIgnoreCase);
 
             string select = (index >= 0) ? query.Substring(0, index) : query;

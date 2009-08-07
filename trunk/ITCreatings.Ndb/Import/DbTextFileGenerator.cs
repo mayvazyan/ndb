@@ -7,12 +7,28 @@ using ITCreatings.Ndb.Exceptions;
 namespace ITCreatings.Ndb.Import
 {
     /// <summary>
-    /// Importer base class
+    /// Base class for Importers which generate an textfile
     /// </summary>
-    public abstract class DbImporter
+    public class DbTextFileGenerator
     {
-        private StreamWriter streamWriter;
+        protected StreamWriter StreamWriter;
         private readonly Stack<LinePrefix> Prefixes = new Stack<LinePrefix>();
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbTextFileGenerator"/> class.
+        /// </summary>
+        protected DbTextFileGenerator()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbTextFileGenerator"/> class.
+        /// </summary>
+        /// <param name="streamWriter">The stream writer.</param>
+        protected DbTextFileGenerator(StreamWriter streamWriter)
+        {
+            StreamWriter = streamWriter;
+        }
 
         private LinePrefix Prefix
         {
@@ -40,63 +56,6 @@ namespace ITCreatings.Ndb.Import
                 Prefixes.Pop();
         }
 
-        /// <summary>
-        /// Inits this instance.
-        /// </summary>
-        protected virtual void Init()
-        {
-            Add("SET NOCOUNT ON");
-            NewLine();
-        }
-
-        /// <summary>
-        /// Processes the specified input.
-        /// </summary>
-        /// <param name="input">The input.</param>
-        protected abstract void ProcessRow(object input);
-
-        /// <summary>
-        /// For custom proccessing purposes
-        /// </summary>
-        protected virtual void PostProcessing()
-        {
-        }
-
-        /// <summary>
-        /// Processes the specified input and saves result to out file.
-        /// </summary>
-        /// <param name="input">The input.</param>
-        /// <param name="outfile">The outfile.</param>
-        public void Process(object input, string outfile)
-        {
-            using (StreamWriter sw = new StreamWriter(outfile))
-            {
-                streamWriter = sw;
-
-                try
-                {
-                    Process(input);
-                }
-                finally
-                {
-                    streamWriter = null;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Processes the specified input.
-        /// </summary>
-        /// <param name="input">The input.</param>
-        private void Process(object input)
-        {
-            Init();
-
-            ProcessRow(input);
-
-            PostProcessing();
-        }
-
         #region utils
 
         /// <summary>
@@ -122,11 +81,11 @@ namespace ITCreatings.Ndb.Import
 
             if (Prefix != null)
             {
-                streamWriter.Write(Prefix.Prefix);
+                StreamWriter.Write(Prefix.Prefix);
                 format = format.Replace("\r\n", "\r\n" + Prefix.Prefix);
             }
 
-            streamWriter.WriteLine(string.Format(format, args));
+            StreamWriter.WriteLine(string.Format(format, args));
         }
         
         /// <summary>
@@ -175,6 +134,8 @@ namespace ITCreatings.Ndb.Import
 
         #endregion
 
+        #region Execute Process
+
         /// <summary>
         /// Executes the process.
         /// </summary>
@@ -189,7 +150,7 @@ namespace ITCreatings.Ndb.Import
 //                                            ,RedirectStandardOutput = false
                                         };
 
-            using (var p = System.Diagnostics.Process.Start(info))
+            using (var p = Process.Start(info))
             {
                 if (p == null)
                     throw new NdbException("Process can't be started: " + fileName);
@@ -212,6 +173,8 @@ namespace ITCreatings.Ndb.Import
             return ExecuteProcess("cmd", args) == 0;
         }
 
+        #endregion
+
         #region Database Specific Utils
 
         /// <summary>
@@ -225,7 +188,7 @@ namespace ITCreatings.Ndb.Import
             /// <param name="tableName">Name of the table.</param>
             public static string SetIdentityInsertOn(string tableName)
             {
-                return string.Format("SET IDENTITY_INSERT [{0}] ON", tableName);
+                return string.Format("SET IDENTITY_INSERT {0} ON", tableName);
             }
 
             /// <summary>
@@ -234,7 +197,7 @@ namespace ITCreatings.Ndb.Import
             /// <param name="tableName">Name of the table.</param>
             public static string SetIdentityInsertOff(string tableName)
             {
-                return string.Format("SET IDENTITY_INSERT [{0}] OFF", tableName);
+                return string.Format("SET IDENTITY_INSERT {0} OFF", tableName);
             }
 
             /// <summary>
@@ -265,6 +228,7 @@ namespace ITCreatings.Ndb.Import
                 return "GO";
             }
         }
+
         #endregion
 
         #region LinePrefix class
@@ -273,11 +237,11 @@ namespace ITCreatings.Ndb.Import
         {
             public string Prefix;
             public string GroupPostfix { get; private set; }
-            private DbImporter Importer;
+            private DbTextFileGenerator textFileGenerator;
 
-            public LinePrefix(DbImporter importer, string prefix, string groupPostfix)
+            public LinePrefix(DbTextFileGenerator textFileGenerator, string prefix, string groupPostfix)
             {
-                Importer = importer;
+                this.textFileGenerator = textFileGenerator;
                 Prefix = prefix;
                 GroupPostfix = groupPostfix;
             }
@@ -290,14 +254,14 @@ namespace ITCreatings.Ndb.Import
 
             public void Dispose(bool disposing)
             {
-                if (disposing && Importer != null)
+                if (disposing && textFileGenerator != null)
                 {
-                    if (Importer.Prefix != this)
-                        throw new Exception("Invalid Importer link");
+                    if (textFileGenerator.Prefix != this)
+                        throw new Exception("Invalid textFileGenerator link");
                     
-                    Importer.RemovePrefix();
-                    Importer.Add(GroupPostfix);
-                    Importer = null;
+                    textFileGenerator.RemovePrefix();
+                    textFileGenerator.Add(GroupPostfix);
+                    textFileGenerator = null;
                 }
             }
         }

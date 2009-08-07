@@ -5,7 +5,7 @@ namespace ITCreatings.Ndb.Import
     /// <summary>
     /// Csv Importer base class
     /// </summary>
-    public abstract class DbCsvImporter : DbImporter
+    public abstract class DbCsvImporter : DbPerItemImporter
     {
         private readonly char delimiter;
 

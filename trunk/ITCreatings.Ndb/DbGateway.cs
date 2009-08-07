@@ -805,9 +805,9 @@ namespace ITCreatings.Ndb
                     
                     if (Accessor.IsMsSql)
                     {
-                        Accessor.ExecuteNonQuery(DbImporter.MsSql.SetIdentityInsertOn(info.TableName));
+                        Accessor.ExecuteNonQuery(DbPerItemImporter.MsSql.SetIdentityInsertOn(info.TableName));
                         Accessor.Insert(info.TableName, values);
-                        Accessor.ExecuteNonQuery(DbImporter.MsSql.SetIdentityInsertOff(info.TableName));
+                        Accessor.ExecuteNonQuery(DbPerItemImporter.MsSql.SetIdentityInsertOff(info.TableName));
                     }
                     else
                         Accessor.Insert(info.TableName, values);
