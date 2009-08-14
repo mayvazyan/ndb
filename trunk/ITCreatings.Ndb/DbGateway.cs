@@ -38,12 +38,12 @@ namespace ITCreatings.Ndb
 
         #region Constructor & properties
 
-        private readonly DbAccessor Da;
+        private readonly DbAccessor dbAccessor;
 
         /// <summary>
         /// Provides access to underlayed DbAccessor
         /// </summary>
-        public DbAccessor Accessor { get { return Da; } }
+        public DbAccessor Accessor { get { return dbAccessor; } }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DbGateway"/> class.
@@ -51,7 +51,7 @@ namespace ITCreatings.Ndb
         /// <param name="accessor">The accessor.</param>
         public DbGateway(DbAccessor accessor)
         {
-            Da = accessor;
+            dbAccessor = accessor;
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace ITCreatings.Ndb
         /// <param name="connectionStringName">Name of the connection string.</param>
         public DbGateway(string connectionStringName)
         {
-            Da = DbAccessor.Create(connectionStringName);
+            dbAccessor = DbAccessor.Create(connectionStringName);
         }
 
         #endregion
@@ -231,7 +231,8 @@ namespace ITCreatings.Ndb
 
             object primaryKey = sourceRecordInfo.PrimaryKey.GetValue(data);
 
-            string select = DbQueryBuilder.BuildSelect(targetRecordInfo);
+            DbQueryBuilder queryBuilder = new DbQueryBuilder(Accessor);
+            string select = queryBuilder.BuildSelect(targetRecordInfo);
             // below is a self documented query? :)
             string sql = string.Format(
                 @"{5} INNER JOIN {1} ON {0}.{3}={1}.{2} AND {1}.{4}=@PrimaryKey"
@@ -407,7 +408,7 @@ namespace ITCreatings.Ndb
         {
             DbRecordInfo info = DbAttributesManager.GetRecordInfo(data.GetType());
             
-            using (IDataReader reader = Accessor.ExecuteReaderEx(DbQueryBuilder.BuildSelect(info), args))
+            using (IDataReader reader = Accessor.ExecuteReaderEx(new DbQueryBuilder(Accessor).BuildSelect(info), args))
             {
                 if (reader.Read())
                 {
@@ -513,7 +514,7 @@ namespace ITCreatings.Ndb
         public T[] LoadList<T>(params object[] args) where T : new()
         {
             DbRecordInfo recordInfo = DbAttributesManager.GetRecordInfo(typeof(T));
-            string query = DbAccessor.BuildWhere(DbQueryBuilder.BuildSelect(recordInfo), args);
+            string query = Accessor.BuildWhere(new DbQueryBuilder(Accessor).BuildSelect(recordInfo), args);
             return LoadRecords<T>(query, args);
         }
 
@@ -590,7 +591,7 @@ namespace ITCreatings.Ndb
         public T[] LoadListLimited<T>(int limit, int offset, params object[] args) where T : new()
         {
             DbRecordInfo recordInfo = DbAttributesManager.GetRecordInfo(typeof(T));
-            string query = DbAccessor.BuildWhere(DbQueryBuilder.BuildSelect(recordInfo), args);
+            string query = Accessor.BuildWhere(new DbQueryBuilder(Accessor).BuildSelect(recordInfo), args);
             return LoadRecords<T>(query, limit, offset, args);
         }
 

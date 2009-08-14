@@ -39,6 +39,11 @@ namespace ITCreatings.Ndb.Accessors
             return " RETURNING " + pk;
         }
 
+        internal override string QuoteName(string name)
+        {
+            return string.Concat('"', name, '"');
+        }
+
         #endregion
 
         #region SDL

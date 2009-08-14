@@ -45,6 +45,11 @@ namespace ITCreatings.Ndb.Accessors
             return ";SELECT LAST_INSERT_ID()";
         }
 
+        internal override string QuoteName(string name)
+        {
+            return string.Concat('`', name, '`');
+        }
+
         #endregion
 
 

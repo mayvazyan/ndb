@@ -622,6 +622,13 @@ namespace ITCreatings.Ndb
         /// <returns></returns>
         public abstract string BuildLimits(string query, int limit, int offset);
         internal abstract string GetIdentity(string pk);
+        
+        /// <summary>
+        /// Quotes the name (table name or column name).
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
+        internal abstract string QuoteName(string name);
 //        internal abstract string ExpressionToString(DbExpressionType expressionType);
 
         private object ExecuteInsert(string query, string pk, params object[] args)
@@ -629,14 +636,14 @@ namespace ITCreatings.Ndb
             return ExecuteScalar(query + GetIdentity(pk), args);
         }
 
-        internal static string BuildWhere(string baseQuery, object[] args)
+        internal string BuildWhere(string baseQuery, object[] args)
         {
             if (args.Length > 0)
             {
                 StringBuilder sb = new StringBuilder(baseQuery + " WHERE ");
                 for (int i = 0; i < args.Length; i += 2)
                 {
-                    sb.Append(args[i]);
+                    sb.Append(QuoteName(args[i].ToString()));
                     sb.Append('=');
                     sb.Append('@');
                     sb.Append(args[i]);
@@ -647,7 +654,7 @@ namespace ITCreatings.Ndb
             return baseQuery;
         }
 
-        private static string BuildInsertQuery(string tableName, object[] args)
+        private string BuildInsertQuery(string tableName, object[] args)
         {
             StringBuilder sb = new StringBuilder("INSERT INTO " + tableName);
 
@@ -656,7 +663,7 @@ namespace ITCreatings.Ndb
 
             for (int i = 0; i < args.Length; i += 2)
             {
-                columnsSb.Append(args[i]);
+                columnsSb.Append(QuoteName(args[i].ToString()));
                 columnsSb.Append(',');
 
                 valuesSb.Append('@');
@@ -815,7 +822,7 @@ namespace ITCreatings.Ndb
         /// <param name="args">Filter</param>
         public uint Delete(string TableName, params object[] args)
         {
-            return Convert.ToUInt32(ExecuteNonQueryEx("DELETE FROM " + TableName, args));
+            return Convert.ToUInt32(ExecuteNonQueryEx("DELETE FROM " + QuoteName(TableName), args));
         }
 
         /// <summary>
@@ -827,11 +834,11 @@ namespace ITCreatings.Ndb
         /// <returns>Affected rows count</returns>
         public int Update(string tableName, object[] values, params object[] args)
         {
-            StringBuilder sb = new StringBuilder("UPDATE " + tableName + " SET ");
+            StringBuilder sb = new StringBuilder("UPDATE " + QuoteName(tableName) + " SET ");
 
             for (int i = 0; i < values.Length; i += 2)
             {
-                sb.Append(values[i]);
+                sb.Append(QuoteName(values[i].ToString()));
                 sb.Append('=');
 
                 sb.Append('@');
@@ -898,7 +905,7 @@ namespace ITCreatings.Ndb
         /// <returns>Count</returns>
         public ulong LoadCount(string tableName)
         {
-            string query = DbQueryBuilder.BuildSelectCount(tableName);
+            string query = new DbQueryBuilder(this).BuildSelectCount(tableName);
             object scalar = ExecuteScalar(query);
 
             return Convert.ToUInt64(scalar);

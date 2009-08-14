@@ -314,9 +314,10 @@ namespace ITCreatings.Ndb.Query
         public T[] Load<T>() where T : new()
         {
             DbRecordInfo recordInfo = DbAttributesManager.GetRecordInfo(typeof(T));
-            
+
             var sb = new StringBuilder();
-            DbQueryBuilder.BuildSelect(sb, recordInfo);
+            
+            new DbQueryBuilder(Gateway.Accessor).BuildSelect(sb, recordInfo);
 
             object [] args = buildWhere(sb, Gateway.Accessor);
             buildOrderBy(sb);
@@ -333,7 +334,7 @@ namespace ITCreatings.Ndb.Query
             DbRecordInfo recordInfo = DbAttributesManager.GetRecordInfo(typeof(T));
             
             var sb = new StringBuilder();
-            DbQueryBuilder.BuildSelectCount(sb, recordInfo);
+            new DbQueryBuilder(Gateway.Accessor).BuildSelectCount(sb, recordInfo);
 
             object [] args = buildWhere(sb, Gateway.Accessor);
             buildOrderBy(sb);
@@ -345,7 +346,7 @@ namespace ITCreatings.Ndb.Query
         /// Loads the result.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="LoadTotalCount">if set to <c>true</c> [load total count].</param>
+        /// <param name="LoadTotalCount">if set to <c>true</c> will load total count.</param>
         /// <returns></returns>
         public DbQueryResult<T> LoadResult<T>(bool LoadTotalCount) where T : new()
         {
@@ -360,7 +361,7 @@ namespace ITCreatings.Ndb.Query
                 DbRecordInfo recordInfo = DbAttributesManager.GetRecordInfo(typeof (T));
 
                 var sb = new StringBuilder();
-                DbQueryBuilder.BuildSelect(sb, recordInfo);
+                new DbQueryBuilder(Gateway.Accessor).BuildSelect(sb, recordInfo);
 
                 object[] args = buildWhere(sb, Gateway.Accessor);
                 buildOrderBy(sb);

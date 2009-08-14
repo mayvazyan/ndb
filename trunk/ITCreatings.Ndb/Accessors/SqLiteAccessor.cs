@@ -25,6 +25,11 @@ namespace ITCreatings.Ndb.Accessors
             return ";SELECT LAST_INSERT_ROWID()";
         }
 
+        internal override string QuoteName(string name)
+        {
+            return string.Concat('"', name, '"');
+        }
+
         internal override Dictionary<string, string> LoadFields(DbGateway gateway, string tableName)
         {
             try

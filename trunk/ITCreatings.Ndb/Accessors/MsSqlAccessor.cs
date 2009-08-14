@@ -25,6 +25,11 @@ namespace ITCreatings.Ndb.Accessors
             return ";SELECT @@IDENTITY";
         }
 
+        internal override string QuoteName(string name)
+        {
+            return string.Concat('[', name, ']');
+        }
+
         protected override string GetSqlType(Type type, uint size)
         {
             if (type == typeof(Byte))
