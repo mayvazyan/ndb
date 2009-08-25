@@ -911,7 +911,8 @@ namespace ITCreatings.Ndb
         {
             var info = DbAttributesManager.GetRecordInfo(data.GetType());
 
-            return Accessor.Delete(info.TableName, info.GetValues(data));
+            object[] values = info.GetValues(data);
+            return Accessor.Delete(info.TableName, values);
         }
 
 

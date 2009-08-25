@@ -308,6 +308,7 @@ namespace ITCreatings.Ndb
             string formatedQuery = Format(query);
             
             Debug.WriteLine(formatedQuery);
+            
 
             var command = Command(formatedQuery);
 
@@ -315,13 +316,19 @@ namespace ITCreatings.Ndb
             {
                 if (!string.IsNullOrEmpty(par[i].ToString()))
                 {
+                    object value = par[i + 1];
+
+                    Debug.Write(string.Format("@{0}={1},", par[i], value));
+
                     DbParameter parameter = command.CreateParameter();
                     parameter.ParameterName = Format(par[i].ToString());
-                    object value = par[i + 1];
+                    
                     parameter.Value = value ?? DBNull.Value;
                     command.Parameters.Add(parameter);
                 }
             }
+
+            Debug.WriteLine("");
 
             return command;
         }

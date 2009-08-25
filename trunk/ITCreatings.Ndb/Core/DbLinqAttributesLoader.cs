@@ -11,7 +11,7 @@ namespace ITCreatings.Ndb.Core
         {
             bool IsDbGeneratedPrimaryKey = false;
             DbFieldInfo primaryKey = null;
-
+            bool primaryKeyFound = false;
             MemberInfo[] fields = type.GetMembers(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
             foreach (MemberInfo field in fields)
@@ -25,8 +25,21 @@ namespace ITCreatings.Ndb.Core
 
                     if (attribute.IsPrimaryKey)
                     {
-                        IsDbGeneratedPrimaryKey = attribute.IsDbGenerated;
-                        primaryKey = dbFieldInfo;
+                        if (primaryKeyFound) //found second primary key mean it's composite
+                        {
+                            if (primaryKey != null)
+                            {
+                                dbFields.Add(primaryKey);
+                                primaryKey = null;
+                            }
+                            dbFields.Add(dbFieldInfo);
+                        }
+                        else
+                        {
+                            IsDbGeneratedPrimaryKey = attribute.IsDbGenerated;
+                            primaryKey = dbFieldInfo;
+                        }
+                        primaryKeyFound = true;
                     }
                     else
                     {

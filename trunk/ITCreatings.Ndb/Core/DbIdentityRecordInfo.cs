@@ -6,6 +6,7 @@
     internal class DbIdentityRecordInfo : DbRecordInfo
     {
         public DbFieldInfo PrimaryKey;
+
         public bool IsDbGeneratedPrimaryKey { get; private set; }
 
         /// <summary>
