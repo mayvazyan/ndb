@@ -11,7 +11,11 @@ namespace ITCreatings.Ndb.Import
     /// </summary>
     public class DbTextFileGenerator
     {
+        /// <summary>
+        /// Provides directly access to the underlayed StreamWriter
+        /// </summary>
         protected StreamWriter StreamWriter;
+
         private readonly Stack<LinePrefix> Prefixes = new Stack<LinePrefix>();
 
         /// <summary>

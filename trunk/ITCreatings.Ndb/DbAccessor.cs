@@ -688,6 +688,12 @@ namespace ITCreatings.Ndb
 
         #region SDL
 
+        /// <summary>
+        /// Gets the type of the SQL.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="size">The size.</param>
+        /// <returns></returns>
         protected abstract string GetSqlType(Type type, uint size);
         internal abstract Dictionary<string, string> LoadFields(DbGateway gateway, string tableName);
         internal Dictionary<string, string> LoadFields(string tableName)

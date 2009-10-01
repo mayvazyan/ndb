@@ -20,6 +20,10 @@ namespace ITCreatings.Ndb.Utils
     public class DbTestHelper : IDisposable
     {
         private readonly List<object> toRemove;
+
+        /// <summary>
+        /// Provides direct access to the underlayed DbGateway
+        /// </summary>
         public readonly DbGateway gateway;
 
         /// <summary>

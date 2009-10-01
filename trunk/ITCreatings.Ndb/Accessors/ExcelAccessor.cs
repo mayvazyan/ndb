@@ -53,6 +53,12 @@ namespace ITCreatings.Ndb.Accessors
             return string.Concat('[', name, ']');
         }
 
+        /// <summary>
+        /// Gets the type of the SQL.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="size">The size.</param>
+        /// <returns></returns>
         protected override string GetSqlType(Type type, uint size)
         {
             throw new System.NotImplementedException();
