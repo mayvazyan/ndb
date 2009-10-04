@@ -5,6 +5,7 @@ namespace ITCreatings.Ndb.Exceptions
     /// <summary>
     /// Unsupported Column Type exception. 
     /// </summary>
+    [Serializable]
     public class NdbUnsupportedColumnTypeException : NdbException
     {
         /// <summary>

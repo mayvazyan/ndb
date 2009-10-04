@@ -15,32 +15,32 @@ namespace ITCreatings.Ndb.Core
         /// <summary>
         /// Record Type
         /// </summary>
-        public Type RecordType;
+        public Type RecordType { get; set; }
 
         /// <summary>
         /// Table Name
         /// </summary>
-        public string TableName;
+        public string TableName { get; set; }
 
         /// <summary>
         /// Fields
         /// </summary>
-        public DbFieldInfo[] Fields;
+        public DbFieldInfo[] Fields { get; set; }
 
         /// <summary>
         /// Childs
         /// </summary>
-        public Dictionary<Type, MemberInfo> Childs;
+        public Dictionary<Type, MemberInfo> Childs { get; set; }
 
         /// <summary>
         /// Parents
         /// </summary>
-        public Dictionary<Type, MemberInfo> Parents;
+        public Dictionary<Type, MemberInfo> Parents { get; set; }
 
         /// <summary>
         /// Foreign Keys
         /// </summary>
-        public Dictionary<Type, DbFieldInfo> ForeignKeys;
+        public Dictionary<Type, DbFieldInfo> ForeignKeys { get; set; }
 
         /// <summary>
         /// returns Key-Value collection

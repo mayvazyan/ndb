@@ -19,6 +19,7 @@ namespace ITCreatings.Ndb
         #region Singleton
 
         private static DbGateway instance;
+
         ///<summary>
         /// Singleton accessor
         ///</summary>
@@ -174,8 +175,8 @@ namespace ITCreatings.Ndb
         /// <summary>
         /// Load records using association table
         /// </summary>
-        /// <typeparam name="TargetType">Type we want to Load</typeparam>
-        /// <typeparam name="AssociationType">Type which contains associations</typeparam>
+        /// <typeparam name="TTargetType">Type we want to Load</typeparam>
+        /// <typeparam name="TAssociationType">Type which contains associations</typeparam>
         /// <param name="data">Data object</param>
         /// <returns>Array of Requested Objects</returns>
         /// <example>
@@ -215,15 +216,15 @@ namespace ITCreatings.Ndb
         ///     }
         /// </code>
         /// </example>
-        public TargetType[] LoadAssociated<TargetType, AssociationType>(object data) where TargetType : new()
+        public TTargetType[] LoadAssociated<TTargetType, TAssociationType>(object data) where TTargetType : new()
         {
             Type primaryType = data.GetType();
 
-            DbIdentityRecordInfo targetRecordInfo = DbAttributesManager.GetRecordInfo(typeof(TargetType)) as DbIdentityRecordInfo;
+            DbIdentityRecordInfo targetRecordInfo = DbAttributesManager.GetRecordInfo(typeof(TTargetType)) as DbIdentityRecordInfo;
             if (targetRecordInfo == null)
                 throw new NdbNotIdentityException("Only DbIdentityRecord objects can have related records");
 
-            DbRecordInfo associationRecordInfo = DbAttributesManager.GetRecordInfo(typeof(AssociationType));
+            DbRecordInfo associationRecordInfo = DbAttributesManager.GetRecordInfo(typeof(TAssociationType));
 
             DbIdentityRecordInfo sourceRecordInfo = DbAttributesManager.GetRecordInfo(primaryType) as DbIdentityRecordInfo;
             if (sourceRecordInfo == null)
@@ -239,19 +240,19 @@ namespace ITCreatings.Ndb
 //                @"SELECT * FROM {0} INNER JOIN {1} ON {0}.{3}={1}.{2} AND {1}.{4}=@PrimaryKey"
                 , targetRecordInfo.TableName
                 , associationRecordInfo.TableName
-                , associationRecordInfo.ForeignKeys[typeof(TargetType)].Name
+                , associationRecordInfo.ForeignKeys[typeof(TTargetType)].Name
                 , targetRecordInfo.PrimaryKey.Name
                 , associationRecordInfo.ForeignKeys[primaryType].Name
                 , select
                 );
 
-            return loadRecords<TargetType>(targetRecordInfo, sql, "PrimaryKey", primaryKey);
+            return loadRecords<TTargetType>(targetRecordInfo, sql, "PrimaryKey", primaryKey);
         }
 
         /// <summary>
         /// Loads child records
         /// </summary>
-        /// <typeparam name="ChildType">Type of the child objects</typeparam>
+        /// <typeparam name="TChildType">Type of the child objects</typeparam>
         /// <param name="data">Parent object</param>
         /// <param name="args">Filter</param>
         /// <returns>Array of childs</returns>
@@ -280,11 +281,11 @@ namespace ITCreatings.Ndb
         ///     }
         /// </code>
         /// </example>
-        public ChildType[] LoadChilds<ChildType>(object data, params object[] args) where ChildType : new()
+        public TChildType[] LoadChilds<TChildType>(object data, params object[] args) where TChildType : new()
         {
             Type primaryType = data.GetType();
 
-            DbRecordInfo childRecordInfo = DbAttributesManager.GetRecordInfo(typeof(ChildType));
+            DbRecordInfo childRecordInfo = DbAttributesManager.GetRecordInfo(typeof(TChildType));
             DbIdentityRecordInfo primaryRecordInfo = DbAttributesManager.GetRecordInfo(primaryType) as DbIdentityRecordInfo;
 
             if (primaryRecordInfo == null)
@@ -294,13 +295,13 @@ namespace ITCreatings.Ndb
                       childRecordInfo.ForeignKeys[primaryType].Name,
                       primaryRecordInfo.PrimaryKey.GetValue(data));
 
-            return LoadList<ChildType>(_args);
+            return LoadList<TChildType>(_args);
         }
 
         /// <summary>
         /// Loads parent record
         /// </summary>
-        /// <typeparam name="ParentType"></typeparam>
+        /// <typeparam name="TParentType"></typeparam>
         /// <param name="data"></param>
         /// <returns></returns>
         /// <example>
@@ -331,18 +332,19 @@ namespace ITCreatings.Ndb
         ///     }
         /// </code>
         /// </example>
-        public ParentType LoadParent<ParentType>(object data) where ParentType : new()
+        public TParentType LoadParent<TParentType>(object data) where TParentType : new()
         {
             Type childType = data.GetType();
+            Type parentType = typeof(TParentType);
 
             DbRecordInfo childRecordInfo = DbAttributesManager.GetRecordInfo(childType);
-
-            if (!childRecordInfo.ForeignKeys.ContainsKey(typeof(ParentType)))
+            
+            if (!childRecordInfo.ForeignKeys.ContainsKey(parentType))
                 throw new NdbException(string.Format(
-                                        "The type '{0}' doesn't contains DbForeignKeyFieldAttribute to type '{1}'", childType, typeof(ParentType)));
+                                        "The type '{0}' doesn't contains DbForeignKeyFieldAttribute to type '{1}'", childType, parentType));
 
-            object primaryKey = childRecordInfo.ForeignKeys[typeof(ParentType)].GetValue(data);
-            return Load<ParentType>(primaryKey);
+            object primaryKey = childRecordInfo.ForeignKeys[parentType].GetValue(data);
+            return Load<TParentType>(primaryKey);
         }
 
         #endregion
@@ -806,9 +808,9 @@ namespace ITCreatings.Ndb
                     
                     if (Accessor.IsMsSql)
                     {
-                        Accessor.ExecuteNonQuery(DbPerItemImporter.MsSql.SetIdentityInsertOn(info.TableName));
+                        Accessor.ExecuteNonQuery(DbTextFileGenerator.MsSql.SetIdentityInsertOn(info.TableName));
                         Accessor.Insert(info.TableName, values);
-                        Accessor.ExecuteNonQuery(DbPerItemImporter.MsSql.SetIdentityInsertOff(info.TableName));
+                        Accessor.ExecuteNonQuery(DbTextFileGenerator.MsSql.SetIdentityInsertOff(info.TableName));
                     }
                     else
                         Accessor.Insert(info.TableName, values);
@@ -964,13 +966,13 @@ namespace ITCreatings.Ndb
         }
 
         /// <summary>
-        /// Binds the specified obj.
+        /// Binds the specified object.
         /// </summary>
-        /// <param name="obj">The obj.</param>
+        /// <param name="target">The target object.</param>
         /// <param name="row">The row.</param>
-        public static void Bind(object obj, IDataRecord row)
+        public static void Bind(object target, IDataRecord row)
         {
-            Bind(obj, row, obj.GetType());
+            Bind(target, row, target.GetType());
         }
 
         /// <summary>
@@ -997,8 +999,6 @@ namespace ITCreatings.Ndb
 
         private static void Bind(object data, IDataRecord row, DbRecordInfo info)
         {
-//            int i = 0;
-
             var identityRecordInfo = info as DbIdentityRecordInfo;
             if (identityRecordInfo != null)
             {
@@ -1014,8 +1014,6 @@ namespace ITCreatings.Ndb
                     value = DbConverter.GetValue(field, value);
 
                 setValue(field, data, value);
-
-//                i++;
             }
 
             int count = info.Fields.Length;

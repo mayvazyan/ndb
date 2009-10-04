@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Security.Permissions;
 using ITCreatings.Ndb.Exceptions;
 
 namespace ITCreatings.Ndb.Import
@@ -14,7 +15,7 @@ namespace ITCreatings.Ndb.Import
         /// <summary>
         /// Provides directly access to the underlayed StreamWriter
         /// </summary>
-        protected StreamWriter StreamWriter;
+        protected StreamWriter StreamWriter { get; set; }
 
         private readonly Stack<LinePrefix> Prefixes = new Stack<LinePrefix>();
 
@@ -146,6 +147,7 @@ namespace ITCreatings.Ndb.Import
         /// <param name="fileName">Name of the file.</param>
         /// <param name="args">The args.</param>
         /// <returns></returns>
+        [EnvironmentPermission(SecurityAction.LinkDemand, Unrestricted=true)]
         public static int ExecuteProcess(string fileName, string args)
         {
             ProcessStartInfo info = new ProcessStartInfo(fileName, args)
@@ -172,6 +174,7 @@ namespace ITCreatings.Ndb.Import
         /// </summary>
         /// <param name="args">The args.</param>
         /// <returns></returns>
+        [EnvironmentPermission(SecurityAction.LinkDemand, Unrestricted=true)]
         public static bool ExecuteCmd(string args)
         {
             return ExecuteProcess("cmd", args) == 0;
@@ -256,12 +259,12 @@ namespace ITCreatings.Ndb.Import
                 GC.SuppressFinalize(this);
             }
 
-            public void Dispose(bool disposing)
+            protected virtual void Dispose(bool disposing)
             {
                 if (disposing && textFileGenerator != null)
                 {
                     if (textFileGenerator.Prefix != this)
-                        throw new Exception("Invalid textFileGenerator link");
+                        throw new NdbException("Invalid textFileGenerator link");
                     
                     textFileGenerator.RemovePrefix();
                     textFileGenerator.Add(GroupPostfix);

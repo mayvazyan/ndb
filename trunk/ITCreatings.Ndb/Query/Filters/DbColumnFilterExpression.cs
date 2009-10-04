@@ -11,7 +11,7 @@ namespace ITCreatings.Ndb.Query.Filters
         /// <summary>
         /// Value to use in Filter
         /// </summary>
-        public object Value;
+        public object Value { get; set; }
 
         private string ParamName;
 

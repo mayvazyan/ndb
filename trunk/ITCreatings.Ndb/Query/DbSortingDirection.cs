@@ -8,11 +8,11 @@ namespace ITCreatings.Ndb.Query
         /// <summary>
         /// ASC sorting direction
         /// </summary>
-        Asc,
+        Asc = 0,
 
         /// <summary>
         /// DESC sorting direction
         /// </summary>
-        Desc
+        Desc = 1
     }
 }

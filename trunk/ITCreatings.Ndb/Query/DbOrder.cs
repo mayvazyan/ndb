@@ -8,12 +8,12 @@
         /// <summary>
         /// Order Direction
         /// </summary>
-        public DbSortingDirection SortingDirection;
+        public DbSortingDirection SortingDirection { get; private set; }
 
         /// <summary>
         /// Column Name to sort by
         /// </summary>
-        public string ColumnName;
+        public string ColumnName { get; private set; }
 
         /// <summary>
         /// Default constructor

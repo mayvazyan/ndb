@@ -8,17 +8,17 @@ namespace ITCreatings.Ndb.Attributes
     public sealed class DbForeignKeyFieldAttribute : DbFieldAttribute
     {
         /// <summary>
-        /// Return ForeignKey Type
+        /// Returns ForeignKey Type
         /// </summary>
-        public Type Type { get; private set; }
-
+        public Type ForeignKeyType { get; private set; }
+        
         /// <summary>
-        /// ForeignKey Type should be specifyed
+        /// Initializes a new instance of the <see cref="DbForeignKeyFieldAttribute"/> class.
         /// </summary>
-        /// <param name="type">ForeignKey Type</param>
-        public DbForeignKeyFieldAttribute(Type type)
+        /// <param name="foreignKeyType">Type of the foreign key.</param>
+        public DbForeignKeyFieldAttribute(Type foreignKeyType)
         {
-            Type = type;
+            ForeignKeyType = foreignKeyType;
         }
     }
 }

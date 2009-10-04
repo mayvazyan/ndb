@@ -17,6 +17,7 @@ namespace ITCreatings.Ndb.Attributes
     /// </code> 
     /// </example> 
     /// </summary>
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class DbFieldAttribute : Attribute
     {
         /// <summary>
@@ -34,7 +35,7 @@ namespace ITCreatings.Ndb.Attributes
         /// </code>
         /// </example>
         /// </summary>
-        internal string Name { get; private set; }
+        public string ColumnName { get; private set; }
 
         /// <summary>
         /// Gets or sets the column size.
@@ -51,29 +52,29 @@ namespace ITCreatings.Ndb.Attributes
         /// </example>
         /// </summary>
         /// <value>The size.</value>
-        internal uint Size { get; private set; }
+        public uint Size { get; private set; }
 
         /// <summary>
         /// Gets or sets the type of the db field.
         /// </summary>
         /// <value>The type of the db field.</value>
-        internal Type DbType { get; private set; }
+        public Type DbType { get; private set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether [differs from database type].
+        /// Gets or sets a value indicating whether field type differs from the database column type.
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if [differs from database type]; otherwise, <c>false</c>.
+        /// 	<c>true</c> if field type differs from database column type otherwise, <c>false</c>.
         /// </value>
-        internal bool DiffersFromDatabaseType { get { return DbType != null; } }
+        public bool IsDiffersFromDatabaseType { get { return DbType != null; } }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="name">Name of the associated column</param>
-        public DbFieldAttribute(string name)
+        /// <param name="columnName">Name of the associated column</param>
+        public DbFieldAttribute(string columnName)
         {
-            Name = name;
+            ColumnName = columnName;
             Size = 255;
         }
 

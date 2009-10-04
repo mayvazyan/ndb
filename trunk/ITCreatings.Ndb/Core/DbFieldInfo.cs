@@ -69,54 +69,54 @@ namespace ITCreatings.Ndb.Core
         /// Gets value of the field
         /// </summary>
         /// <param name="memberInfo">The member info.</param>
-        /// <param name="obj">Source object</param>
+        /// <param name="source">Source object</param>
         /// <returns>Current value</returns>
-        public static object GetValue(MemberInfo memberInfo, object obj)
+        public static object GetValue(MemberInfo memberInfo, object source)
         {
             PropertyInfo propertyInfo = memberInfo as PropertyInfo;
             if (propertyInfo != null)
             {
-                return propertyInfo.GetValue(obj, null);
+                return propertyInfo.GetValue(source, null);
             }
 
-            return ((FieldInfo)memberInfo).GetValue(obj);
+            return ((FieldInfo)memberInfo).GetValue(source);
         }
 
         /// <summary>
         /// Gets value of the field
         /// </summary>
-        /// <param name="obj">Source object</param>
+        /// <param name="source">Source object</param>
         /// <returns>Current value</returns>
-        public object GetValue(object obj)
+        public object GetValue(object source)
         {
-            return GetValue(FieldInfo, obj);
+            return GetValue(FieldInfo, source);
         }
 
         /// <summary>
         /// Gets value of the field
         /// </summary>
         /// <param name="memberInfo">The member info.</param>
-        /// <param name="data">Target object</param>
+        /// <param name="target">Target object</param>
         /// <param name="value">New value</param>
-        public static void SetValue(MemberInfo memberInfo, object data, object value)
+        public static void SetValue(MemberInfo memberInfo, object target, object value)
         {
             PropertyInfo propertyInfo = memberInfo as PropertyInfo;
             if (propertyInfo != null)
             {
-                propertyInfo.SetValue(data, value, null);
+                propertyInfo.SetValue(target, value, null);
             }
             else
-                ((FieldInfo)memberInfo).SetValue(data, value);
+                ((FieldInfo)memberInfo).SetValue(target, value);
         }
 
         /// <summary>
         /// Gets value of the field
         /// </summary>
-        /// <param name="data">Target object</param>
+        /// <param name="target">Target object</param>
         /// <param name="value">New value</param>
-        public void SetValue(object data, object value)
+        public void SetValue(object target, object value)
         {
-            SetValue(FieldInfo,data,value);
+            SetValue(FieldInfo, target, value);
         }
 
         /// <summary>

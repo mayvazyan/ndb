@@ -6,6 +6,7 @@ namespace ITCreatings.Ndb.Exceptions
     /// <summary>
     /// Invalid Filter Expression Exception
     /// </summary>
+    [Serializable]
     public class NdbInvalidFilterException : NdbException
     {
         /// <summary>

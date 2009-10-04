@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
+using System.Globalization;
 using System.Text;
 using ITCreatings.Ndb.Accessors;
 using ITCreatings.Ndb.Core;
@@ -213,7 +214,7 @@ namespace ITCreatings.Ndb
             set
             {
                 //by default we wan't ConvertZeroDateTime=true, if you don't so, please specify your value in the connection string
-                if (IsMySql && value.IndexOf("ConvertZeroDateTime") == -1)
+                if (IsMySql && DbString.IndexOf(value, "ConvertZeroDateTime") == -1)
                 {
                     connectionString = "ConvertZeroDateTime=true;" + value;
                 }
@@ -430,16 +431,15 @@ namespace ITCreatings.Ndb
             {
                 query = BuildLimits(query, limit, offset);
             }
-
             
             DbDataAdapter adapter = null;
             try
             {
                 adapter = DataAdapter(query, args);
 
-                DataSet set = new DataSet();
-                adapter.Fill(set);
-                return set;
+                DataSet dataSet = new DataSet {Locale = CultureInfo.InvariantCulture};
+                adapter.Fill(dataSet);
+                return dataSet;
             }
             catch (Exception ex)
             {

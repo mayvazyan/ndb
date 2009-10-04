@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
+using ITCreatings.Ndb.Exceptions;
+using ITCreatings.Ndb.Utils;
 
 namespace ITCreatings.Ndb.Accessors.DataReaders
 {
@@ -22,7 +25,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         {
             int indexOf = names.IndexOf(name);
             if (indexOf == -1)
-                throw new Exception(string.Format("Field {0} wasn't found", name));
+                throw new NdbException("Field {0} wasn't found", name);
 
             return indexOf;
         }

@@ -6,6 +6,11 @@ namespace ITCreatings.Ndb.Query
     public enum DbExpressionType
     {
         /// <summary>
+        /// Unknown
+        /// </summary>
+        Unknown = 0, 
+
+        /// <summary>
         /// Equal
         /// </summary>
         Equal = 10,

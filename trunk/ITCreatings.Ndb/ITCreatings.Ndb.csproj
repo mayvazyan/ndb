@@ -234,6 +234,7 @@
     <Compile Include="Utils\DbConverter.cs" />
     <Compile Include="Utils\DbTestHelper.cs" />
     <Compile Include="Utils\DbValidator.cs" />
+    <Compile Include="Utils\DbString.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Tests\Accessors\FixedWidthTextFileSample.txt">

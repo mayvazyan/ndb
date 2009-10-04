@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using ITCreatings.Ndb.Exceptions;
 
 namespace ITCreatings.Ndb.Accessors.DataReaders
 {
@@ -26,7 +27,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         private void InitNames()
         {
             if (!Read())
-                throw new Exception("Can't read column names");
+                throw new NdbException("Can't read column names");
 
             names = DataReaderUtils.ReadNames(this);
         }
@@ -47,7 +48,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         /// Releases unmanaged and - optionally - managed resources
         /// </summary>
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-        public void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (disposing && reader != null)
             {

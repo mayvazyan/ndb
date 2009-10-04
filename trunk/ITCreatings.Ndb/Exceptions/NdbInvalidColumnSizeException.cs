@@ -5,6 +5,7 @@ namespace ITCreatings.Ndb.Exceptions
     /// <summary>
     /// Invalid Column Size Exception
     /// </summary>
+    [Serializable]
     public class NdbInvalidColumnSizeException : NdbException
     {
         /// <summary>

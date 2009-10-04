@@ -11,10 +11,10 @@ namespace ITCreatings.Ndb.Tests.Data
         private const string IndexName = "TaskUser";
 
         [DbForeignKeyField(typeof(Task))]
-        [DbUniqueField(IndexName = IndexName)]
+        [DbUniqueField(IndexName)]
         public long TaskId;
 
-        [DbUniqueField(IndexName = IndexName)]
+        [DbUniqueField(IndexName)]
         [DbForeignKeyField(typeof(User))]
         public long UserId;
 

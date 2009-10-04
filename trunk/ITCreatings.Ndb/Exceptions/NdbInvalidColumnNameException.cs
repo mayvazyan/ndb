@@ -1,8 +1,11 @@
-﻿namespace ITCreatings.Ndb.Exceptions
+﻿using System;
+
+namespace ITCreatings.Ndb.Exceptions
 {
     /// <summary>
     /// Invalid Column Name Exception
     /// </summary>
+    [Serializable] 
     public class NdbInvalidColumnNameException : NdbException
 
     {

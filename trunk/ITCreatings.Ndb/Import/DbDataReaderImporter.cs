@@ -11,7 +11,7 @@ namespace ITCreatings.Ndb.Import
         /// <summary>
         /// Contains imported row
         /// </summary>
-        protected T row;
+        protected T row { get; private set; }
 
         /// <summary>
         /// Reads the next entry from the underlyed IDataReader and binds this data to "row" field

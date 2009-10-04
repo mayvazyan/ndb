@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Data.Common;
+using System.Globalization;
 
 namespace ITCreatings.Ndb.Exceptions
 {
     /// <summary>
     /// Base Exception class
     /// </summary>
+    [Serializable] 
     public class NdbException : DbException
     {
         /// <summary>
@@ -21,7 +23,7 @@ namespace ITCreatings.Ndb.Exceptions
         /// </summary>
         /// <param name="format"></param>
         /// <param name="args"></param>
-        public NdbException(string format, params object [] args) : this(string.Format(format, args))
+        public NdbException(string format, params object [] args) : this(string.Format(CultureInfo.InvariantCulture,format, args))
         {   
         }
 

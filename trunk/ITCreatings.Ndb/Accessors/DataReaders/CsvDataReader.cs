@@ -11,15 +11,16 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
     /// </summary>
     public class CsvDataReader : IDataReader
     {
-        /// <summary>
-        /// Attemps to fix invalid CSV file (if CSV contains not quoted multiline columns)
-        /// NOTE: last column can't be multiline
-        /// </summary>
-        public bool AttemptToFixMultiline;
         private StreamReader sr;
         private readonly List<string> names;
         private string[] args;
         private readonly char delimiter;
+
+        /// <summary>
+        /// Attemps to fix invalid CSV file (if CSV contains not quoted multiline columns)
+        /// NOTE: last column can't be multiline
+        /// </summary>
+        public bool AttemptToFixMultiline { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CsvDataReader"/> class.
@@ -69,7 +70,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
         /// Releases unmanaged and - optionally - managed resources
         /// </summary>
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-        public void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (disposing && sr != null)
             {
@@ -585,7 +586,7 @@ namespace ITCreatings.Ndb.Accessors.DataReaders
                                 if (ch == '\r')
                                 {
                                     sr.Read(); //skip '\n'
-                                    break;
+                                    //break;
                                 }
                                 
                                 if (ch == '\n')

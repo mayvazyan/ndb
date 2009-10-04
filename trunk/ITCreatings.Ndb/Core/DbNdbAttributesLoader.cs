@@ -43,7 +43,7 @@ namespace ITCreatings.Ndb.Core
                 if (childRecordsAttributes != null && childRecordsAttributes.Length > 0)
                 {
                     if (memberType.BaseType != typeof (Array))
-                        throw new NdbException("DbChildRecordsAttribute can belong to Array field ONLY");
+                        throw new NdbException("DbChildRecordsAttribute can belong to Array fields ONLY");
 
                     childs.Add(memberType.GetElementType(), field);
                 }
@@ -62,14 +62,14 @@ namespace ITCreatings.Ndb.Core
                         if (attribute.DefaultValue != null)
                             defaultValue = attribute.DefaultValue;
 
-                        if (attribute.DiffersFromDatabaseType)
+                        if (attribute.IsDiffersFromDatabaseType)
                             DbType = attribute.DbType;
 
                         if (attribute.Size > 0)
                             Size = attribute.Size;
 
                         if (string.IsNullOrEmpty(Name))
-                            Name = attribute.Name;
+                            Name = attribute.ColumnName;
 
                         var primaryKeyFieldAttribute = attribute as DbPrimaryKeyFieldAttribute;
                         if (primaryKeyFieldAttribute != null)
@@ -81,7 +81,7 @@ namespace ITCreatings.Ndb.Core
                         {
                             var dbForeignKeyFieldAttribute = attribute as DbForeignKeyFieldAttribute;
                             if (dbForeignKeyFieldAttribute != null)
-                                foreignTypes.Add(dbForeignKeyFieldAttribute.Type);
+                                foreignTypes.Add(dbForeignKeyFieldAttribute.ForeignKeyType);
                             //                                    foreignKeys.Add(dbForeignKeyFieldAttribute.Type, dbFieldInfo);
                         }
                     }

@@ -5,6 +5,7 @@ namespace ITCreatings.Ndb.Exceptions
     /// <summary>
     /// Informs about Connection Failed exceptions
     /// </summary>
+    [Serializable] 
     public class NdbConnectionFailedException : NdbException
     {
         internal NdbConnectionFailedException(string connectionString, Exception ex) :

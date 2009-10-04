@@ -7,12 +7,13 @@ namespace ITCreatings.Ndb.Attributes
     /// Allows to specify Table name. If not specifyed, 's' will be added to the class name.
     /// Ex: We have class User. By default we suppose it belongs to the "Users" table
     /// </summary>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public sealed class DbRecordAttribute : Attribute
     {
         /// <summary>
         /// name of the table associated with record
         /// </summary>
-        public string TableName { get; set; }
+        public string TableName { get; private set; }
 
 /*
         /// <summary>

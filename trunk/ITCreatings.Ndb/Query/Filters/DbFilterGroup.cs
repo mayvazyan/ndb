@@ -10,7 +10,7 @@ namespace ITCreatings.Ndb.Query.Filters
         /// <summary>
         /// Nodes
         /// </summary>
-        public List<DbFilterNode> Nodes;
+        public List<DbFilterNode> Nodes { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DbFilterGroup"/> class.

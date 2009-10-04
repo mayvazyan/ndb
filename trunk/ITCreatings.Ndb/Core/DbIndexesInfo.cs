@@ -10,18 +10,28 @@ namespace ITCreatings.Ndb.Core
         /// <summary>
         /// Unique indexes
         /// </summary>
-        public Dictionary<string, List<string>> Unique = new Dictionary<string, List<string>>();
+        public Dictionary<string, List<string>> Unique { get; private set; }
         
         /// <summary>
         /// Indexes
         /// </summary>
-        public Dictionary<string, List<string>> Indexes = new Dictionary<string, List<string>>();
+        public Dictionary<string, List<string>> Indexes { get; private set; }
 
         /// <summary>
         /// Full text indexes
         /// </summary>
-        public Dictionary<string, List<string>> FullText = new Dictionary<string, List<string>>();
+        public Dictionary<string, List<string>> FullText { get; private set; }
 
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbIndexesInfo"/> class.
+        /// </summary>
+        public DbIndexesInfo()
+        {
+            Unique = new Dictionary<string, List<string>>();
+            Indexes = new Dictionary<string, List<string>>();
+            FullText = new Dictionary<string, List<string>>();
+        }
 
         /// <summary>
         /// Adds the unique index.
@@ -53,7 +63,7 @@ namespace ITCreatings.Ndb.Core
             Add(FullText, indexName, name);
         }
 
-        private static void Add(Dictionary<string, List<string>> dict, string indexName, string name)
+        private static void Add(IDictionary<string, List<string>> dict, string indexName, string name)
         {
             if (string.IsNullOrEmpty(indexName))
             {

@@ -24,6 +24,6 @@
         /// Name of the index. 
         /// Should be specifyed for the Indexes which contains several columns
         /// </summary>
-        public string IndexName;
+        public string IndexName { get; protected set; }
     }
 }

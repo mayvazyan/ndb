@@ -12,17 +12,20 @@ namespace ITCreatings.Ndb
     /// </summary>
     public class DbCodeGenerator
     {
+        private const string NAMESPACE = "ITCreatings.GeneratedObjects";
+        private readonly DbStructureGateway gateway;
+
         /// <summary>
         /// Namespace for generated classes
         /// </summary>
-        public string Namespace = "ITCreatings.GeneratedObjects";
-        private readonly DbStructureGateway gateway;
+        public string Namespace { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DbCodeGenerator"/> class.
         /// </summary>
         public DbCodeGenerator(DbStructureGateway gateway)
         {
+            Namespace = NAMESPACE;
             this.gateway = gateway;
         }
 

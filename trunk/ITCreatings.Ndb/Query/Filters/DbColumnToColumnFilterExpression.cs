@@ -10,7 +10,7 @@ namespace ITCreatings.Ndb.Query.Filters
         /// <summary>
         /// Second Column Name
         /// </summary>
-        public string ColumnName2;
+        public string ColumnName2 { get; private set; }
 
         /// <summary>
         /// Default constructor

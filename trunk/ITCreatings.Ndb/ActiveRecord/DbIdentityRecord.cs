@@ -13,7 +13,7 @@ namespace ITCreatings.Ndb.ActiveRecord
         /// Primary Key
         /// </summary>
         [DbPrimaryKeyField]
-        public long Id;
+        public long Id { get; set; }
 
         /// <summary>
         /// Loads object from database by Primary Key

@@ -207,7 +207,7 @@ namespace ITCreatings.Ndb.Execution
         /// <summary>
         /// Default message
         /// </summary>
-        public string InvalidArgumentsMessage = @"Invalid arguments";
+        private const string INVALID_ARGUMENTS_MESSAGE = @"Invalid arguments";
 
         #endregion
 
@@ -238,7 +238,7 @@ namespace ITCreatings.Ndb.Execution
             if (!IsError && !expression)
             {
                 if (description == null)
-                    Error = InvalidArgumentsMessage;
+                    Error = INVALID_ARGUMENTS_MESSAGE;
                 else
                 if (description is TResultCode)
                     Error = (TResultCode)description;

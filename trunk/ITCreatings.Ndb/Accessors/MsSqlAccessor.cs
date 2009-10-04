@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Text;
 using ITCreatings.Ndb.Core;
 using ITCreatings.Ndb.Exceptions;
+using ITCreatings.Ndb.Utils;
 
 namespace ITCreatings.Ndb.Accessors
 {
@@ -210,7 +211,7 @@ namespace ITCreatings.Ndb.Accessors
             if (offset == 0)
                 return query.Insert(6, string.Concat(" TOP ", limit));
 
-            int index = query.IndexOf("ORDER BY", StringComparison.OrdinalIgnoreCase);
+            int index = DbString.IndexOf(query, "ORDER BY");
 
             string select = (index >= 0) ? query.Substring(0, index) : query;
             string fields = select.Substring(7, select.IndexOf("FROM", StringComparison.OrdinalIgnoreCase) - 7);

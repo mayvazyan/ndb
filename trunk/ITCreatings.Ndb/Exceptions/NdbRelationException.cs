@@ -5,6 +5,7 @@ namespace ITCreatings.Ndb.Exceptions
     /// <summary>
     /// Invalid Relation Exception
     /// </summary>
+    [Serializable]
     public class NdbRelationException : NdbException
     {
         /// <summary>

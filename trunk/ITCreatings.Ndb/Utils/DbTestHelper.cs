@@ -24,7 +24,7 @@ namespace ITCreatings.Ndb.Utils
         /// <summary>
         /// Provides direct access to the underlayed DbGateway
         /// </summary>
-        public readonly DbGateway gateway;
+        public DbGateway gateway { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DbTestHelper"/> class.
@@ -68,7 +68,7 @@ namespace ITCreatings.Ndb.Utils
         /// Releases unmanaged and - optionally - managed resources
         /// </summary>
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-        public void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (disposing)
             {

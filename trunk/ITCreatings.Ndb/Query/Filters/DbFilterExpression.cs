@@ -11,12 +11,12 @@ namespace ITCreatings.Ndb.Query.Filters
         /// <summary>
         /// Expression Type
         /// </summary>
-        public DbExpressionType ExpressionType;
+        public DbExpressionType ExpressionType { get; private set; }
 
         /// <summary>
         /// Column Name
         /// </summary>
-        public string ColumnName;
+        public string ColumnName { get; private set; }
 
         /// <summary>
         /// Default constructor
