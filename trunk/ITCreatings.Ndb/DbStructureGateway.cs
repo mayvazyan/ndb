@@ -42,12 +42,21 @@ namespace ITCreatings.Ndb
         public DbAccessor Accessor { get { return accessor; } }
 
         /// <summary>
-        /// Creates new instance
+        /// Initializes a new instance of the <see cref="DbStructureGateway"/> class.
         /// </summary>
-        /// <param name="accessor"></param>
+        /// <param name="accessor">The accessor.</param>
         public DbStructureGateway(DbAccessor accessor)
         {
             this.accessor = accessor;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbStructureGateway"/> class.
+        /// </summary>
+        /// <param name="connectionStringName">Name of the connection string.</param>
+        public DbStructureGateway(string connectionStringName)
+        {
+            accessor = DbAccessor.Create(connectionStringName);
         }
 
         #endregion
