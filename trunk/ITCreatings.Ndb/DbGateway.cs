@@ -701,6 +701,25 @@ namespace ITCreatings.Ndb
         }
 
         /// <summary>
+        /// Loads the array from the first column
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query">The query.</param>
+        /// <returns></returns>
+        public T[] LoadArray<T>(string query)
+        {
+            var list = new List<T>();
+            using (IDataReader reader = Accessor.ExecuteReader(query))
+            {
+                while (reader.Read())
+                {
+                    list.Add((T)reader[0]);
+                }
+            }
+            return list.ToArray();
+        }
+
+        /// <summary>
         /// Loads the result.
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -869,7 +888,7 @@ namespace ITCreatings.Ndb
         /// </summary>
         /// <param name="type">Type which has DbAttributes</param>
         /// <param name="args">filter values</param>
-        /// <returns></returns>
+        /// <returns>Count of removed objects</returns>
         /// <example>
         /// <code>
         /// uint count = DbGateway.Instance.Delete(typeof(WorkLog), "Type", WorkLogType.Default);

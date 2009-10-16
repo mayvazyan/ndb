@@ -217,17 +217,7 @@ ALTER SEQUENCE tablename_colname_seq OWNED BY tablename.colname;*/
             sb.Append(postQueries);
 
             string query = sb.ToString();
-//            try
-//            {
-                ExecuteNonQuery(query);
-//            }
-//            catch (Exception ex)
-//            {
-//                Console.WriteLine(string.Format(
-//                                      "query {0} failed this error {1}", query, ex.Message));
-//                throw;
-//            }
-
+            ExecuteNonQuery(query);
         }
 
         internal override string[] LoadTables(DbGateway gateway)

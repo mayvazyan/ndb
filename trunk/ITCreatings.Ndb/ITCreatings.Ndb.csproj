@@ -27,6 +27,8 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>ndb.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -58,10 +60,6 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Enyim.Caching, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\libs\Enyim.Caching.dll</HintPath>
-    </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\libs\log4net.dll</HintPath>
@@ -138,7 +136,6 @@
     <Compile Include="Core\DbRecordsMapper.cs" />
     <Compile Include="Core\DbTableCheckResult.cs" />
     <Compile Include="Core\DbFieldInfo.cs" />
-    <Compile Include="DbCachedGateway.cs" />
     <Compile Include="DbCodeGenerator.cs" />
     <Compile Include="DbStructureGateway.cs" />
     <Compile Include="DbGateway.cs" />
@@ -279,6 +276,9 @@
       <ProductName>SQL Server Compact 3.5</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ndb.pfx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

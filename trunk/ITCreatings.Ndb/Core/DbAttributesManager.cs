@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using ITCreatings.Ndb.Attributes;
 
@@ -111,7 +112,7 @@ namespace ITCreatings.Ndb.Core
             {
                 foreach (Exception exception in ex.LoaderExceptions)
                 {
-                    Console.WriteLine("\tLoaderExceptions: " + exception.Message);
+                    Debug.WriteLine("\tLoaderExceptions: " + exception.Message);
                 }
                 return new Type[]{};
             }

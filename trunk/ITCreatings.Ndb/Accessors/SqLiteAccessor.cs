@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.Text;
 using ITCreatings.Ndb.Core;
 using ITCreatings.Ndb.Exceptions;
@@ -119,18 +120,9 @@ namespace ITCreatings.Ndb.Accessors
             sb.Append(")");
 
             string query = sb.ToString();
-            try
-            {
-                ExecuteNonQuery(query);
-                createTriggers(info);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(string.Format(
-                                      "query {0} failed this error {1}", query, ex.Message));
-
-                throw;
-            }
+            
+            ExecuteNonQuery(query);
+            createTriggers(info);
         }
 
         internal override string[] LoadTables(DbGateway gateway)
