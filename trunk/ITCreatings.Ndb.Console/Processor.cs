@@ -20,6 +20,10 @@ namespace ITCreatings.Ndb.NdbConsole
         {
             switch (action)
             {
+                case Action.Recreate:
+                    gateway.DropTables(assembly);
+                    return gateway.CreateTables(assembly);
+
                 case Action.Create:
                     return gateway.CreateTables(assembly);
 

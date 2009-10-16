@@ -47,6 +47,9 @@ namespace ITCreatings.Ndb.Accessors
 
             if (type == typeof(String))
             {
+                if (size == 0)
+                    size = 255;
+
                 if (size < 4000)
                     return string.Concat("nvarchar(", size, ")");
 

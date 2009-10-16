@@ -62,8 +62,6 @@ namespace ITCreatings.Ndb.Query
         /// <param name="filterGroup">The filter group.</param>
         private DbQuery(DbGateway gateway, DbFilterGroup filterGroup)
         {
-            //TODO: add filters validation?
-
             Gateway = gateway;
             FilterGroup = filterGroup;
         }

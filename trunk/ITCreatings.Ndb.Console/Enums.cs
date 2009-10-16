@@ -49,5 +49,10 @@
         /// Check is database structure and code are synchronized
         /// </summary>
         Check,
+
+        /// <summary>
+        /// Recreate database structure
+        /// </summary>
+        Recreate
     }
 }

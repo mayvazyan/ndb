@@ -1,5 +1,6 @@
 #if LINQ
 using System;
+using System.Collections.Generic;
 using System.Data.Linq.Mapping;
 using System.Reflection;
 
@@ -53,11 +54,11 @@ namespace ITCreatings.Ndb.Core
                              : new DbRecordInfo();
 
             RecordInfo.RecordType = type;
-//            RecordInfo.ForeignKeys = foreignKeys;
+            RecordInfo.ForeignKeys = new Dictionary<Type, DbFieldInfo>(0);
             RecordInfo.TableName = string.IsNullOrEmpty(tableAttribute.Name) ? type.Name :  tableAttribute.Name;
             RecordInfo.Fields = dbFields.ToArray();
-//            RecordInfo.Childs = childs;
-//            RecordInfo.Parents = parents;
+            RecordInfo.Childs = new Dictionary<Type, MemberInfo>(0);
+            RecordInfo.Parents = new Dictionary<Type, MemberInfo>(0);
         }
     }
 }
