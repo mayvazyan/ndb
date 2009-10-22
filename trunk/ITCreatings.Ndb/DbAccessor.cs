@@ -522,7 +522,6 @@ namespace ITCreatings.Ndb
             try
             {
                 command = CommandEx(query, args);
-
                 return command.ExecuteNonQuery();
             }
             catch (NdbConnectionFailedException)
@@ -835,7 +834,9 @@ namespace ITCreatings.Ndb
         /// <param name="args">Filter</param>
         public uint Delete(string TableName, params object[] args)
         {
-            return Convert.ToUInt32(ExecuteNonQueryEx("DELETE FROM " + QuoteName(TableName), args));
+            string query = "DELETE FROM " + QuoteName(TableName);
+            Debug.Write(query);
+            return Convert.ToUInt32(ExecuteNonQueryEx(query, args));
         }
 
         /// <summary>

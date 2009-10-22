@@ -5,13 +5,15 @@ namespace ITCreatings.Ndb.NdbConsole
 {
     public class FormattersFactory
     {
-        public static XmlFormatter GetFormatter(string key, string path)
+        const string MsTest2008Filename = @"results.trx";
+
+        public static XmlFormatter GetFormatter(string key)
         {
             //TODO: add NUnit formatter
             switch (key)
             {
                 case "MsTest2008":
-                    return new MsTest2008Formatter(path);
+                    return new MsTest2008Formatter(MsTest2008Filename);
             }
             
             throw new NdbException("The following formatter isn't supported: {0}.\r\nSupported formatters: MsTest2008", key);

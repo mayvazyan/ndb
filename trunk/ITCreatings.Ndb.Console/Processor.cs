@@ -2,45 +2,42 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using ITCreatings.Ndb.Accessors;
 using ITCreatings.Ndb.Core;
 using ITCreatings.Ndb.Exceptions;
+using ITCreatings.Ndb.Import;
 using ITCreatings.Ndb.NdbConsole.Formatters;
 
 namespace ITCreatings.Ndb.NdbConsole
 {
     public class Processor
     {
-        public Action action { get; private set; }
-        DbProvider provider;
-        DbAccessor accessor;
-        DbStructureGateway gateway;
+        public Action Action { get; private set; }
+        public DbProvider Provider { get; private set; }
+        public DbAccessor Accessor { get; private set; }
+        public DbStructureGateway StructureGateway { get; private set; }
         public ExitCode ExitCode = 0;
 
         private Type[] Process(Assembly assembly)
         {
-            switch (action)
+            switch (Action)
             {
                 case Action.Recreate:
-                    gateway.DropTables(assembly);
-                    return gateway.CreateTables(assembly);
+                    StructureGateway.DropTables(assembly);
+                    return StructureGateway.CreateTables(assembly);
 
                 case Action.Create:
-                    return gateway.CreateTables(assembly);
+                    return StructureGateway.CreateTables(assembly);
 
                 case Action.Drop:
-                    return gateway.DropTables(assembly);
+                    return StructureGateway.DropTables(assembly);
 
                 case Action.Alter:
-                    return gateway.AlterTables(assembly);
+                    return StructureGateway.AlterTables(assembly);
 
                 default:
-                    throw new Exception("Unknown Action: " + action);
+                    throw new Exception("Unknown Action: " + Action);
             }
-        }
-
-        private static string FixPath(string path)
-        {
-            return Path.Combine(Directory.GetCurrentDirectory(), path);
         }
 
         public void Run(IEnumerable<string> assemblies, XmlFormatter xmlFormatter)
@@ -66,14 +63,14 @@ namespace ITCreatings.Ndb.NdbConsole
 
         private bool ProcessEx(Assembly assembly, XmlFormatter xmlFormatter)
         {
-            if (action == Action.Check)
+            if (Action == Action.Check)
             {
                 Type[] types = DbAttributesManager.LoadDbRecordTypes(assembly);
                 int errorNumber = 1;
                 for (int i = 0; i < types.Length; i++)
                 {
                     Type type = types[i];
-                    bool isValid = gateway.IsValid(type);
+                    bool isValid = StructureGateway.IsValid(type);
                     if (isValid)
                     {
                         xmlFormatter.AppendUnitTestResult("Mapping Test - " + type.FullName, Outcome.Passed, "");
@@ -86,13 +83,13 @@ namespace ITCreatings.Ndb.NdbConsole
                     {
                         string message = string.Format(
                             "\r\n{3}. {0} ({1}) \r\n{4}\r\n{2}\r\n{4}"
-                            , type, assembly.ManifestModule.Name, gateway.LastError, errorNumber++,
+                            , type, assembly.ManifestModule.Name, StructureGateway.LastError, errorNumber++,
                             "----------------------------------------------------------------------------"
                             );
                         Console.WriteLine(message);
 
                         ExitCode = ExitCode.Failure;
-                        xmlFormatter.AppendUnitTestResult("Mapping Test - " + type.FullName, Outcome.Failed, gateway.LastError);
+                        xmlFormatter.AppendUnitTestResult("Mapping Test - " + type.FullName, Outcome.Failed, StructureGateway.LastError);
                     }
                 }
                 return true;
@@ -104,7 +101,7 @@ namespace ITCreatings.Ndb.NdbConsole
         {
             try
             {
-                provider = (DbProvider)Enum.Parse(typeof(DbProvider), _provider, true);
+                Provider = (DbProvider)Enum.Parse(typeof(DbProvider), _provider, true);
             }
             catch
             {
@@ -114,19 +111,19 @@ namespace ITCreatings.Ndb.NdbConsole
 
         public void SetConnectionString(string connectionString)
         {
-            accessor = DbAccessor.Create(provider, connectionString);
-            gateway = new DbStructureGateway(accessor);
+            Accessor = DbAccessor.Create(Provider, connectionString);
+            StructureGateway = new DbStructureGateway(Accessor);
 
-            if (!accessor.CanConnect)
+            if (!Accessor.CanConnect)
                 throw new NdbException(string.Format(
-                                           "Can't connect to \"{0}\" using {1} provider", connectionString, provider));
+                                           "Can't connect to \"{0}\" using {1} provider", connectionString, Provider));
         }
 
         public void SetAction(string _action)
         {
             try
             {
-                action = (Action) Enum.Parse(typeof(Action), _action, true);
+                Action = (Action) Enum.Parse(typeof(Action), _action, true);
             }
             catch
             {
@@ -134,16 +131,19 @@ namespace ITCreatings.Ndb.NdbConsole
             }
         }
 
-        public void GenerateClasses(string path, string @namespace)
+        public void GenerateClasses(string [] args)
         {
-            var generator = new DbCodeGenerator(gateway);
-            if (!string.IsNullOrEmpty(@namespace))
-                generator.Namespace = @namespace;
+            string path = args[3];
+            string Namespace = (args.Length > 4) ? args[4] : null;
+            
+            var generator = new DbCodeGenerator(StructureGateway);
+            if (!string.IsNullOrEmpty(Namespace))
+                generator.Namespace = Namespace;
 
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
 
-            string[] Tables = gateway.Accessor.LoadTables();
+            string[] Tables = StructureGateway.Accessor.LoadTables();
             foreach (string table in Tables)
             {
                 string generatedClass = generator.GenerateClass(table);
@@ -163,6 +163,30 @@ namespace ITCreatings.Ndb.NdbConsole
                 }
 
                 Console.WriteLine("Success: File {0} generated...", filepath);
+            }
+        }
+
+        public void ImportFromExcel(string [] args)
+        {
+            if (args.Length > 4)
+            {
+                string SourceFileConnectionString = args[3];
+                string assemblyName = args[4];
+
+                var assembly = Assembly.LoadFrom(assemblyName);
+                Type[] types = DbAttributesManager.LoadDbRecordTypes(assembly);
+
+                var Source = (ExcelAccessor) DbAccessor.Create(DbProvider.Excel, SourceFileConnectionString);
+                Accessor.ShareConnection = true;
+                var Target = new DbGateway(Accessor);
+
+                DbExcelExport export = new DbExcelExport(Source, Target);
+                export.Export(types, true);
+                ExitCode = ExitCode.Success;
+            }
+            else
+            {
+                ExitCode = ExitCode.Exception;    
             }
         }
     }

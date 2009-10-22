@@ -24,35 +24,40 @@
     public enum Action
     {
         /// <summary>
-        /// Create database structure
+        /// Creates database structure
         /// </summary>
         Create,
 
 
         /// <summary>
-        /// Drop database objects
+        /// Drops database objects
         /// </summary>
         Drop,
 
 
         /// <summary>
-        /// Update database objects
+        /// Updates database objects
         /// </summary>
         Alter,
 
         /// <summary>
-        /// Generate Classes depending on the database structure
+        /// Generates Classes depending on the database structure
         /// </summary>
         Generate,
 
         /// <summary>
-        /// Check is database structure and code are synchronized
+        /// Checks is database structure and code are synchronized
         /// </summary>
         Check,
 
         /// <summary>
-        /// Recreate database structure
+        /// Recreates database structure
         /// </summary>
-        Recreate
+        Recreate,
+
+        /// <summary>
+        /// Imports data from Excel file (removes presend data)
+        /// </summary>
+        ImportExcel
     }
 }

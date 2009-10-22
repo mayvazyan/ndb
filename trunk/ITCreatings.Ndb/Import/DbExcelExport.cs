@@ -30,13 +30,13 @@ namespace ITCreatings.Ndb.Import
         /// Gets or sets the target DbGateway.
         /// </summary>
         /// <value>The target.</value>
-        protected DbGateway Target { get; private set; }
+        public DbGateway Target { get; private set; }
 
         /// <summary>
         /// Gets or sets the source ExcelAccessor.
         /// </summary>
         /// <value>The source.</value>
-        protected ExcelAccessor Source { get; private set; }
+        public ExcelAccessor Source { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DbExcelExport"/> class.
@@ -47,6 +47,17 @@ namespace ITCreatings.Ndb.Import
         {
             Source = (ExcelAccessor)DbAccessor.Create(sourceConnectionStringName);
             Target = new DbGateway(DbAccessor.Create(targetConnectionStringName));
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbExcelExport"/> class.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="target">The target.</param>
+        public DbExcelExport(ExcelAccessor source, DbGateway target)
+        {
+            Source = source;
+            Target = target;
         }
 
         /// <summary>
@@ -91,7 +102,7 @@ namespace ITCreatings.Ndb.Import
         /// Exports the specified types.
         /// </summary>
         /// <param name="types">The types.</param>
-        /// <param name="ExportWithClean">if set to <c>true</c> [export with clean].</param>
+        /// <param name="ExportWithClean">if set to <c>true</c> than all existsing data will be removed first.</param>
         public void Export(Type[] types, bool ExportWithClean)
         {
             string methodName = ExportWithClean ? "ExportWithClean" : "Export";

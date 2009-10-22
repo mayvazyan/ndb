@@ -45,7 +45,7 @@ namespace ITCreatings.Ndb.Accessors
 
         internal override string GetIdentity(string pk)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         internal override string QuoteName(string name)
@@ -61,12 +61,12 @@ namespace ITCreatings.Ndb.Accessors
         /// <returns></returns>
         protected override string GetSqlType(Type type, uint size)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         internal override Dictionary<string, string> LoadFields(DbGateway gateway, string tableName)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -77,7 +77,16 @@ namespace ITCreatings.Ndb.Accessors
         /// <returns></returns>
         internal override string[] LoadTables(DbGateway gateway)
         {
-            throw new System.NotImplementedException();
+            using(OleDbConnection connection = (OleDbConnection) CreateConnection())
+            {
+                DataTable dataTable = connection.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, new Object[] {null, null, null, "TABLE"});
+                string[] tables = new string[dataTable.Rows.Count];
+                for (int i = 0; i < dataTable.Rows.Count; i++)
+                {
+                    tables[i] = dataTable.Rows[i][0].ToString();
+                }
+                return tables;
+            }
         }
 
         /// <summary>
@@ -87,17 +96,17 @@ namespace ITCreatings.Ndb.Accessors
         /// <returns>true if success</returns>
         public override void DropTable(string name)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         internal override void AlterTable(DbTableCheckResult checkResult)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         internal override void CreateTable(DbRecordInfo info)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -109,7 +118,7 @@ namespace ITCreatings.Ndb.Accessors
         /// <returns></returns>
         public override string BuildLimits(string query, int limit, int offset)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>

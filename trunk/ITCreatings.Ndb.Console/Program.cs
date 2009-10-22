@@ -7,7 +7,6 @@ namespace ITCreatings.Ndb.NdbConsole
 {
     public class Program
     {
-        //TODO: add params validation
         public static int Main(string[] args)
         {
             return (int) Run(args);
@@ -15,23 +14,17 @@ namespace ITCreatings.Ndb.NdbConsole
 
         private static ExitCode Run(string[] args)
         {
-            if (args.Length < 4)
+            var parameters = new InputParameters();
+            if (!parameters.Init(args))
             {
                 printUsage();
-                return ExitCode.Success;
+                return ExitCode.Exception;
             }
-
-            string action = args[0];
-            string provider = args[1];
-            string connectionString = args[2];
-
+            
             var processor = new Processor();
-
             try
             {
-                processor.SetProvider(provider);
-                processor.SetConnectionString(connectionString);
-                processor.SetAction(action);
+                parameters.Apply(processor);
             }
             catch(Exception ex)
             {
@@ -40,37 +33,30 @@ namespace ITCreatings.Ndb.NdbConsole
                 return ExitCode.Exception;
             }
 
-//            Console.WriteLine("Action: {0}", action);
-            //TODO: refactor
             try
             {
-                switch (processor.action)
+                switch (processor.Action)
                 {
                     case Action.Generate:
-                        string Path = args[3];
-                        
-                        string Namespace = (args.Length > 4) ? args[4] : null;
-                        processor.GenerateClasses(Path, Namespace);
+                        processor.GenerateClasses(args);
+                        break;
+
+                    case Action.ImportExcel:
+                        processor.ImportFromExcel(args);
                         break;
 
                     default:
-
-                        var assemblies = new string[args.Length - 3];
-                        for (int i = 3; i < args.Length; i++)
-                        {
-                            string path = args[i];
-                            assemblies[i - 3] = path;
-                        }
-
-                        const string filename = @"results.trx";
                         string outputFormatter = ConfigurationManager.AppSettings["OutputFormatter"];
-                        using (XmlFormatter xmlFormatter = FormattersFactory.GetFormatter(outputFormatter, filename))
+                        using (XmlFormatter xmlFormatter = FormattersFactory.GetFormatter(outputFormatter))
                         {
-                            processor.Run(assemblies, xmlFormatter);
+                            processor.Run(parameters.Assemblies, xmlFormatter);
                         }
-//                        Console.ReadLine();
                         break;
                 }
+                
+                if (processor.ExitCode != ExitCode.Success)
+                    printUsage();
+
                 return processor.ExitCode;
             }
             catch(Exception ex)
@@ -79,8 +65,7 @@ namespace ITCreatings.Ndb.NdbConsole
                 return ExitCode.Exception;
             }
         }
-
-       
+        
         private static void printUsage()
         {
             var sb = new StringBuilder();
@@ -97,9 +82,6 @@ namespace ITCreatings.Ndb.NdbConsole
             sb.AppendFormat("{0},", DbProvider.MsSql);
             sb.AppendFormat("{0}, etc.", DbProvider.SqLite);
 
-//            sb.AppendLine("Params:");
-//            sb.AppendLine("- Alter");
-//            sb.AppendFormat("\t\d\r\n");
             Console.WriteLine(sb.ToString());
         }
     }
