@@ -219,7 +219,6 @@
     <Compile Include="Tests\Data\User.cs" />
     <Compile Include="Tests\Data\WorkLog.cs" />
     <Compile Include="Tests\Core\DbAttributesManagerTests.cs" />
-    <Compile Include="Tests\Core\DbCachedGatewayTests.cs" />
     <Compile Include="Tests\DbGatewayTests.cs" />
     <Compile Include="Tests\Core\DbTableCheckResultTest.cs" />
     <Compile Include="Tests\DbStructureGatewayTests.cs" />
