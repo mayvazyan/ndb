@@ -41,8 +41,7 @@ If you like Domain-Driven Design probably you'll like Ndb.
 
 
 Ndb allows you to easily **load objects from relational database**
-
-{{
+```
 User user = DbGateway.Instance.Load<User>(userId);
 User user = DbGateway.Instance.LoadParent<User>(TestData.WorkLog);
 WorkLog []() events = DbGateway.Instance.LoadChilds<WorkLog>(TestData.TestUser);
@@ -93,20 +92,18 @@ public class Task
 
     ...
 }
-}}
-
+```
 
 **Database Structure Access**
 
 Ndb allows you to create database structure based on your assemblies and types. Also it can check is database structure and your types are syncronized, ie what all required tables and fields present in database
 **DbStructureGateway** class provides all functionality needed to work this database structure **CreateTable() AlterTable() DropTable() IsValid()**
 
-{{
+```
 DbStructureGateway.Instance.CreateTable(typeof(User));
 DbStructureGateway.Instance.AlterTable(typeof(User));
 DbStructureGateway.Instance.DropTable(typeof(User));
 DbStructureGateway.Instance.IsValid(typeof(User))
-}}
-
+```
 **FAQ**
 * [Why do not use stored procedures?](http://www.codeproject.com/KB/architecture/DudeWheresMyBusinessLogic.aspx) ([ru version](http://habrahabr.ru/blogs/refactoring/65432/))
